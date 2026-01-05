@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Target, Users, Award, Heart, TrendingUp, Leaf } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 
 const About: React.FC = () => {
     const values = [
@@ -35,6 +36,10 @@ const About: React.FC = () => {
 
     return (
         <div className="bg-[#050505] min-h-screen text-white">
+            <Helmet>
+                <title>About Sunstar - Our Story & Values</title>
+                <meta name="description" content="Founded in 2015, Sunstar is revolutionizing refreshments with bold flavors and zero compromise. Learn about our journey, values, and commitment to quality." />
+            </Helmet>
             {/* Hero Section */}
             <section className="relative py-20 md:py-32 overflow-hidden">
                 <div className="absolute inset-0 opacity-5">

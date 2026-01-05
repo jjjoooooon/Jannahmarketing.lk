@@ -9,10 +9,17 @@ import BlogSection from '../components/BlogSection';
 import SriLankaMap from '../components/SriLankaMap';
 import DistributorCTA from '../components/DistributorCTA';
 import Newsletter from '../components/Newsletter';
+import { Helmet } from 'react-helmet-async';
+
+
 
 const Home: React.FC = () => {
     return (
         <main>
+            <Helmet>
+                <title>Sunstar - Fueling the New Generation</title>
+                <meta name="description" content="Experience the kinetic energy of Sunstar. Premium carbonated beverages with zero sugar and natural ingredients. Join the revolution." />
+            </Helmet>
             <Hero />
             <Marquee />
             <Story />

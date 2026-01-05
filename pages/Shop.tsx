@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ShoppingCart, Plus, Minus, Star, Package, Truck, Shield } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 
 // Import product images
 import orange from '../assets/orange.png';
@@ -100,8 +101,14 @@ const Shop: React.FC = () => {
         }, 0);
     };
 
+
+
     return (
         <div className="bg-[#050505] min-h-screen text-white">
+            <Helmet>
+                <title>Shop Sunstar - Premium Energy Drinks</title>
+                <meta name="description" content="Order Sunstar online. Explore our range of zero-sugar, natural energy drinks including Orange, Ginger, Cola, Cream Soda, and Nesta Ice." />
+            </Helmet>
             {/* Hero Section */}
             <section className="relative py-20 md:py-32 overflow-hidden border-b border-white/5">
                 <div className="absolute inset-0 opacity-5">

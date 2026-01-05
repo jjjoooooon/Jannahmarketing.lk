@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin, Send, Facebook, Instagram, Twitter, Clock } from 'lucide-react';
 import DistributorCTA from '../components/DistributorCTA';
+import { Helmet } from 'react-helmet-async';
 
 const Contact: React.FC = () => {
     const [formData, setFormData] = useState({
@@ -46,6 +47,10 @@ const Contact: React.FC = () => {
 
     return (
         <div className="bg-[#050505] min-h-screen text-white">
+            <Helmet>
+                <title>Contact Sunstar - Get in Touch</title>
+                <meta name="description" content="Have questions or want to become a distributor? Contact Sunstar today. We're here to help and explore partnership opportunities." />
+            </Helmet>
             {/* Hero Section */}
             <section className="relative py-20 md:py-32 overflow-hidden border-b border-white/5">
                 <div className="absolute inset-0 opacity-5">

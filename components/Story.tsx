@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Zap, Clock, Trophy } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import story1 from '../assets/banner.png'
 
 const Story: React.FC = () => {
   return (
@@ -20,7 +21,7 @@ const Story: React.FC = () => {
             <div className="relative rounded-3xl overflow-hidden border border-white/10 aspect-[4/5] group">
               <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10" />
               <img
-                src="/home/joon/.gemini/antigravity/brain/57b0e2bf-b0e1-40a7-a361-416aef689311/sunstar_energy_can_concept.png"
+                src={story1}
                 alt="Sunstar Energy Drink"
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
