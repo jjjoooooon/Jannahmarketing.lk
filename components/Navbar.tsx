@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Menu, X, Droplets, ShoppingBag } from 'lucide-react';
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
+import logo from '../assets/sunstar_logo.png';
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -69,7 +70,7 @@ const Navbar: React.FC = () => {
                   transition={{ repeat: Infinity, duration: 10, ease: "linear" }}
                   className="absolute inset-0 bg-[#CCFF00] blur-lg opacity-20 rounded-full"
                 />
-                <Droplets className="w-6 h-6 md:w-8 md:h-8 text-[#CCFF00] relative z-10" />
+                <img src={logo} alt="Sunstar Logo" className="w-8 h-8 md:w-10 md:h-10 relative z-10 object-contain" />
               </div>
               <span className="text-xl md:text-2xl font-black tracking-tighter text-white font-['Plus_Jakarta_Sans'] group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-[#CCFF00] transition-all">
                 SUNSTAR

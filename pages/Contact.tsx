@@ -22,19 +22,19 @@ const Contact: React.FC = () => {
         {
             icon: Phone,
             title: 'Phone',
-            details: ['+94 11 234 5678', '+94 77 123 4567'],
-            link: 'tel:+94112345678'
+            details: ['077 907 7134', '075 438 5840', '075 342 1104'],
+            link: 'tel:0779077134'
         },
         {
             icon: Mail,
             title: 'Email',
-            details: ['hello@sunstar.lk', 'support@sunstar.lk'],
-            link: 'mailto:hello@sunstar.lk'
+            details: ['hello@jannahmarketing.lk', 'inquiry@jannahmarketing.lk'],
+            link: 'mailto:hello@jannahmarketing.lk'
         },
         {
             icon: MapPin,
             title: 'Head Office',
-            details: ['123 Galle Road', 'Colombo 03, Sri Lanka'],
+            details: ['300,B Boliverian Village', 'Sainthamaruthu'],
             link: 'https://maps.google.com'
         },
         {

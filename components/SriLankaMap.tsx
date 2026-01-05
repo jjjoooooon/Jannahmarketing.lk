@@ -12,7 +12,7 @@ const LOCATIONS = [
         x: 82,
         y: 68,
         type: 'Flagship Store',
-        address: 'One Galle Face, Colombo 01',
+        address: '300,B Boliverian Village, Sainthamaruthu',
         stock: 'High',
         flavors: ['Orange', 'Cola', 'Ginger', 'Nesta', 'Cream Soda'],
         shops: 7

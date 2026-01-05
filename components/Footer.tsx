@@ -1,6 +1,7 @@
 import React from 'react';
 import { Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import logo from '../assets/sunstar_logo.png';
 
 const Footer: React.FC = () => {
   return (
@@ -8,7 +9,10 @@ const Footer: React.FC = () => {
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
           <div className="col-span-1 md:col-span-2">
-            <h2 className="text-5xl font-black font-['Plus_Jakarta_Sans'] tracking-tighter mb-6 text-[#CCFF00]">SUNSTAR</h2>
+            <div className="flex items-center gap-3 mb-6">
+              <img src={logo} alt="Sunstar Logo" className="w-12 h-12 object-contain" />
+              <h2 className="text-5xl font-black font-['Plus_Jakarta_Sans'] tracking-tighter text-[#CCFF00]">SUNSTAR</h2>
+            </div>
             <p className="text-gray-400 max-w-sm mb-8 font-light text-lg font-['Inter']">
               Redefining refreshment for the digital age. Zero gravity flavor profiles crafted for the bold.
             </p>
@@ -34,9 +38,9 @@ const Footer: React.FC = () => {
           <div>
             <h4 className="text-lg font-bold mb-6 font-['Plus_Jakarta_Sans'] uppercase tracking-wider">Contact</h4>
             <ul className="space-y-4 text-gray-400 font-['Inter']">
-              <li>hello@sunstar.lk</li>
-              <li>+94 11 234 5678</li>
-              <li>123 Galle Road<br />Colombo 03, Sri Lanka</li>
+              <li>hello@jannahmarketing.lk</li>
+              <li>077 907 7134 / 075 438 5840</li>
+              <li>300,B Boliverian Village<br />Sainthamaruthu</li>
             </ul>
           </div>
         </div>
