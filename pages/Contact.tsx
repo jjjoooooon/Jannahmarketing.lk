@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Phone, MapPin, Send, Facebook, Instagram, Twitter, Clock } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, Facebook, Instagram, Twitter, Clock, CheckCircle, AlertCircle } from 'lucide-react';
 import DistributorCTA from '../components/DistributorCTA';
 import { Helmet } from 'react-helmet-async';
+import emailjs from '@emailjs/browser';
 
 const Contact: React.FC = () => {
     const [formData, setFormData] = useState({
@@ -12,10 +13,36 @@ const Contact: React.FC = () => {
         message: ''
     });
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Handle form submission
-        console.log('Form submitted:', formData);
+        setStatus('sending');
+
+        // REPLACE THESE WITH YOUR ACTUAL EMAILJS CREDENTIALS
+        const SERVICE_ID = 'service_q5ks567';
+        const TEMPLATE_ID = 'template_olrefpj'; // You might want a separate template for newsletter
+        const PUBLIC_KEY = 'c0QlLfxOR3zDbpgHF';
+
+        try {
+            await emailjs.send(
+                SERVICE_ID,
+                TEMPLATE_ID,
+                {
+                    to_email: 'jannahne@gmail.com',
+                    from_name: formData.name,
+                    from_email: formData.email,
+                    subject: formData.subject,
+                    message: formData.message,
+                },
+                PUBLIC_KEY
+            );
+            setStatus('success');
+            setFormData({ name: '', email: '', subject: '', message: '' });
+        } catch (error) {
+            console.error('EmailJS Error:', error);
+            setStatus('error');
+        }
     };
 
     const contactInfo = [
@@ -214,10 +241,32 @@ const Contact: React.FC = () => {
 
                                     <button
                                         type="submit"
-                                        className="w-full md:w-auto px-8 py-4 bg-[#CCFF00] text-black font-black rounded-full hover:bg-white transition-all flex items-center justify-center gap-2 uppercase tracking-wider"
+                                        disabled={status === 'sending' || status === 'success'}
+                                        className={`w-full md:w-auto px-8 py-4 rounded-full font-black transition-all flex items-center justify-center gap-2 uppercase tracking-wider ${status === 'success'
+                                            ? 'bg-green-500 text-white cursor-default'
+                                            : status === 'error'
+                                                ? 'bg-red-500 text-white hover:bg-red-600'
+                                                : 'bg-[#CCFF00] text-black hover:bg-white'
+                                            }`}
                                     >
-                                        <span>Send Message</span>
-                                        <Send className="w-5 h-5" />
+                                        {status === 'sending' ? (
+                                            <span>Sending...</span>
+                                        ) : status === 'success' ? (
+                                            <>
+                                                <span>Message Sent!</span>
+                                                <CheckCircle className="w-5 h-5" />
+                                            </>
+                                        ) : status === 'error' ? (
+                                            <>
+                                                <span>Failed. Try Again.</span>
+                                                <AlertCircle className="w-5 h-5" />
+                                            </>
+                                        ) : (
+                                            <>
+                                                <span>Send Message</span>
+                                                <Send className="w-5 h-5" />
+                                            </>
+                                        )}
                                     </button>
                                 </form>
                             </div>

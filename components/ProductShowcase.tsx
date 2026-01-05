@@ -121,6 +121,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index, progress, ran
             <p className="text-xs md:text-xl font-medium mb-3 md:mb-8 max-w-md text-white/90 line-clamp-3 md:line-clamp-none font-['Inter']">
               {product.description}
             </p>
+
+            <div className="mb-4 md:mb-6">
+              <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-white/60 mb-2">Available In</p>
+              <div className="flex flex-wrap gap-2">
+                {['250ml', '330ml', '750ml', '1050ml', '1.5L'].map(size => (
+                  <span key={size} className="text-[10px] md:text-xs px-2 py-1 md:px-3 md:py-1.5 rounded-full border border-white/20 text-white/80 bg-white/5">
+                    {size}
+                  </span>
+                ))}
+              </div>
+            </div>
             <div className="mb-3 md:mb-8 hidden md:block">
               <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest bg-black/20 px-2 py-1 md:px-3 md:py-1 rounded text-white border border-white/20 font-['Inter']">
                 AI Generated Vibe:

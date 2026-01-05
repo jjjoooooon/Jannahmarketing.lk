@@ -18,6 +18,7 @@ interface Product {
     description: string;
     inStock: boolean;
     rating: number;
+    color: string;
 }
 
 const products: Product[] = [
@@ -28,43 +29,48 @@ const products: Product[] = [
         image: orange,
         description: 'Explosive orange zest with sparkling finish',
         inStock: true,
-        rating: 4.9
+        rating: 4.9,
+        color: '#FF8C00'
     },
     {
         id: '2',
-        name: 'Solar Ginger',
+        name: 'Sunstar Ginger',
         price: 150,
         image: ginger,
         description: 'Bold ginger kick with natural extracts',
         inStock: true,
-        rating: 4.8
+        rating: 4.8,
+        color: '#CD853F'
     },
     {
         id: '3',
-        name: 'Midnight Cola',
+        name: 'Sunstar Cola',
         price: 150,
         image: cola,
         description: 'Classic cola taste, zero sugar',
         inStock: true,
-        rating: 5.0
+        rating: 5.0,
+        color: '#4A2C2A'
     },
     {
         id: '4',
-        name: 'Cream Dream',
+        name: 'Sunstar Cream Soda',
         price: 150,
         image: creamsoda,
         description: 'Creamy vanilla heaven in every sip',
         inStock: true,
-        rating: 4.7
+        rating: 4.7,
+        color: '#00E676'
     },
     {
         id: '5',
-        name: 'Nesta Ice',
+        name: 'Sunstar Nesta',
         price: 150,
         image: nesta,
         description: 'Refreshing peach tea with tropical vibes',
         inStock: true,
-        rating: 4.9
+        rating: 4.9,
+        color: '#FFAB40'
     }
 ];
 
@@ -178,11 +184,23 @@ const Shop: React.FC = () => {
                             >
                                 <div className="p-6 rounded-2xl border border-white/10 bg-white/5 hover:border-[#CCFF00]/30 transition-all h-full flex flex-col">
                                     {/* Product Image */}
-                                    <div className="relative h-64 mb-6 flex items-center justify-center overflow-hidden rounded-xl bg-white/5">
+                                    <div
+                                        className="relative h-64 mb-6 flex items-center justify-center overflow-hidden rounded-xl transition-colors duration-500"
+                                        style={{ backgroundColor: `${product.color}10` }}
+                                    >
+                                        {/* Colored Ambient Glow */}
+                                        <div
+                                            className="absolute inset-0 blur-3xl opacity-20 transition-opacity duration-500 group-hover:opacity-30"
+                                            style={{ backgroundColor: product.color }}
+                                        />
+
+                                        {/* White Glow Behind Bottle */}
+                                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-white blur-[60px] opacity-40 rounded-full pointer-events-none" />
+
                                         <img
                                             src={product.image}
                                             alt={product.name}
-                                            className="h-full w-auto object-contain group-hover:scale-110 transition-transform duration-500"
+                                            className="h-full w-auto object-contain group-hover:scale-110 transition-transform duration-500 relative z-10 drop-shadow-2xl"
                                         />
                                     </div>
 
@@ -198,6 +216,17 @@ const Shop: React.FC = () => {
                                             {product.name}
                                         </h3>
                                         <p className="text-gray-400 text-sm mb-4">{product.description}</p>
+
+                                        <div className="mb-4">
+                                            <p className="text-xs text-gray-500 font-bold uppercase tracking-wider mb-2">Available Sizes</p>
+                                            <div className="flex flex-wrap gap-2">
+                                                {['250ml', '330ml', '750ml', '1050ml', '1.5L'].map(size => (
+                                                    <span key={size} className="text-xs px-2 py-1 rounded border border-white/20 text-gray-300">
+                                                        {size}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
 
                                         <div className="flex items-center justify-between mt-auto pt-4 border-t border-white/10">
                                             <div>
