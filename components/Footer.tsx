@@ -46,7 +46,11 @@ const Footer: React.FC = () => {
         </div>
 
         <div className="border-t border-white/10 mt-16 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-600 font-mono uppercase tracking-wider">
-          <p>&copy; 2026 Sunstar Soft Drinks. All rights reserved.</p>
+          <div className="flex flex-col md:flex-row items-center gap-4">
+            <p>&copy; 2024 - 2026 Jannah Marketing (PVT) Ltd.</p>
+            <span className="hidden md:block text-white/20">|</span>
+            <p>Developed by <a href="https://inzeedo.com" target="_blank" rel="noopener noreferrer" className="hover:text-[#CCFF00] transition-colors">Inzeedo (PVT) Ltd</a></p>
+          </div>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <Link to="/privacy-policy" onClick={() => window.scrollTo(0, 0)} className="hover:text-[#CCFF00] transition-colors">Privacy Policy</Link>
             <Link to="/terms-of-service" onClick={() => window.scrollTo(0, 0)} className="hover:text-[#CCFF00] transition-colors">Terms of Service</Link>
