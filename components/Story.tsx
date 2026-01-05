@@ -6,9 +6,9 @@ import story1 from '../assets/banner.png'
 
 const Story: React.FC = () => {
   return (
-    <section id="our-story" className="relative py-20 md:py-32 bg-[#050505] overflow-hidden">
+    <section id="our-story" className="relative py-12 md:py-32 bg-[#050505] overflow-hidden">
       <div className="container mx-auto px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
 
           {/* Visual Side */}
           <motion.div
@@ -18,7 +18,7 @@ const Story: React.FC = () => {
             transition={{ duration: 0.8 }}
             className="relative order-2 lg:order-1"
           >
-            <div className="relative rounded-3xl overflow-hidden border border-white/10 aspect-[4/5] group">
+            <div className="relative rounded-3xl overflow-hidden border border-white/10 aspect-square lg:aspect-[4/5] group">
               <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10" />
               <img
                 src={story1}

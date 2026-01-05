@@ -9,6 +9,7 @@ import Contact from './pages/Contact';
 import Shop from './pages/Shop';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
+import Loader from './components/Loader';
 
 // ScrollToTop component to reset scroll on route change
 const ScrollToTop = () => {
@@ -33,16 +34,7 @@ const App: React.FC = () => {
     }, []);
 
     if (loading) {
-        return (
-            <div className="fixed inset-0 bg-[#050505] flex items-center justify-center z-50">
-                <div className="relative">
-                    <div className="w-16 h-16 rounded-full border-4 border-[#CCFF00]/30 border-t-[#CCFF00] animate-spin"></div>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-2 h-2 bg-[#CCFF00] rounded-full animate-pulse"></div>
-                    </div>
-                </div>
-            </div>
-        );
+        return <Loader />;
     }
 
     return (
