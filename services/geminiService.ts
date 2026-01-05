@@ -10,7 +10,7 @@ export const generateMarketingCopy = async (flavor: string): Promise<string> => 
   try {
     const ai = new GoogleGenAI({ apiKey });
     const model = 'gemini-3-flash-preview';
-    
+
     const prompt = `Write a short, punchy, 2-sentence marketing slogan for a soft drink flavor called "${flavor}". The brand is "Sunstar", styled as futuristic, neon, and high-energy.`;
 
     const response = await ai.models.generateContent({
@@ -37,7 +37,7 @@ export const generateBlogTopics = async (): Promise<any[]> => {
   try {
     const ai = new GoogleGenAI({ apiKey });
     const model = 'gemini-3-flash-preview';
-    
+
     const prompt = `Generate 3 blog post ideas for a futuristic soda brand "Sunstar". Return ONLY a JSON array with objects containing "title" and "excerpt" keys.`;
 
     const response = await ai.models.generateContent({

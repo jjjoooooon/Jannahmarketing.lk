@@ -1,198 +1,244 @@
-import React, { useRef } from 'react';
-import { motion, useScroll, useTransform, useMotionValue } from 'framer-motion';
-import Bubbles from './Bubbles';
-import { ArrowDown, Zap } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { ChevronDown, Sparkles } from 'lucide-react';
 
-const Hero: React.FC = () => {
-  const ref = useRef<HTMLDivElement>(null);
-  
-  // Parallax & Mouse tracking
-  const mouseX = useMotionValue(0.5);
-  const mouseY = useMotionValue(0.5);
+// Import your bottle images
+import orange from '../assets/orange.png';
+import ginger from '../assets/ginger.png';
+import cola from '../assets/cola.png';
+import creamsoda from '../assets/creamsoda.png';
+import nesta from '../assets/nesta.png';
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    const { clientX, clientY } = e;
-    const { innerWidth, innerHeight } = window;
-    mouseX.set(clientX / innerWidth);
-    mouseY.set(clientY / innerHeight);
+gsap.registerPlugin(ScrollTrigger);
+
+const SunstarModernHero = () => {
+  const [activeFlavor, setActiveFlavor] = useState(0);
+  const heroRef = useRef(null);
+  const bottleRef = useRef(null);
+  const contentRef = useRef(null);
+
+  const flavors = [
+    {
+      name: 'Orange',
+      tagline: 'Citrus Burst',
+      color: '#FF6B35',
+      gradient: 'from-orange-400 via-orange-500 to-red-500',
+      image: orange,
+      description: 'Pure sunshine in every sip'
+    },
+    {
+      name: 'Ginger',
+      tagline: 'Spiced Refresh',
+      color: '#D4A574',
+      gradient: 'from-amber-400 via-yellow-600 to-orange-700',
+      image: ginger,
+      description: 'Bold and invigorating'
+    },
+    {
+      name: 'Cola',
+      tagline: 'Classic Kick',
+      color: '#2D1810',
+      gradient: 'from-stone-700 via-stone-900 to-black',
+      image: cola,
+      description: 'Timeless carbonated perfection'
+    },
+    {
+      name: 'Cream Soda',
+      tagline: 'Smooth Vanilla',
+      color: '#FFB6D9',
+      gradient: 'from-pink-300 via-pink-400 to-rose-500',
+      image: creamsoda,
+      description: 'Creamy, dreamy indulgence'
+    },
+    {
+      name: 'Nesta',
+      tagline: 'Tropical Escape',
+      color: '#00CBA9',
+      gradient: 'from-teal-400 via-emerald-500 to-green-600',
+      image: nesta,
+      description: 'Island vibes in a bottle'
+    }
+  ];
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Initial entrance animation
+      const tl = gsap.timeline();
+
+      tl.from(contentRef.current.children, {
+        y: 80,
+        opacity: 0,
+        stagger: 0.15,
+        duration: 1,
+        ease: 'power3.out'
+      })
+        .from(bottleRef.current, {
+          x: 200,
+          opacity: 0,
+          rotation: 15,
+          duration: 1.2,
+          ease: 'back.out(1.4)'
+        }, '-=0.8');
+
+      // Continuous floating animation
+      gsap.to(bottleRef.current, {
+        y: -20,
+        duration: 2.5,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut'
+      });
+
+    }, heroRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  const changeFlavor = (index) => {
+    if (index === activeFlavor) return;
+
+    gsap.timeline()
+      .to(bottleRef.current, {
+        x: -100,
+        opacity: 0,
+        rotation: -20,
+        duration: 0.4,
+        ease: 'power2.in'
+      })
+      .call(() => setActiveFlavor(index))
+      .to(bottleRef.current, {
+        x: 0,
+        opacity: 1,
+        rotation: 0,
+        duration: 0.6,
+        ease: 'back.out(1.4)'
+      });
+
+    gsap.fromTo(contentRef.current.children,
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, stagger: 0.1, duration: 0.6, ease: 'power2.out' }
+    );
   };
-  
-  // Smooth parallax values - reduced intensity for mobile
-  const moveX = useTransform(mouseX, [0, 1], [15, -15]);
-  const moveY = useTransform(mouseY, [0, 1], [15, -15]);
-  const moveXReverse = useTransform(mouseX, [0, 1], [-15, 15]);
-  const moveYReverse = useTransform(mouseY, [0, 1], [-15, 15]);
-  
-  // Scroll parallax
-  const { scrollY } = useScroll();
-  const yText = useTransform(scrollY, [0, 500], [0, 200]);
-  const opacityHero = useTransform(scrollY, [0, 400], [1, 0]);
 
   return (
-    <section 
-      ref={ref}
-      onMouseMove={handleMouseMove}
-      className="relative w-full h-[100dvh] bg-[#050505] overflow-hidden flex flex-col items-center justify-center [perspective:1000px]"
+    <div
+      ref={heroRef}
+      className="relative w-full min-h-[100dvh] bg-[#050505] overflow-hidden flex flex-col"
     >
-      {/* Cinematic Background */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#111] via-[#050505] to-[#000000] z-0" />
-      
-      {/* Noise Texture Overlay */}
-      <div className="absolute inset-0 opacity-[0.04] pointer-events-none z-[1]" 
-           style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='1'/%3E%3C/svg%3E")` }} 
-      />
-
-      <div className="absolute inset-0 z-[2]">
-        <Bubbles color="rgba(204, 255, 0, 0.1)" />
+      {/* Animated Background Gradient */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div
+          className={`absolute inset-0 bg-gradient-to-br ${flavors[activeFlavor].gradient} opacity-5 transition-all duration-1000`}
+        />
+        <div className="absolute -top-20 sm:-top-40 -right-20 sm:-right-40 w-48 h-48 sm:w-96 sm:h-96 bg-[#CCFF00]/5 rounded-full blur-3xl" />
+        <div className="absolute -bottom-20 sm:-bottom-40 -left-20 sm:-left-40 w-48 h-48 sm:w-96 sm:h-96 bg-[#CCFF00]/3 rounded-full blur-3xl" />
       </div>
 
-      {/* Main Content Container */}
-      <motion.div 
-        style={{ opacity: opacityHero, y: yText }}
-        className="relative z-10 w-full max-w-[1400px] px-6 h-full flex flex-col items-center justify-center"
-      >
-        {/* Brand Tag - Adjusted position for mobile */}
-        <motion.div 
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="absolute top-[12%] md:top-[18%] flex items-center gap-2 md:gap-3 z-30"
-        >
-           <div className="h-[1px] w-6 md:w-16 bg-[#CCFF00]" />
-           <span className="text-[#CCFF00] uppercase tracking-[0.2em] md:tracking-[0.3em] font-bold text-[10px] md:text-xs font-['Inter'] whitespace-nowrap">
-             Premium Carbonation
-           </span>
-           <div className="h-[1px] w-6 md:w-16 bg-[#CCFF00]" />
-        </motion.div>
+      {/* Main Content Grid */}
+      <div className="relative z-10 flex-1 grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 px-4 sm:px-6 md:px-12 lg:px-16 py-6 sm:py-8 lg:py-12 max-w-7xl mx-auto items-center w-full">
 
-        {/* 3D Composition Wrapper */}
-        <div className="relative w-full flex items-center justify-center py-0 h-[60vh] md:h-auto">
-          
-          {/* Back Text Layer - "FEEL" */}
-          <motion.h1 
-            style={{ x: moveX, y: moveY }}
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="text-[25vw] md:text-[14rem] leading-none font-bold font-['Plus_Jakarta_Sans'] text-transparent stroke-text absolute left-1/2 -translate-x-1/2 md:translate-x-0 md:left-[5%] top-[10%] md:top-auto z-0 select-none pointer-events-none opacity-30 md:opacity-100 tracking-tighter w-full text-center md:text-left md:w-auto"
-          >
-            FEEL
-          </motion.h1>
+        {/* Left: Content */}
+        <div ref={contentRef} className="space-y-4 sm:space-y-6 lg:space-y-8 lg:pr-12 order-2 lg:order-1">
+          <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-white/5 backdrop-blur-sm rounded-full text-xs sm:text-sm font-bold text-white/60 border border-white/10 uppercase tracking-wider">
+            <div className="w-2 h-2 rounded-full bg-[#CCFF00] animate-pulse" />
+            Sri Lankan Heritage
+          </div>
 
-          {/* Central 3D Product (CSS Constructed Can) */}
-          <motion.div 
-            style={{ x: moveXReverse, y: moveYReverse, rotate: 5 }}
-            initial={{ scale: 0.8, opacity: 0, y: 50 }}
-            animate={{ scale: 1, opacity: 1, y: 0 }}
-            transition={{ duration: 1, type: "spring" }}
-            className="relative z-10 w-[160px] h-[280px] md:w-[280px] md:h-[500px]"
-          >
-            {/* Can Body Gradient */}
-            <div className="absolute inset-0 rounded-[2rem] bg-gradient-to-br from-[#CCFF00] via-[#050505] to-[#CCFF00] p-[1px] shadow-[0_0_60px_-10px_rgba(204,255,0,0.3)] md:shadow-[0_0_100px_-20px_rgba(204,255,0,0.3)]">
-              <div className="w-full h-full bg-[#111] rounded-[2rem] overflow-hidden relative border border-white/10 backdrop-blur-md">
-                 {/* Liquid Animation inside Can */}
-                 <div className="absolute bottom-0 left-0 w-full h-[60%] bg-gradient-to-t from-[#CCFF00] to-transparent opacity-20 animate-pulse"></div>
-                 
-                 {/* Bubbles inside Can */}
-                 <div className="absolute inset-0">
-                   {[...Array(5)].map((_, i) => (
-                      <motion.div
-                        key={i}
-                        animate={{ y: [0, -400], opacity: [0, 1, 0] }}
-                        transition={{ 
-                          repeat: Infinity, 
-                          duration: 2 + Math.random() * 2, 
-                          ease: "linear", 
-                          delay: Math.random() * 2 
-                        }}
-                        style={{ left: `${20 + Math.random() * 60}%` }}
-                        className="absolute bottom-0 w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-white/50"
-                      />
-                   ))}
-                 </div>
-                 
-                 {/* Label Text */}
-                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-[-90deg] whitespace-nowrap">
-                   <span className="text-4xl md:text-6xl font-extrabold text-white/10 tracking-tight font-['Plus_Jakarta_Sans']">SUNSTAR</span>
-                 </div>
-                 
-                 {/* Highlighting */}
-                 <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-white/5 to-transparent pointer-events-none" />
-                 <div className="absolute top-4 left-4 w-2 h-16 rounded-full bg-white/20 blur-[2px]" />
-              </div>
+          <div className="space-y-2 sm:space-y-4">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-white leading-none tracking-tight font-['Plus_Jakarta_Sans']">
+              {flavors[activeFlavor].name}
+            </h1>
+            <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-light text-[#CCFF00] italic">
+              {flavors[activeFlavor].tagline}
+            </p>
+          </div>
+
+          <p className="text-sm sm:text-base lg:text-lg text-gray-400 max-w-md leading-relaxed">
+            {flavors[activeFlavor].description}. Crafted with authentic Sri Lankan tradition and modern carbonation technology.
+          </p>
+
+          <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4">
+            <Link
+              to="/shop"
+              className="group px-6 sm:px-8 py-3 sm:py-4 bg-[#CCFF00] text-black rounded-full font-black text-xs sm:text-sm hover:bg-white transition-all hover:shadow-lg hover:shadow-[#CCFF00]/40 flex items-center justify-center gap-2 uppercase tracking-widest"
+            >
+              Explore Flavors
+              <ChevronDown className="w-4 h-4 rotate-[-90deg] group-hover:translate-x-1 transition-transform" />
+            </Link>
+            <Link
+              to="/about"
+              className="px-6 sm:px-8 py-3 sm:py-4 bg-white/5 text-white rounded-full font-bold text-xs sm:text-sm hover:bg-white/10 transition-all border border-white/10 backdrop-blur-sm uppercase tracking-widest"
+            >
+              Learn More
+            </Link>
+          </div>
+
+          {/* Nutritional Info */}
+          <div className="flex gap-4 sm:gap-6 lg:gap-8 pt-4 sm:pt-6 border-t border-white/10">
+            <div>
+              <div className="text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Calories</div>
+              <div className="text-2xl sm:text-3xl font-bold text-white">0</div>
             </div>
-            
-            {/* Can Top/Rim Detail (Visual) */}
-            <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-[80%] h-6 bg-[#222] rounded-[50%] border border-white/10 shadow-lg" />
-          </motion.div>
-
-          {/* Front Text Layer - "THE FIZZ" */}
-          <motion.div
-             style={{ x: moveX, y: moveY }}
-             initial={{ opacity: 0, x: 50 }}
-             animate={{ opacity: 1, x: 0 }}
-             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-             className="absolute left-1/2 -translate-x-1/2 md:translate-x-0 md:left-auto md:right-[5%] bottom-[10%] md:bottom-auto md:top-1/2 md:-translate-y-1/2 z-20 flex flex-col items-center md:items-start pointer-events-none w-full md:w-auto"
-          >
-             <span className="text-xl md:text-4xl font-light italic text-white mb-[-5px] md:mb-[-20px] mr-2 md:mr-0 opacity-80 font-['Inter']">the</span>
-             <h1 className="text-[25vw] md:text-[14rem] leading-none font-bold font-['Plus_Jakarta_Sans'] text-white mix-blend-overlay md:mix-blend-normal liquid-text drop-shadow-[0_0_20px_rgba(204,255,0,0.4)] tracking-tighter">
-               FIZZ
-             </h1>
-          </motion.div>
+            <div>
+              <div className="text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Volume</div>
+              <div className="text-2xl sm:text-3xl font-bold text-white">500<span className="text-sm sm:text-lg">ml</span></div>
+            </div>
+            <div>
+              <div className="text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Sugar</div>
+              <div className="text-2xl sm:text-3xl font-bold text-white">0<span className="text-sm sm:text-lg">g</span></div>
+            </div>
+          </div>
         </div>
 
-        {/* Action Area */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8 }}
-          className="absolute bottom-[8%] md:bottom-[10%] w-full flex flex-col md:flex-row items-center justify-center gap-6 md:gap-8 z-30"
-        >
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="group relative px-8 md:px-10 py-4 md:py-5 bg-white/5 backdrop-blur-md border border-white/10 rounded-full overflow-hidden"
-          >
-            <div className="absolute inset-0 w-full h-full bg-[#CCFF00] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            <div className="flex items-center gap-3 relative z-10">
-              <span className="text-white font-bold tracking-widest text-[10px] md:text-xs uppercase group-hover:text-black transition-colors font-['Inter']">Taste The Future</span>
-              <Zap size={16} className="text-[#CCFF00] group-hover:text-black transition-colors" />
-            </div>
-          </motion.button>
-          
-          <div className="flex items-center gap-4 md:gap-6 text-[10px] md:text-xs text-gray-500 font-medium tracking-wider font-['Inter']">
-             <span className="whitespace-nowrap">0g SUGAR</span>
-             <span className="w-1 h-1 bg-[#CCFF00] rounded-full" />
-             <span className="whitespace-nowrap">NATURAL CAFFEINE</span>
-             <span className="hidden md:block w-1 h-1 bg-[#CCFF00] rounded-full" />
-             <span className="hidden md:inline whitespace-nowrap">100% VIBES</span>
-          </div>
-        </motion.div>
+        {/* Right: Bottle Showcase */}
+        <div className="relative flex items-center justify-center lg:justify-end order-1 lg:order-2 min-h-[300px] sm:min-h-[400px] lg:min-h-0">
+          <div ref={bottleRef} className="relative w-full max-w-[250px] sm:max-w-[350px] md:max-w-md">
+            {/* Glow Effect */}
+            <div
+              className={`absolute inset-0 bg-gradient-to-br ${flavors[activeFlavor].gradient} blur-3xl opacity-20 scale-75 transition-all duration-1000`}
+            />
 
-        {/* Animated Scroll Indicator */}
-        <motion.div 
-          animate={{ y: [0, 10, 0] }}
-          transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-          className="absolute bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 text-white/30"
-        >
-          <ArrowDown size={20} className="md:w-6 md:h-6" />
-        </motion.div>
-      </motion.div>
-      
-      {/* Styles for outline text */}
-      <style>{`
-        .stroke-text {
-          -webkit-text-stroke: 1px rgba(255, 255, 255, 0.2);
-          color: transparent;
-        }
-        @media (min-width: 768px) {
-           .stroke-text {
-            -webkit-text-stroke: 4px rgba(255, 255, 255, 0.15);
-           }
-        }
-      `}</style>
-    </section>
+            {/* Bottle Image */}
+            <img
+              src={flavors[activeFlavor].image}
+              alt={flavors[activeFlavor].name}
+              className="relative w-full h-auto drop-shadow-2xl z-10"
+            />
+
+            {/* Decorative Circle */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 sm:w-60 sm:h-60 md:w-72 md:h-72 border border-white/10 rounded-full -z-10" />
+          </div>
+        </div>
+      </div>
+
+      {/* Flavor Selector */}
+      <div className="relative z-20 flex flex-wrap justify-center gap-2 sm:gap-3 px-4 sm:px-8 pb-8 sm:pb-12">
+        {flavors.map((flavor, index) => (
+          <button
+            key={flavor.name}
+            onClick={() => changeFlavor(index)}
+            className={`group relative px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full font-bold text-xs sm:text-sm transition-all uppercase tracking-wider ${activeFlavor === index
+              ? 'bg-[#CCFF00] text-black shadow-lg shadow-[#CCFF00]/20'
+              : 'bg-white/5 text-gray-400 hover:bg-white/10 border border-white/10 hover:text-white'
+              }`}
+          >
+            <span className="relative z-10">{flavor.name}</span>
+            {activeFlavor === index && (
+              <div className={`absolute inset-0 bg-gradient-to-r ${flavor.gradient} opacity-30 rounded-full blur-sm`} />
+            )}
+          </button>
+        ))}
+      </div>
+
+      {/* Scroll Indicator */}
+      <div className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 sm:gap-2 text-gray-600 animate-bounce hidden sm:flex">
+        <span className="text-xs font-medium uppercase tracking-wider">Scroll</span>
+        <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5" />
+      </div>
+    </div>
   );
 };
 
-export default Hero;
+export default SunstarModernHero;

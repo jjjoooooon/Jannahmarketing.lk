@@ -1,13 +1,79 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform, MotionValue } from 'framer-motion';
-import { PRODUCTS } from '../constants';
 import { Product } from '../types';
 import { generateMarketingCopy } from '../services/geminiService';
 import Bubbles from './Bubbles';
 
+// Import bottle images
+import orange from '../assets/orange.png';
+import ginger from '../assets/ginger.png';
+import cola from '../assets/cola.png';
+import creamsoda from '../assets/creamsoda.png';
+import nesta from '../assets/nesta.png';
+
+// Updated products array with actual bottle images
+const SHOWCASE_PRODUCTS: (Product & { image: string })[] = [
+  {
+    id: 'orange',
+    name: 'Sunstar Orange',
+    tagline: 'Citrus Burst',
+    description: 'Explosive orange zest with a sparkling finish that wakes up your senses.',
+    color: '#FF8C00',
+    accent: '#FF8C00',
+    flavorProfile: 'Zesty, Sweet, Sharp',
+    imagePlaceholderColor: 'bg-orange-500',
+    image: orange
+  },
+  {
+    id: 'ginger',
+    name: 'Solar Ginger',
+    tagline: 'Spiced Refresh',
+    description: 'Real ginger root extract delivers a bold, spicy kick that burns so good.',
+    color: '#CD853F',
+    accent: '#CD853F',
+    flavorProfile: 'Spicy, Bold, Invigorating',
+    imagePlaceholderColor: 'bg-amber-700',
+    image: ginger
+  },
+  {
+    id: 'cola',
+    name: 'Midnight Cola',
+    tagline: 'Classic Kick',
+    description: 'Deep, rich cola notes with the perfect balance of sweetness and carbonation.',
+    color: '#4A2C2A',
+    accent: '#4A2C2A',
+    flavorProfile: 'Bold, Classic, Timeless',
+    imagePlaceholderColor: 'bg-stone-800',
+    image: cola
+  },
+  {
+    id: 'cream-soda',
+    name: 'Cream Dream',
+    tagline: 'Smooth Vanilla',
+    description: 'Creamy vanilla heaven with a bubbly twist. Pure indulgence in every sip.',
+    color: '#FF69B4',
+    accent: '#FF69B4',
+    flavorProfile: 'Creamy, Dreamy, Sweet',
+    imagePlaceholderColor: 'bg-pink-300',
+    image: creamsoda
+  },
+  {
+    id: 'nesta',
+    name: 'Nesta Ice',
+    tagline: 'Tropical Escape',
+    description: 'Refreshing peach-infused tea with island vibes and a crisp finish.',
+    color: '#00BCD4',
+    accent: '#00BCD4',
+    flavorProfile: 'Refreshing, Fruity, Tropical',
+    imagePlaceholderColor: 'bg-teal-500',
+    image: nesta
+  },
+];
+
 // Single Product Card Component
 interface ProductCardProps {
-  product: Product;
+  product: Product & { image: string };
   index: number;
   progress: MotionValue<number>;
   range: [number, number];
@@ -21,15 +87,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index, progress, ran
     offset: ['start end', 'start start'],
   });
 
-  const imageScale = useTransform(scrollYProgress, [0, 1], [1.5, 1]);
+  const imageScale = useTransform(scrollYProgress, [0, 1], [1.2, 1]);
   const scale = useTransform(progress, range, [1, targetScale]);
-  
+
   const [aiText, setAiText] = useState<string>('');
 
   useEffect(() => {
     let mounted = true;
     generateMarketingCopy(product.name).then(text => {
-      if(mounted) setAiText(text);
+      if (mounted) setAiText(text);
     });
     return () => { mounted = false; };
   }, [product.name]);
@@ -37,8 +103,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index, progress, ran
   return (
     <div ref={container} className="h-[100dvh] flex items-center justify-center sticky top-0 bg-[#050505] text-white overflow-hidden border-t border-white/5 pt-10 md:pt-0">
       <Bubbles color={`${product.color}40`} />
-      
-      <motion.div 
+
+      <motion.div
         style={{ scale, backgroundColor: product.color }}
         className="relative flex flex-col md:flex-row w-[92vw] md:w-[90vw] h-[80dvh] md:h-[80vh] rounded-[2rem] overflow-hidden shadow-2xl origin-top"
       >
@@ -49,7 +115,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index, progress, ran
               {product.tagline}
             </h3>
             <h2 className="text-3xl md:text-8xl font-black mb-2 md:mb-6 leading-[0.9] text-white font-['Plus_Jakarta_Sans'] uppercase tracking-tight">
-              {product.name.split(' ')[0]}<br/>
+              {product.name.split(' ')[0]}<br />
               <span className="text-transparent text-outline">{product.name.split(' ')[1]}</span>
             </h2>
             <p className="text-xs md:text-xl font-medium mb-3 md:mb-8 max-w-md text-white/90 line-clamp-3 md:line-clamp-none font-['Inter']">
@@ -61,37 +127,29 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index, progress, ran
               </span>
               <p className="italic text-white/90 mt-1 md:mt-2 text-[10px] md:text-sm font-medium font-['Inter'] line-clamp-2">"{aiText || 'Loading vibe...'}"</p>
             </div>
-            <button className="self-start px-6 py-3 md:px-8 md:py-4 rounded-full bg-white text-black font-bold hover:bg-black hover:text-white border-2 border-white transition-all text-xs md:text-base active:scale-95 touch-manipulation font-['Plus_Jakarta_Sans'] uppercase tracking-wider">
-              Taste It
-            </button>
+            <Link to="/shop" className="self-start">
+              <button className="px-6 py-3 md:px-8 md:py-4 rounded-full bg-white text-black font-bold hover:bg-black hover:text-white border-2 border-white transition-all text-xs md:text-base active:scale-95 touch-manipulation font-['Plus_Jakarta_Sans'] uppercase tracking-wider">
+                Taste It
+              </button>
+            </Link>
           </div>
         </div>
 
-        {/* Visual Content (Bottle Placeholder) */}
+        {/* Visual Content (Actual Bottle Image) */}
         <div className="w-full md:w-1/2 relative h-[50%] md:h-full overflow-hidden flex items-center justify-center bg-black/10 order-1 md:order-2">
           <motion.div style={{ scale: imageScale }} className="relative z-10 w-full h-full flex items-center justify-center">
-             {/* Abstract Bottle Representation */}
-             <div className="relative w-28 h-[30dvh] md:w-64 md:h-[60vh]">
-                <div className={`absolute inset-0 rounded-full blur-3xl opacity-50 ${product.imagePlaceholderColor}`}></div>
-                {/* Bottle Shape SVG */}
-                <svg viewBox="0 0 100 300" className="w-full h-full drop-shadow-2xl filter brightness-110">
-                   <defs>
-                      <linearGradient id={`grad-${index}`} x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" style={{stopColor: '#ffffff', stopOpacity: 0.2}} />
-                        <stop offset="50%" style={{stopColor: 'transparent', stopOpacity: 0}} />
-                        <stop offset="100%" style={{stopColor: '#ffffff', stopOpacity: 0.1}} />
-                      </linearGradient>
-                   </defs>
-                   <path d="M30,0 L70,0 C75,0 80,5 80,10 L80,60 C80,80 90,90 90,110 L90,280 C90,295 80,300 50,300 C20,300 10,295 10,280 L10,110 C10,90 20,80 20,60 L20,10 C20,5 25,0 30,0 Z" 
-                         fill={product.accent} stroke="rgba(255,255,255,0.2)" strokeWidth="2" />
-                   <path d="M30,0 L70,0 C75,0 80,5 80,10 L80,60 C80,80 90,90 90,110 L90,280 C90,295 80,300 50,300 C20,300 10,295 10,280 L10,110 C10,90 20,80 20,60 L20,10 C20,5 25,0 30,0 Z" 
-                         fill={`url(#grad-${index})`} />
-                   {/* Label */}
-                   <rect x="11" y="130" width="78" height="100" fill="rgba(255,255,255,0.9)" />
-                   <text x="50" y="180" textAnchor="middle" fontSize="16" fontWeight="900" fill="black" fontFamily="Plus Jakarta Sans">{product.name.split(' ')[0]}</text>
-                   <text x="50" y="200" textAnchor="middle" fontSize="12" fill="black" fontFamily="Inter">PREMIUM</text>
-                </svg>
-             </div>
+            {/* Bottle Image */}
+            <div className="relative w-auto h-[28dvh] md:h-[65vh] flex items-center justify-center">
+              {/* Glow Effect */}
+              <div className="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent blur-3xl opacity-50 scale-110" />
+
+              {/* Actual Bottle */}
+              <img
+                src={product.image}
+                alt={product.name}
+                className="relative w-auto h-full object-contain drop-shadow-2xl filter brightness-110"
+              />
+            </div>
           </motion.div>
         </div>
       </motion.div>
@@ -111,8 +169,8 @@ const ProductShowcase: React.FC = () => {
       <div className="sticky top-0 h-[8vh] flex items-center justify-center z-10 pointer-events-none mix-blend-difference text-white">
         <h2 className="text-sm md:text-3xl font-bold uppercase tracking-widest bg-white/10 px-4 py-1.5 md:px-6 md:py-2 backdrop-blur-md rounded-full font-['Plus_Jakarta_Sans'] border border-white/20">Flavor Drop</h2>
       </div>
-      {PRODUCTS.map((product, index) => {
-        const targetScale = 1 - ((PRODUCTS.length - index) * 0.05);
+      {SHOWCASE_PRODUCTS.map((product, index) => {
+        const targetScale = 1 - ((SHOWCASE_PRODUCTS.length - index) * 0.05);
         return (
           <ProductCard
             key={product.id}

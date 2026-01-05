@@ -1,5 +1,6 @@
 import React from 'react';
 import { Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Footer: React.FC = () => {
   return (
@@ -19,32 +20,32 @@ const Footer: React.FC = () => {
               ))}
             </div>
           </div>
-          
+
           <div>
             <h4 className="text-lg font-bold mb-6 font-['Plus_Jakarta_Sans'] uppercase tracking-wider">Explore</h4>
             <ul className="space-y-4 text-gray-400 font-['Inter']">
-              <li><a href="#" className="hover:text-[#CCFF00] transition-colors">Our Flavors</a></li>
-              <li><a href="#" className="hover:text-[#CCFF00] transition-colors">The Lab</a></li>
-              <li><a href="#" className="hover:text-[#CCFF00] transition-colors">Blog</a></li>
-              <li><a href="#" className="hover:text-[#CCFF00] transition-colors">Careers</a></li>
+              <li><Link to="/shop" className="hover:text-[#CCFF00] transition-colors">Our Flavors</Link></li>
+              <li><Link to="/about" className="hover:text-[#CCFF00] transition-colors">The Lab</Link></li>
+              <li><Link to="/" className="hover:text-[#CCFF00] transition-colors">News & Resources</Link></li>
+              <li><Link to="/contact" className="hover:text-[#CCFF00] transition-colors">Contact Us</Link></li>
             </ul>
           </div>
-          
+
           <div>
             <h4 className="text-lg font-bold mb-6 font-['Plus_Jakarta_Sans'] uppercase tracking-wider">Contact</h4>
             <ul className="space-y-4 text-gray-400 font-['Inter']">
-              <li>info@sunstarfizz.com</li>
-              <li>+1 (555) 0123-4567</li>
-              <li>123 Neon Way, Sector 7<br/>Cyber City, CA 90210</li>
+              <li>hello@sunstar.lk</li>
+              <li>+94 11 234 5678</li>
+              <li>123 Galle Road<br />Colombo 03, Sri Lanka</li>
             </ul>
           </div>
         </div>
-        
+
         <div className="border-t border-white/10 mt-16 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-600 font-mono uppercase tracking-wider">
-          <p>&copy; 2025 Sunstar Soft Drinks. All rights reserved.</p>
+          <p>&copy; 2026 Sunstar Soft Drinks. All rights reserved.</p>
           <div className="flex space-x-6 mt-4 md:mt-0">
-            <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
+            <Link to="/" className="hover:text-white transition-colors">Privacy Policy</Link>
+            <Link to="/" className="hover:text-white transition-colors">Terms of Service</Link>
           </div>
         </div>
       </div>

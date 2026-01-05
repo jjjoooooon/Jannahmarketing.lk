@@ -1,60 +1,67 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import SmoothScroll from './components/SmoothScroll';
 import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import Marquee from './components/Marquee';
-import Story from './components/Story';
-import Ingredients from './components/Ingredients';
-import ProductShowcase from './components/ProductShowcase';
-import Testimonials from './components/Testimonials';
-import BlogSection from './components/BlogSection';
-import Distributors from './components/Distributors';
-import Newsletter from './components/Newsletter';
 import Footer from './components/Footer';
+import Home from './pages/Home';
+import About from './pages/About';
+import Contact from './pages/Contact';
+import Shop from './pages/Shop';
+
+// ScrollToTop component to reset scroll on route change
+const ScrollToTop = () => {
+    const { pathname } = useLocation();
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [pathname]);
+
+    return null;
+};
 
 const App: React.FC = () => {
-  const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    // Simulate initial asset loading
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 2000);
-    return () => clearTimeout(timer);
-  }, []);
+    useEffect(() => {
+        // Simulate initial asset loading
+        const timer = setTimeout(() => {
+            setLoading(false);
+        }, 2000);
+        return () => clearTimeout(timer);
+    }, []);
 
-  if (loading) {
+    if (loading) {
+        return (
+            <div className="fixed inset-0 bg-[#050505] flex items-center justify-center z-50">
+                <div className="relative">
+                    <div className="w-16 h-16 rounded-full border-4 border-[#CCFF00]/30 border-t-[#CCFF00] animate-spin"></div>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="w-2 h-2 bg-[#CCFF00] rounded-full animate-pulse"></div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     return (
-      <div className="fixed inset-0 bg-[#050505] flex items-center justify-center z-50">
-        <div className="relative">
-          <div className="w-16 h-16 rounded-full border-4 border-[#CCFF00]/30 border-t-[#CCFF00] animate-spin"></div>
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-2 h-2 bg-[#CCFF00] rounded-full animate-pulse"></div>
-          </div>
-        </div>
-      </div>
+        <Router>
+            <ScrollToTop />
+            <SmoothScroll>
+                <div className="bg-[#050505] min-h-screen selection:bg-[#CCFF00] selection:text-black flex flex-col">
+                    <Navbar />
+                    <main className="flex-grow">
+                        <Routes>
+                            <Route path="/" element={<Home />} />
+                            <Route path="/about" element={<About />} />
+                            <Route path="/contact" element={<Contact />} />
+                            <Route path="/shop" element={<Shop />} />
+                        </Routes>
+                    </main>
+                    <Footer />
+                </div>
+            </SmoothScroll>
+        </Router>
     );
-  }
-
-  return (
-    <SmoothScroll>
-      <div className="bg-[#050505] min-h-screen selection:bg-[#CCFF00] selection:text-black">
-        <Navbar />
-        <main>
-          <Hero />
-          <Marquee />
-          <Story />
-          <Ingredients />
-          <ProductShowcase />
-          <Testimonials />
-          <BlogSection />
-          <Distributors />
-          <Newsletter />
-        </main>
-        <Footer />
-      </div>
-    </SmoothScroll>
-  );
 };
 
 export default App;
