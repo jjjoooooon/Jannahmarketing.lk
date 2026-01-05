@@ -48,8 +48,8 @@ const Footer: React.FC = () => {
         <div className="border-t border-white/10 mt-16 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-600 font-mono uppercase tracking-wider">
           <p>&copy; 2026 Sunstar Soft Drinks. All rights reserved.</p>
           <div className="flex space-x-6 mt-4 md:mt-0">
-            <Link to="/" className="hover:text-white transition-colors">Privacy Policy</Link>
-            <Link to="/" className="hover:text-white transition-colors">Terms of Service</Link>
+            <Link to="/privacy-policy" onClick={() => window.scrollTo(0, 0)} className="hover:text-[#CCFF00] transition-colors">Privacy Policy</Link>
+            <Link to="/terms-of-service" onClick={() => window.scrollTo(0, 0)} className="hover:text-[#CCFF00] transition-colors">Terms of Service</Link>
           </div>
         </div>
       </div>
