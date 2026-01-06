@@ -10,12 +10,11 @@ import cola from '../assets/cola.webp';
 import creamsoda from '../assets/creamsoda.webp';
 import nesta from '../assets/nesta.webp';
 
-// --- Static Data (Moved outside to prevent re-creation) ---
+// --- Static Data ---
 const FLAVORS = [
   {
     name: 'Orange',
     tagline: 'Citrus Burst',
-    // Optimized: Using simple hex colors instead of complex tailwind gradients
     bgGradient: 'radial-gradient(circle at 50% 50%, rgba(255, 107, 53, 0.4) 0%, transparent 70%)',
     image: orange,
     description: 'Pure sunshine in every sip'
@@ -54,13 +53,12 @@ const SunstarModernHero = () => {
   const [activeFlavor, setActiveFlavor] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
 
-  // Refs for animation targets
   const containerRef = useRef<HTMLDivElement>(null);
   const bottleRef = useRef<HTMLImageElement>(null);
   const textGroupRef = useRef<HTMLDivElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
 
-  // 1. Image Preloader (Prevents flashing on slow connections)
+  // 1. Image Preloader
   useEffect(() => {
     FLAVORS.forEach((flavor) => {
       const img = new Image();
@@ -92,7 +90,7 @@ const SunstarModernHero = () => {
     return () => ctx.revert();
   }, []);
 
-  // 3. Optimized Switch Logic
+  // 3. Switch Logic
   const handleFlavorChange = (index: number) => {
     if (index === activeFlavor || isAnimating) return;
     setIsAnimating(true);
@@ -101,7 +99,6 @@ const SunstarModernHero = () => {
       onComplete: () => setIsAnimating(false)
     });
 
-    // Step 1: Animate Out
     tl.to(bottleRef.current, {
       x: -50,
       opacity: 0,
@@ -113,14 +110,12 @@ const SunstarModernHero = () => {
         opacity: 0,
         x: -20,
         duration: 0.2
-      }, 0) // Run concurrently
+      }, 0)
 
-      // Step 2: Swap State (Instant)
       .call(() => {
         setActiveFlavor(index);
       })
 
-      // Step 3: Animate In
       .to(bottleRef.current, {
         x: 0,
         opacity: 1,
@@ -142,15 +137,13 @@ const SunstarModernHero = () => {
       ref={containerRef}
       className="relative w-full min-h-[100dvh] bg-[#050505] overflow-hidden flex flex-col justify-center"
     >
-      {/* --- Optimized Background --- */}
-      {/* We use specific CSS backgrounds instead of heavy blur filters */}
+      {/* --- Background --- */}
       <div className="absolute inset-0 z-0 transition-opacity duration-700 ease-in-out">
         <div
           ref={bgRef}
           className="absolute inset-0 opacity-40 transition-all duration-700"
           style={{ background: currentData.bgGradient }}
         />
-        {/* Simple Vignette to focus center */}
         <div className="absolute inset-0 bg-[radial-gradient(transparent,black_80%)]" />
       </div>
 
@@ -159,7 +152,6 @@ const SunstarModernHero = () => {
 
         {/* Left: Text Content */}
         <div ref={textGroupRef} className="order-2 lg:order-1 flex flex-col items-start space-y-6">
-
           <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-full border border-white/10">
             <span className="w-2 h-2 rounded-full bg-[#CCFF00] animate-pulse" />
             <span className="text-xs font-bold text-white/80 uppercase tracking-widest">Sri Lankan Heritage</span>
@@ -174,7 +166,6 @@ const SunstarModernHero = () => {
             </p>
           </div>
 
-          {/* Fixed height container to prevent layout shift during text swap */}
           <div className="min-h-[3.5rem] flex items-center">
             <p className="text-gray-400 text-sm sm:text-lg leading-relaxed max-w-lg">
               {currentData.description}. Crafted with authentic Sri Lankan tradition.
@@ -190,7 +181,6 @@ const SunstarModernHero = () => {
             </Link>
           </div>
 
-          {/* Sizes */}
           <div className="pt-8 border-t border-white/10 w-full">
             <p className="text-[10px] uppercase tracking-widest text-gray-500 mb-2">Available Sizes</p>
             <div className="flex gap-4 text-white font-mono text-sm opacity-60">
@@ -201,15 +191,22 @@ const SunstarModernHero = () => {
 
         {/* Right: Bottle */}
         <div className="order-1 lg:order-2 flex justify-center lg:justify-end relative h-[40vh] lg:h-[60vh]">
-          {/* Optimization: 
-            The "float" animation is now pure CSS (defined below). 
-            This runs on the Compositor Thread and doesn't block JS.
+
+          {/* --- NEW: White Glow Effect --- */}
+          {/* This div is positioned absolutely behind the bottle. 
+              It uses a strong blur to create the glow and shares the same 
+              'animate-float' class so it moves in sync with the bottle.
           */}
+          <div
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] h-[60%] bg-white/30 rounded-full blur-[80px] animate-float z-0"
+          />
+
           <img
             ref={bottleRef}
             src={currentData.image}
             alt={currentData.name}
-            className="h-full w-auto object-contain drop-shadow-2xl animate-float will-change-transform"
+            // Added z-10 to ensure bottle sits in front of the glow
+            className="h-full w-auto object-contain drop-shadow-2xl animate-float will-change-transform z-10"
             style={{ filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.5))' }}
           />
         </div>
@@ -234,7 +231,6 @@ const SunstarModernHero = () => {
         ))}
       </div>
 
-      {/* Scroll Indicator */}
       <div className="absolute bottom-6 left-1/2 -translate-x-1/2 animate-bounce hidden md:block">
         <ChevronDown className="text-white/30" />
       </div>
