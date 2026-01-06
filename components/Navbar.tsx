@@ -8,6 +8,7 @@ import logo from '../assets/sunstar_logo.webp';
 const MENU_ITEMS = [
   { name: 'Home', href: '/' },
   { name: 'Shop', href: '/shop' },
+  { name: 'Blog', href: '/blog' },
   { name: 'About', href: '/about' },
   { name: 'Contact', href: '/contact' },
 ] as const;
