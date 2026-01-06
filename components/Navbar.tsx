@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Menu, X, ShoppingBag, Instagram, Twitter, Facebook } from 'lucide-react';
 import { motion, AnimatePresence, useScroll, useMotionValueEvent, Variants } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
@@ -15,33 +15,36 @@ const MENU_ITEMS = [
 
 const SOCIAL_LINKS = [Instagram, Twitter, Facebook];
 
-// --- Animation Variants ---
+// --- Optimized Animation Variants ---
 const NAV_VARIANTS: Variants = {
   visible: { y: 0 },
   hidden: { y: '-100%' },
 };
 
-// "Curtain" Effect: Smoother and more "premium" than simple opacity
 const MENU_CONTAINER_VARIANTS: Variants = {
   initial: { scaleY: 0, transformOrigin: "top" },
   animate: {
     scaleY: 1,
-    transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] }
+    transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } // Slightly faster for mobile responsiveness
   },
   exit: {
     scaleY: 0,
-    transition: { delay: 0.5, duration: 0.5, ease: [0.22, 1, 0.36, 1] }
+    transition: { delay: 0.3, duration: 0.4, ease: [0.22, 1, 0.36, 1] }
   }
 };
 
 const LINK_CONTAINER_VARIANTS: Variants = {
-  initial: { transition: { staggerChildren: 0.09, staggerDirection: -1 } },
-  open: { transition: { delayChildren: 0.4, staggerChildren: 0.09 } }
+  initial: { transition: { staggerChildren: 0.05, staggerDirection: -1 } },
+  open: { transition: { delayChildren: 0.2, staggerChildren: 0.05 } }
 };
 
 const LINK_ITEM_VARIANTS: Variants = {
-  initial: { y: "30vh", transition: { duration: 0.5, ease: [0.37, 0, 0.63, 1] } },
-  open: { y: 0, transition: { duration: 0.7, ease: [0, 0.55, 0.45, 1] } }
+  initial: { y: 50, opacity: 0 },
+  open: {
+    y: 0,
+    opacity: 1,
+    transition: { duration: 0.4, ease: "easeOut" }
+  }
 };
 
 const Navbar: React.FC = () => {
@@ -52,27 +55,47 @@ const Navbar: React.FC = () => {
   const { scrollY } = useScroll();
   const location = useLocation();
 
-  // Scroll Logic
+  // Optimized Scroll Logic
   useMotionValueEvent(scrollY, "change", (latest) => {
     const previous = scrollY.getPrevious() || 0;
+
+    // Logic for hiding navbar
     if (latest > previous && latest > 150 && !isOpen) {
       if (!hidden) setHidden(true);
     } else {
       if (hidden) setHidden(false);
     }
+
+    // Logic for background style
     const isScrolled = latest > 50;
     if (scrolled !== isScrolled) setScrolled(isScrolled);
   });
 
-  // Body Scroll Lock
+  // Lock body scroll efficiently
   useEffect(() => {
-    document.body.style.overflow = isOpen ? 'hidden' : 'unset';
-    return () => { document.body.style.overflow = 'unset'; };
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      // iOS specific fix to prevent rubber banding
+      document.body.style.touchAction = 'none';
+    } else {
+      document.body.style.overflow = 'unset';
+      document.body.style.touchAction = 'auto';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+      document.body.style.touchAction = 'auto';
+    };
   }, [isOpen]);
 
+  // Handle route change closing
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location.pathname]);
+
+  // Optimized Background Class: Removed backdrop-blur for mobile performance
   const navBackgroundClass = useMemo(() =>
     scrolled || isOpen || location.pathname !== '/'
-      ? 'bg-[#050505]/95 py-3 border-b border-white/5'
+      ? 'bg-[#050505]/95 py-3 border-b border-white/5 shadow-lg' // Solid high-opacity bg is much faster than blur
       : 'bg-transparent py-4 md:py-6 border-b border-transparent',
     [scrolled, isOpen, location.pathname]);
 
@@ -82,24 +105,27 @@ const Navbar: React.FC = () => {
         variants={NAV_VARIANTS}
         animate={hidden ? "hidden" : "visible"}
         transition={{ duration: 0.35, ease: "easeInOut" }}
-        className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 will-change-transform ${navBackgroundClass}`}
+        className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 will-change-transform ${navBackgroundClass}`}
+        style={{ transform: 'translateZ(0)' }} // Hardware acceleration
       >
         <div className="container mx-auto px-6 flex justify-between items-center relative z-50">
 
           {/* --- Logo --- */}
-          <Link to="/" aria-label="Home" className="z-50">
+          <Link to="/" aria-label="Home" className="z-50 block">
             <motion.div
               className="flex items-center space-x-2 cursor-pointer group"
-              whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
               <div className="relative">
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ repeat: Infinity, duration: 10, ease: "linear" }}
-                  className="absolute inset-0 bg-[#CCFF00] blur-lg opacity-20 rounded-full"
+                <div className="absolute inset-0 bg-[#CCFF00] blur-md opacity-20 rounded-full" />
+                <img
+                  src={logo}
+                  alt="Sunstar Logo"
+                  className="w-8 h-8 md:w-10 md:h-10 relative z-10 object-contain"
+                  loading="eager"
+                  width="40"
+                  height="40"
                 />
-                <img src={logo} alt="Sunstar Logo" className="w-8 h-8 md:w-10 md:h-10 relative z-10 object-contain" />
               </div>
               <span className="text-xl md:text-2xl font-black tracking-tighter text-white font-['Plus_Jakarta_Sans']">
                 SUNSTAR
@@ -113,10 +139,12 @@ const Navbar: React.FC = () => {
               <Link
                 key={item.name}
                 to={item.href}
-                className={`relative text-sm uppercase tracking-widest font-bold transition-colors font-['Inter'] group ${location.pathname === item.href ? 'text-white' : 'text-gray-400 hover:text-white'}`}
+                className={`relative text-sm uppercase tracking-widest font-bold transition-colors font-['Inter'] group ${location.pathname === item.href ? 'text-white' : 'text-gray-400 hover:text-white'
+                  }`}
               >
                 {item.name}
-                <span className={`absolute -bottom-1 left-0 h-[2px] bg-[#CCFF00] transition-all duration-300 group-hover:w-full box-shadow-[0_0_10px_#CCFF00] ${location.pathname === item.href ? 'w-full' : 'w-0'}`} />
+                <span className={`absolute -bottom-1 left-0 h-[2px] bg-[#CCFF00] transition-all duration-300 group-hover:w-full box-shadow-[0_0_10px_#CCFF00] ${location.pathname === item.href ? 'w-full' : 'w-0'
+                  }`} />
               </Link>
             ))}
           </div>
@@ -136,13 +164,13 @@ const Navbar: React.FC = () => {
           </div>
 
           {/* --- Mobile Toggle --- */}
-          <motion.button
-            className="md:hidden text-white z-50 p-2 focus:outline-none relative"
+          <button
+            className="md:hidden text-white z-50 p-2 focus:outline-none relative touch-manipulation"
             onClick={() => setIsOpen(!isOpen)}
-            whileTap={{ scale: 0.9 }}
+            aria-label={isOpen ? "Close Menu" : "Open Menu"}
           >
             {isOpen ? <X size={28} className="text-[#CCFF00]" /> : <Menu size={28} />}
-          </motion.button>
+          </button>
         </div>
       </motion.nav>
 
@@ -155,11 +183,16 @@ const Navbar: React.FC = () => {
             initial="initial"
             animate="animate"
             exit="exit"
-            className="fixed inset-0 bg-[#050505] z-40 flex flex-col h-[100dvh] w-full origin-top overflow-hidden"
+            // Use transform-gpu to force GPU rendering for the slide animation
+            className="fixed inset-0 bg-[#050505] z-40 flex flex-col h-[100dvh] w-full origin-top overflow-hidden transform-gpu"
           >
-            {/* Grid Background Pattern */}
+            {/* Grid Background - Static & Optimized */}
             <div className="absolute inset-0 z-0 opacity-10 pointer-events-none"
-              style={{ backgroundImage: 'linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px)', backgroundSize: '40px 40px' }}
+              style={{
+                backgroundImage: 'linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px)',
+                backgroundSize: '40px 40px',
+                // Avoid complex blend modes on mobile
+              }}
             />
 
             {/* Content Container */}
@@ -178,10 +211,9 @@ const Navbar: React.FC = () => {
                     <motion.div variants={LINK_ITEM_VARIANTS}>
                       <Link
                         to={item.href}
-                        onClick={() => setIsOpen(false)}
                         className={`text-5xl font-black font-['Plus_Jakarta_Sans'] uppercase tracking-tighter block py-2 transition-colors ${location.pathname === item.href
                           ? 'text-[#CCFF00]'
-                          : 'text-white/50 hover:text-white'
+                          : 'text-white/50 active:text-white' // "active" is better than "hover" for touch
                           }`}
                       >
                         {item.name}
@@ -191,17 +223,17 @@ const Navbar: React.FC = () => {
                 ))}
               </motion.div>
 
-              {/* Mobile Footer Info (New Addition) */}
+              {/* Mobile Footer Info */}
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6, duration: 0.5 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4, duration: 0.4 }} // Delayed slightly less for snappiness
                 className="border-t border-white/10 pt-8"
               >
                 <div className="flex flex-col space-y-6">
                   {/* Action Button */}
-                  <Link to="/shop" onClick={() => setIsOpen(false)} className="w-full">
-                    <button className="w-full py-4 rounded-full bg-[#CCFF00] text-black font-bold uppercase text-sm tracking-widest shadow-[0_0_20px_rgba(204,255,0,0.2)]">
+                  <Link to="/shop" className="w-full">
+                    <button className="w-full py-4 rounded-full bg-[#CCFF00] text-black font-bold uppercase text-sm tracking-widest active:scale-[0.98] transition-transform">
                       Shop Now
                     </button>
                   </Link>
@@ -215,7 +247,7 @@ const Navbar: React.FC = () => {
 
                     <div className="flex space-x-4">
                       {SOCIAL_LINKS.map((Icon, i) => (
-                        <div key={i} className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white/50 hover:text-[#CCFF00] hover:border-[#CCFF00] transition-colors">
+                        <div key={i} className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white/50 active:text-[#CCFF00] active:border-[#CCFF00] transition-colors">
                           <Icon size={18} />
                         </div>
                       ))}
@@ -232,4 +264,4 @@ const Navbar: React.FC = () => {
   );
 };
 
-export default Navbar;
+export default React.memo(Navbar);
