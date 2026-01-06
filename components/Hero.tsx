@@ -194,7 +194,7 @@ const SunstarModernHero = () => {
           <div className="pt-8 border-t border-white/10 w-full">
             <p className="text-[10px] uppercase tracking-widest text-gray-500 mb-2">Available Sizes</p>
             <div className="flex gap-4 text-white font-mono text-sm opacity-60">
-              <span>250ml</span>/<span>330ml</span>/<span>500ml</span>/<span>1.5L</span>
+              <span>250ml</span>/<span>330ml</span>/<span>750ml</span>/<span>1050ml</span>/<span>1.5L</span>
             </div>
           </div>
         </div>

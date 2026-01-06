@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { Facebook, Twitter, Instagram, Linkedin, LucideIcon } from 'lucide-react';
+import { Facebook, Twitter, Instagram, Linkedin, LucideIcon, Mail, Phone, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import logo from '../assets/sunstar_logo.png';
 
@@ -19,8 +19,9 @@ const EXPLORE_LINKS = [
 ];
 
 const CONTACT_INFO = [
-  'hello@jannahmarketing.lk',
-  '077 907 7134 / 075 438 5840',
+  { icon: Mail, text: 'hello@jannahmarketing.lk', href: 'mailto:hello@jannahmarketing.lk' },
+  { icon: Phone, text: '077 907 7134', href: 'tel:0779077134' },
+  { icon: MapPin, text: 'B293 Boliverian Village, Sainthamaruthu', href: null },
 ];
 
 const Footer: React.FC = () => {
@@ -81,12 +82,21 @@ const Footer: React.FC = () => {
           <div className="text-center md:text-left">
             <h4 className="text-lg font-bold mb-6 font-['Plus_Jakarta_Sans'] uppercase tracking-wider">Contact</h4>
             <ul className="space-y-4 text-gray-400">
-              {CONTACT_INFO.map((info) => (
-                <li key={info}>{info}</li>
-              ))}
-              <li>
-                B293 Boliverian Village<br />Sainthamaruthu
-              </li>
+              {CONTACT_INFO.map((info, index) => {
+                const IconComponent = info.icon;
+                return (
+                  <li key={index} className="flex items-start justify-center md:justify-start gap-3">
+                    <IconComponent className="w-5 h-5 text-[#CCFF00] flex-shrink-0 mt-0.5" />
+                    {info.href ? (
+                      <a href={info.href} className="hover:text-[#CCFF00] transition-colors">
+                        {info.text}
+                      </a>
+                    ) : (
+                      <span>{info.text}</span>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
           </div>
         </div>

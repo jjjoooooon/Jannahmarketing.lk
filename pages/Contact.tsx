@@ -49,7 +49,7 @@ const Contact: React.FC = () => {
         {
             icon: Phone,
             title: 'Phone',
-            details: ['077 907 7134', '075 438 5840', '075 342 1104'],
+            details: ['077 907 7134'],
             link: 'tel:0779077134'
         },
         {
