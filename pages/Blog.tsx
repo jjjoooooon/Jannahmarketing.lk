@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion, Variants } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
+import { Link } from 'react-router-dom';
 import { ArrowRight, Calendar, Search } from 'lucide-react';
 import { BLOG_POSTS } from '../data/blogPosts';
 
@@ -91,52 +92,53 @@ const Blog: React.FC = () => {
                         {BLOG_POSTS.map((post) => {
                             const IconComponent = post.icon;
                             return (
-                                <motion.article
-                                    key={post.id}
-                                    variants={FADE_UP_VARIANTS}
-                                    className="group flex flex-col h-full bg-white/5 rounded-3xl overflow-hidden border border-white/5 hover:border-[#CCFF00]/30 transition-colors duration-300"
-                                >
-                                    {/* Image */}
-                                    <div className="relative h-64 overflow-hidden">
-                                        <img
-                                            src={post.image}
-                                            alt={post.title}
-                                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                        />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-[#050505] to-transparent opacity-60" />
+                                <Link to={`/blog/${post.id}`} key={post.id} className="block h-full">
+                                    <motion.article
+                                        variants={FADE_UP_VARIANTS}
+                                        className="group flex flex-col h-full bg-white/5 rounded-3xl overflow-hidden border border-white/5 hover:border-[#CCFF00]/30 transition-colors duration-300"
+                                    >
+                                        {/* Image */}
+                                        <div className="relative h-64 overflow-hidden">
+                                            <img
+                                                src={post.image}
+                                                alt={post.title}
+                                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                            />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-[#050505] to-transparent opacity-60" />
 
-                                        <div className="absolute top-4 left-4 flex items-center gap-2 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">
-                                            <IconComponent className="w-3 h-3 text-[#CCFF00]" />
-                                            <span className="text-[10px] font-bold uppercase text-white font-['Inter']">
-                                                {post.category}
+                                            <div className="absolute top-4 left-4 flex items-center gap-2 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">
+                                                <IconComponent className="w-3 h-3 text-[#CCFF00]" />
+                                                <span className="text-[10px] font-bold uppercase text-white font-['Inter']">
+                                                    {post.category}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        {/* Content */}
+                                        <div className="p-6 md:p-8 flex flex-col flex-grow">
+                                            <div className="flex items-center gap-3 text-xs text-gray-500 mb-4 font-['Inter']">
+                                                <div className="flex items-center gap-1.5">
+                                                    <Calendar className="w-3 h-3" />
+                                                    <span>{post.date}</span>
+                                                </div>
+                                                <span className="w-1 h-1 rounded-full bg-[#CCFF00]" />
+                                                <span>{post.readTime}</span>
+                                            </div>
+
+                                            <h2 className="text-xl md:text-2xl font-bold font-['Plus_Jakarta_Sans'] mb-3 group-hover:text-[#CCFF00] transition-colors leading-tight">
+                                                {post.title}
+                                            </h2>
+
+                                            <p className="text-gray-400 text-sm leading-relaxed mb-6 line-clamp-3 font-['Inter'] flex-grow">
+                                                {post.excerpt}
+                                            </p>
+
+                                            <span className="inline-flex items-center gap-2 text-white font-bold uppercase tracking-wider text-xs group-hover:gap-3 transition-all duration-300">
+                                                Read Article <ArrowRight size={14} className="text-[#CCFF00]" />
                                             </span>
                                         </div>
-                                    </div>
-
-                                    {/* Content */}
-                                    <div className="p-6 md:p-8 flex flex-col flex-grow">
-                                        <div className="flex items-center gap-3 text-xs text-gray-500 mb-4 font-['Inter']">
-                                            <div className="flex items-center gap-1.5">
-                                                <Calendar className="w-3 h-3" />
-                                                <span>{post.date}</span>
-                                            </div>
-                                            <span className="w-1 h-1 rounded-full bg-[#CCFF00]" />
-                                            <span>{post.readTime}</span>
-                                        </div>
-
-                                        <h2 className="text-xl md:text-2xl font-bold font-['Plus_Jakarta_Sans'] mb-3 group-hover:text-[#CCFF00] transition-colors leading-tight">
-                                            {post.title}
-                                        </h2>
-
-                                        <p className="text-gray-400 text-sm leading-relaxed mb-6 line-clamp-3 font-['Inter'] flex-grow">
-                                            {post.excerpt}
-                                        </p>
-
-                                        <button className="inline-flex items-center gap-2 text-white font-bold uppercase tracking-wider text-xs group-hover:gap-3 transition-all duration-300">
-                                            Read Article <ArrowRight size={14} className="text-[#CCFF00]" />
-                                        </button>
-                                    </div>
-                                </motion.article>
+                                    </motion.article>
+                                </Link>
                             );
                         })}
                     </motion.div>
