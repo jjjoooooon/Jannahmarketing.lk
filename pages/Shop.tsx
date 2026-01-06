@@ -4,11 +4,11 @@ import { ShoppingCart, Plus, Minus, Star, Package, Truck, Shield } from 'lucide-
 import { Helmet } from 'react-helmet-async';
 
 // Import product images
-import orange from '../assets/orange.png';
-import ginger from '../assets/ginger.png';
-import cola from '../assets/cola.png';
-import creamsoda from '../assets/creamsoda.png';
-import nesta from '../assets/nesta.png';
+import orange from '../assets/orange.webp';
+import ginger from '../assets/ginger.webp';
+import cola from '../assets/cola.webp';
+import creamsoda from '../assets/creamsoda.webp';
+import nesta from '../assets/nesta.webp';
 
 interface Product {
     id: string;
@@ -87,7 +87,7 @@ const Shop: React.FC = () => {
     const removeFromCart = (productId: string) => {
         setCart(prev => {
             const newCart = { ...prev };
-            if (newCart[productId] > 1) {
+            if (newCart[productId] && newCart[productId] > 1) {
                 newCart[productId]--;
             } else {
                 delete newCart[productId];
@@ -97,11 +97,11 @@ const Shop: React.FC = () => {
     };
 
     const getTotalItems = () => {
-        return Object.values(cart).reduce((sum, qty) => sum + qty, 0);
+        return Object.values(cart).reduce((sum: number, qty: number) => sum + qty, 0);
     };
 
     const getTotalPrice = () => {
-        return Object.entries(cart).reduce((sum, [productId, qty]) => {
+        return Object.entries(cart).reduce((sum: number, [productId, qty]: [string, number]) => {
             const product = products.find(p => p.id === productId);
             return sum + (product?.price || 0) * qty;
         }, 0);
@@ -112,8 +112,23 @@ const Shop: React.FC = () => {
     return (
         <div className="bg-[#050505] min-h-screen text-white">
             <Helmet>
-                <title>Shop Sunstar - Premium Energy Drinks</title>
-                <meta name="description" content="Order Sunstar online. Explore our range of zero-sugar, natural energy drinks including Orange, Ginger, Cola, Cream Soda, and Nesta Ice." />
+                <title>Shop Sunstar - 5 Premium Flavors | Orange, Ginger, Cola & More</title>
+                <meta name="description" content="Shop Sunstar premium carbonated beverages online. Available in Orange, Ginger, Cola, Cream Soda & Nesta. All sizes from 250ml to 1.5L. Free delivery over LKR 1,000." />
+                <link rel="canonical" href="https://jannahmarketing.lk/shop" />
+
+                {/* Open Graph */}
+                <meta property="og:title" content="Shop Sunstar - 5 Premium Flavors" />
+                <meta property="og:description" content="Shop Sunstar premium carbonated beverages online. Available in Orange, Ginger, Cola, Cream Soda & Nesta. Free delivery over LKR 1,000." />
+                <meta property="og:image" content="https://jannahmarketing.lk/og-sunstar-shop.jpg" />
+                <meta property="og:url" content="https://jannahmarketing.lk/shop" />
+                <meta property="og:type" content="website" />
+                <meta property="og:site_name" content="Sunstar" />
+
+                {/* Twitter Card */}
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content="Shop Sunstar - 5 Premium Flavors" />
+                <meta name="twitter:description" content="Shop Sunstar premium carbonated beverages online. Available in Orange, Ginger, Cola, Cream Soda & Nesta." />
+                <meta name="twitter:image" content="https://jannahmarketing.lk/og-sunstar-shop.jpg" />
             </Helmet>
             {/* Hero Section */}
             <section className="relative py-20 md:py-32 overflow-hidden border-b border-white/5">

@@ -17,8 +17,23 @@ const Home: React.FC = () => {
     return (
         <main>
             <Helmet>
-                <title>Sunstar - Fueling the New Generation</title>
-                <meta name="description" content="Experience the kinetic energy of Sunstar. Premium carbonated beverages with zero sugar and natural ingredients. Join the revolution." />
+                <title>Sunstar - Premium Sri Lankan Carbonated Beverages | Feel The Fizz</title>
+                <meta name="description" content="Experience Sunstar - Sri Lanka's premium carbonated beverage brand. Available in Orange, Ginger, Cola, Cream Soda & Nesta flavors. Authentic taste, modern fizz. Find us island-wide." />
+                <link rel="canonical" href="https://jannahmarketing.lk/" />
+
+                {/* Open Graph */}
+                <meta property="og:title" content="Sunstar - Premium Sri Lankan Carbonated Beverages" />
+                <meta property="og:description" content="Experience Sunstar - Sri Lanka's premium carbonated beverage brand. Available in 5 refreshing flavors. Authentic taste, modern fizz." />
+                <meta property="og:image" content="https://jannahmarketing.lk/og-sunstar-home.jpg" />
+                <meta property="og:url" content="https://jannahmarketing.lk/" />
+                <meta property="og:type" content="website" />
+                <meta property="og:site_name" content="Sunstar" />
+
+                {/* Twitter Card */}
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content="Sunstar - Premium Sri Lankan Carbonated Beverages" />
+                <meta name="twitter:description" content="Experience Sunstar - Sri Lanka's premium carbonated beverage brand. Available in 5 refreshing flavors." />
+                <meta name="twitter:image" content="https://jannahmarketing.lk/og-sunstar-home.jpg" />
             </Helmet>
             <Hero />
             <Marquee />

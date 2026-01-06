@@ -37,8 +37,23 @@ const About: React.FC = () => {
     return (
         <div className="bg-[#050505] min-h-screen text-white">
             <Helmet>
-                <title>About Sunstar - Our Story & Values</title>
-                <meta name="description" content="Founded in 2015, Sunstar is revolutionizing refreshments with bold flavors and zero compromise. Learn about our journey, values, and commitment to quality." />
+                <title>About Sunstar - Our Story & Values | Premium Sri Lankan Beverages</title>
+                <meta name="description" content="Founded in 2015, Sunstar brings authentic Sri Lankan flavors to life. Learn about our journey, values, and commitment to quality refreshments. 10K+ happy customers trust us." />
+                <link rel="canonical" href="https://jannahmarketing.lk/about" />
+
+                {/* Open Graph */}
+                <meta property="og:title" content="About Sunstar - Our Story & Values" />
+                <meta property="og:description" content="Founded in 2015, Sunstar brings authentic Sri Lankan flavors to life. Learn about our journey, values, and commitment to quality." />
+                <meta property="og:image" content="https://jannahmarketing.lk/og-sunstar-about.jpg" />
+                <meta property="og:url" content="https://jannahmarketing.lk/about" />
+                <meta property="og:type" content="website" />
+                <meta property="og:site_name" content="Sunstar" />
+
+                {/* Twitter Card */}
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content="About Sunstar - Our Story & Values" />
+                <meta name="twitter:description" content="Founded in 2015, Sunstar brings authentic Sri Lankan flavors to life. Learn about our journey and values." />
+                <meta name="twitter:image" content="https://jannahmarketing.lk/og-sunstar-about.jpg" />
             </Helmet>
             {/* Hero Section */}
             <section className="relative py-20 md:py-32 overflow-hidden">

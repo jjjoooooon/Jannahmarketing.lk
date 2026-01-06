@@ -7,7 +7,9 @@ const PrivacyPolicy: React.FC = () => {
         <div className="bg-[#050505] min-h-screen text-white pt-32 pb-20">
             <Helmet>
                 <title>Privacy Policy - Sunstar</title>
+                <meta name="description" content="Sunstar Privacy Policy - Learn how we collect, use, and protect your personal information." />
                 <meta name="robots" content="noindex" />
+                <link rel="canonical" href="https://jannahmarketing.lk/privacy-policy" />
             </Helmet>
             <div className="container mx-auto px-6 max-w-4xl">
                 <motion.div

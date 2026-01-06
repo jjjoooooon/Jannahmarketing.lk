@@ -4,11 +4,11 @@ import { gsap } from 'gsap';
 import { ChevronDown } from 'lucide-react';
 
 // Import bottle images
-import orange from '../assets/orange.png';
-import ginger from '../assets/ginger.png';
-import cola from '../assets/cola.png';
-import creamsoda from '../assets/creamsoda.png';
-import nesta from '../assets/nesta.png';
+import orange from '../assets/orange.webp';
+import ginger from '../assets/ginger.webp';
+import cola from '../assets/cola.webp';
+import creamsoda from '../assets/creamsoda.webp';
+import nesta from '../assets/nesta.webp';
 
 // --- Static Data (Moved outside to prevent re-creation) ---
 const FLAVORS = [

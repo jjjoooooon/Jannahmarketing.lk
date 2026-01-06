@@ -75,8 +75,23 @@ const Contact: React.FC = () => {
     return (
         <div className="bg-[#050505] min-h-screen text-white">
             <Helmet>
-                <title>Contact Sunstar - Get in Touch</title>
-                <meta name="description" content="Have questions or want to become a distributor? Contact Sunstar today. We're here to help and explore partnership opportunities." />
+                <title>Contact Sunstar - Get in Touch | B293 Sainthamaruthu</title>
+                <meta name="description" content="Contact Sunstar for inquiries, distributor opportunities, or support. Located in Sainthamaruthu, Sri Lanka. Call 077 907 7134 or email hello@jannahmarketing.lk" />
+                <link rel="canonical" href="https://jannahmarketing.lk/contact" />
+
+                {/* Open Graph */}
+                <meta property="og:title" content="Contact Sunstar - Get in Touch" />
+                <meta property="og:description" content="Contact Sunstar for inquiries, distributor opportunities, or support. Call 077 907 7134 or email hello@jannahmarketing.lk" />
+                <meta property="og:image" content="https://jannahmarketing.lk/og-sunstar-contact.jpg" />
+                <meta property="og:url" content="https://jannahmarketing.lk/contact" />
+                <meta property="og:type" content="website" />
+                <meta property="og:site_name" content="Sunstar" />
+
+                {/* Twitter Card */}
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content="Contact Sunstar - Get in Touch" />
+                <meta name="twitter:description" content="Contact Sunstar for inquiries or distributor opportunities. Call 077 907 7134" />
+                <meta name="twitter:image" content="https://jannahmarketing.lk/og-sunstar-contact.jpg" />
             </Helmet>
             {/* Hero Section */}
             <section className="relative py-20 md:py-32 overflow-hidden border-b border-white/5">

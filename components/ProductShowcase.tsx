@@ -6,11 +6,11 @@ import { generateMarketingCopy } from '../services/geminiService';
 // import Bubbles from './Bubbles'; // Disable Bubbles for testing performance if needed
 
 // Import bottle images
-import orange from '../assets/orange.png';
-import ginger from '../assets/ginger.png';
-import cola from '../assets/cola.png';
-import creamsoda from '../assets/creamsoda.png';
-import nesta from '../assets/nesta.png';
+import orange from '../assets/orange.webp';
+import ginger from '../assets/ginger.webp';
+import cola from '../assets/cola.webp';
+import creamsoda from '../assets/creamsoda.webp';
+import nesta from '../assets/nesta.webp';
 
 // --- Constants & Types ---
 interface ExtendedProduct extends Product {

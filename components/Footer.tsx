@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { Facebook, Twitter, Instagram, Linkedin, LucideIcon, Mail, Phone, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import logo from '../assets/sunstar_logo.png';
+import logo from '../assets/sunstar_logo.webp';
 
 // --- Constants (Defined outside for performance) ---
 const SOCIAL_LINKS = [

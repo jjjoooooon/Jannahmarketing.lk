@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Zap, Clock, Trophy } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import story1 from '../assets/banner.png'
+import story1 from '../assets/banner.webp'
 
 const Story: React.FC = () => {
   return (

@@ -7,7 +7,9 @@ const TermsOfService: React.FC = () => {
         <div className="bg-[#050505] min-h-screen text-white pt-32 pb-20">
             <Helmet>
                 <title>Terms of Service - Sunstar</title>
+                <meta name="description" content="Sunstar Terms of Service - Read our terms and conditions for using our website and purchasing our products." />
                 <meta name="robots" content="noindex" />
+                <link rel="canonical" href="https://jannahmarketing.lk/terms-of-service" />
             </Helmet>
             <div className="container mx-auto px-6 max-w-4xl">
                 <motion.div

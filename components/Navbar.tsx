@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Menu, X, ShoppingBag, Instagram, Twitter, Facebook } from 'lucide-react';
 import { motion, AnimatePresence, useScroll, useMotionValueEvent, Variants } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
-import logo from '../assets/sunstar_logo.png';
+import logo from '../assets/sunstar_logo.webp';
 
 // --- Constants ---
 const MENU_ITEMS = [
