@@ -73,14 +73,31 @@ const products: Product[] = [
 const Shop: React.FC = () => {
     const { addToCart, totalItems, totalPrice } = useCart();
     const [selectedSizes, setSelectedSizes] = useState<{ [key: string]: BottleSize }>({});
+    const [selectedQuantities, setSelectedQuantities] = useState<{ [key: string]: number }>({});
 
     const handleSizeSelect = (productId: string, size: BottleSize) => {
         setSelectedSizes(prev => ({ ...prev, [productId]: size }));
     };
 
+    const handleQuantityChange = (productId: string, delta: number) => {
+        setSelectedQuantities(prev => {
+            const current = prev[productId] || 1;
+            const newQty = Math.max(1, current + delta);
+            return { ...prev, [productId]: newQty };
+        });
+    };
+
     const handleAddToCart = (product: Product) => {
         const size = selectedSizes[product.id] || '250ml'; // Default to 250ml
-        addToCart({ id: product.id, name: product.name, image: product.image }, size);
+        const quantity = selectedQuantities[product.id] || 1;
+
+        // Add item multiple times based on quantity
+        for (let i = 0; i < quantity; i++) {
+            addToCart({ id: product.id, name: product.name, image: product.image }, size);
+        }
+
+        // Reset quantity after adding
+        setSelectedQuantities(prev => ({ ...prev, [product.id]: 1 }));
     };
 
     return (
@@ -123,9 +140,16 @@ const Shop: React.FC = () => {
                         <h1 className="text-4xl md:text-7xl font-black mb-6 font-['Plus_Jakarta_Sans']">
                             Our Products
                         </h1>
-                        <p className="text-lg md:text-xl text-gray-400">
+                        <p className="text-lg md:text-xl text-gray-400 mb-8">
                             Discover our full range of premium carbonated beverages. All products feature zero sugar and 100% natural ingredients.
                         </p>
+
+                        <div className="inline-block bg-[#CCFF00]/10 border border-[#CCFF00]/20 rounded-xl p-4 max-w-2xl">
+                            <p className="text-[#CCFF00] font-bold text-sm md:text-base flex items-center justify-center gap-2">
+                                <Package className="w-5 h-5" />
+                                Note: These are event bundles intended for special occasions. Not for commercial resale.
+                            </p>
+                        </div>
                     </motion.div>
                 </div>
             </section>
@@ -135,7 +159,7 @@ const Shop: React.FC = () => {
                 <div className="container mx-auto px-6">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {[
-                            { icon: Package, title: 'Free Delivery', desc: 'On orders over LKR 1,000' },
+                            { icon: Package, title: 'Event Bundles', desc: 'Perfect for parties & gatherings' },
                             { icon: Truck, title: 'Fast Shipping', desc: 'Delivered within 2-3 days' },
                             { icon: Shield, title: 'Quality Guarantee', desc: '100% satisfaction guaranteed' }
                         ].map((feature, i) => (
@@ -256,25 +280,25 @@ const Shop: React.FC = () => {
             {/* Floating Cart Summary */}
             {totalItems > 0 && (
                 <motion.div
-                    initial={{ y: 100, opacity: 0 }}
+                    initial={{ y: -100, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
-                    className="fixed bottom-8 right-8 p-6 rounded-2xl border border-[#CCFF00]/30 bg-[#050505] shadow-2xl z-50 max-w-sm w-full mx-4 md:mx-0"
+                    className="fixed top-24 right-4 md:right-8 p-4 rounded-2xl border border-[#CCFF00]/30 bg-[#050505]/90 backdrop-blur-md shadow-2xl z-50 max-w-xs w-full"
                 >
-                    <div className="flex items-center gap-4 mb-4">
-                        <div className="p-3 bg-[#CCFF00]/10 rounded-full">
-                            <ShoppingCart className="w-6 h-6 text-[#CCFF00]" />
+                    <div className="flex items-center gap-3 mb-3">
+                        <div className="p-2 bg-[#CCFF00]/10 rounded-full">
+                            <ShoppingCart className="w-5 h-5 text-[#CCFF00]" />
                         </div>
                         <div>
-                            <div className="font-bold font-['Plus_Jakarta_Sans'] text-lg">Cart Summary</div>
-                            <div className="text-sm text-gray-400">{totalItems} items selected</div>
+                            <div className="font-bold font-['Plus_Jakarta_Sans'] text-base">Cart Summary</div>
+                            <div className="text-xs text-gray-400">{totalItems} items selected</div>
                         </div>
                     </div>
-                    <div className="text-3xl font-black text-[#CCFF00] mb-6">
+                    <div className="text-2xl font-black text-[#CCFF00] mb-3">
                         LKR {totalPrice.toLocaleString()}
                     </div>
                     <Link to="/checkout" className="block w-full">
-                        <button className="w-full px-6 py-4 bg-[#CCFF00] text-black font-black rounded-xl hover:bg-white transition-all uppercase tracking-wider flex items-center justify-center gap-2">
-                            Proceed to Checkout <ArrowRight size={20} />
+                        <button className="w-full px-4 py-3 bg-[#CCFF00] text-black font-bold rounded-xl hover:bg-white transition-all uppercase tracking-wider flex items-center justify-center gap-2 text-sm">
+                            Checkout <ArrowRight size={16} />
                         </button>
                     </Link>
                 </motion.div>
