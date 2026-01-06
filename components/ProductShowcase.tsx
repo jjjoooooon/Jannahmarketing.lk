@@ -224,7 +224,7 @@ const ProductShowcase: React.FC = () => {
     <div id="flavors" ref={container} className="relative bg-[#050505] pb-[10vh]">
 
       {/* Sticky Header */}
-      <div className="sticky top-6 h-0 flex justify-center z-50 pointer-events-none mix-blend-difference text-white mb-20">
+      <div className="sticky top-6 h-12 flex justify-center z-50 pointer-events-none mix-blend-difference text-white mb-20">
         <h2 className="text-sm md:text-3xl font-bold uppercase tracking-widest bg-white/10 px-4 py-1.5 backdrop-blur-md rounded-full border border-white/20">
           Flavor Drop
         </h2>
