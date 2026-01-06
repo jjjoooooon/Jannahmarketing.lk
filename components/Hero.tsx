@@ -148,7 +148,8 @@ const SunstarModernHero = () => {
       </div>
 
       {/* --- Main Content --- */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center pt-20">
+      {/* Added lg:pr-24 to make room for the right-side menu */}
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:pr-24 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center pt-20">
 
         {/* Left: Text Content */}
         <div ref={textGroupRef} className="order-2 lg:order-1 flex flex-col items-start space-y-6">
@@ -191,12 +192,7 @@ const SunstarModernHero = () => {
 
         {/* Right: Bottle */}
         <div className="order-1 lg:order-2 flex justify-center lg:justify-end relative h-[40vh] lg:h-[60vh]">
-
-          {/* --- NEW: White Glow Effect --- */}
-          {/* This div is positioned absolutely behind the bottle. 
-              It uses a strong blur to create the glow and shares the same 
-              'animate-float' class so it moves in sync with the bottle.
-          */}
+          {/* White Glow Effect */}
           <div
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] h-[60%] bg-white/30 rounded-full blur-[80px] animate-float z-0"
           />
@@ -205,7 +201,6 @@ const SunstarModernHero = () => {
             ref={bottleRef}
             src={currentData.image}
             alt={currentData.name}
-            // Added z-10 to ensure bottle sits in front of the glow
             className="h-full w-auto object-contain drop-shadow-2xl animate-float will-change-transform z-10"
             style={{ filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.5))' }}
           />
@@ -213,22 +208,45 @@ const SunstarModernHero = () => {
 
       </div>
 
-      {/* --- Flavor Selector --- */}
-      <div className="relative z-20 w-full flex justify-center gap-2 sm:gap-4 px-4 pb-12 mt-12 lg:mt-0">
-        {FLAVORS.map((flavor, index) => (
-          <button
-            key={flavor.name}
-            onClick={() => handleFlavorChange(index)}
-            className={`
-              relative px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-300
-              ${activeFlavor === index
-                ? 'bg-[#CCFF00] text-black scale-110 shadow-[0_0_20px_rgba(204,255,0,0.3)]'
-                : 'bg-white/5 text-gray-500 hover:text-white hover:bg-white/10'}
-            `}
-          >
-            {flavor.name}
-          </button>
-        ))}
+      {/* --- Optimized Flavor Selector (Vertical Right) --- */}
+      <div className="
+        z-50
+        /* Mobile: Horizontal Bottom */
+        absolute bottom-8 left-0 w-full flex justify-center gap-2
+        /* Desktop: Vertical Right Fixed */
+        lg:fixed lg:right-10 lg:top-1/2 lg:-translate-y-1/2 lg:w-auto lg:flex-col lg:items-end lg:gap-4 lg:bottom-auto lg:left-auto
+      ">
+        {FLAVORS.map((flavor, index) => {
+          const isActive = activeFlavor === index;
+          return (
+            <button
+              key={flavor.name}
+              onClick={() => handleFlavorChange(index)}
+              className={`
+                group flex items-center gap-3 transition-all duration-300 ease-out
+                ${isActive ? 'opacity-100' : 'opacity-50 hover:opacity-100'}
+              `}
+            >
+              {/* Text Label - Hidden on mobile, visible on desktop */}
+              <span className={`
+                hidden lg:block font-bold uppercase tracking-widest transition-all duration-300
+                ${isActive ? 'text-[#CCFF00] text-sm translate-x-0' : 'text-white text-xs translate-x-2'}
+              `}>
+                {flavor.name}
+              </span>
+
+              {/* Indicator Dot / Pill */}
+              <div className={`
+                h-2 rounded-full transition-all duration-300
+                /* Mobile sizing vs Desktop sizing */
+                ${isActive
+                  ? 'w-8 bg-[#CCFF00] lg:w-12 lg:h-1' // Active: Wide pill
+                  : 'w-2 bg-white lg:w-6 lg:h-[1px] group-hover:bg-[#CCFF00]' // Inactive: Small dot/line
+                }
+              `} />
+            </button>
+          );
+        })}
       </div>
 
       <div className="absolute bottom-6 left-1/2 -translate-x-1/2 animate-bounce hidden md:block">

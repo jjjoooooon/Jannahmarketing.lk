@@ -2,7 +2,8 @@ import React, { useRef, useState, useEffect, memo, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform, MotionValue } from 'framer-motion';
 import { Product } from '../types';
-import { generateMarketingCopy } from '../services/geminiService';
+
+// import { generateMarketingCopy } from '../services/geminiService'; // Removed for performance
 // import Bubbles from './Bubbles'; // Disable Bubbles for testing performance if needed
 
 // Import bottle images
@@ -135,13 +136,11 @@ const ProductCard: React.FC<ProductCardProps> = memo(({ product, index, total, p
   // Parallax for image: As global progress moves, shift image slightly
   const imageScale = useTransform(progress, [start, end], [1.1, 1]);
 
+  // --- Optimization: Static Text ---
+  // Removed AI generation for performance. Using static description from product data.
   useEffect(() => {
-    let mounted = true;
-    generateMarketingCopy(product.name).then(text => {
-      if (mounted) setAiText(text);
-    });
-    return () => { mounted = false; };
-  }, [product.name]);
+    setAiText(product.description);
+  }, [product.description]);
 
   const [firstName, secondName] = product.name.split(' ');
 
