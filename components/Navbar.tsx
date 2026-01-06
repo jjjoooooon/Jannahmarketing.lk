@@ -71,7 +71,7 @@ const Navbar: React.FC = () => {
 
   const navBackgroundClass = useMemo(() =>
     scrolled || isOpen || location.pathname !== '/'
-      ? 'bg-[#050505]/80 backdrop-blur-xl py-3 border-b border-white/5'
+      ? 'bg-[#050505]/95 py-3 border-b border-white/5'
       : 'bg-transparent py-4 md:py-6 border-b border-transparent',
     [scrolled, isOpen, location.pathname]);
 

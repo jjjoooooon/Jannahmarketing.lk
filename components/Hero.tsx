@@ -82,14 +82,17 @@ const SunstarModernHero = () => {
           ease: 'back.out(1.4)'
         }, '-=0.8');
 
-      // Continuous floating animation
-      gsap.to(bottleRef.current, {
-        y: -20,
-        duration: 2.5,
-        repeat: -1,
-        yoyo: true,
-        ease: 'sine.inOut'
-      });
+      // Continuous floating animation - disabled on mobile for performance
+      const isMobile = window.matchMedia('(max-width: 768px)').matches;
+      if (!isMobile) {
+        gsap.to(bottleRef.current, {
+          y: -20,
+          duration: 2.5,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut'
+        });
+      }
 
     }, heroRef);
 
@@ -141,7 +144,7 @@ const SunstarModernHero = () => {
 
         {/* Left: Content */}
         <div ref={contentRef} className="space-y-4 sm:space-y-6 lg:space-y-8 lg:pr-12 order-2 lg:order-1">
-          <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-white/5 backdrop-blur-sm rounded-full text-xs sm:text-sm font-bold text-white/60 border border-white/10 uppercase tracking-wider">
+          <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-white/5 rounded-full text-xs sm:text-sm font-bold text-white/60 border border-white/10 uppercase tracking-wider">
             <div className="w-2 h-2 rounded-full bg-[#CCFF00] animate-pulse" />
             Sri Lankan Heritage
           </div>
@@ -169,7 +172,7 @@ const SunstarModernHero = () => {
             </Link>
             <Link
               to="/about"
-              className="px-6 sm:px-8 py-3 sm:py-4 bg-white/5 text-white rounded-full font-bold text-xs sm:text-sm hover:bg-white/10 transition-all border border-white/10 backdrop-blur-sm uppercase tracking-widest"
+              className="px-6 sm:px-8 py-3 sm:py-4 bg-white/5 text-white rounded-full font-bold text-xs sm:text-sm hover:bg-white/10 transition-all border border-white/10 uppercase tracking-widest"
             >
               Learn More
             </Link>

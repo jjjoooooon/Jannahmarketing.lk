@@ -20,6 +20,7 @@
 
 
 
+
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--brand-black);
@@ -28,6 +29,25 @@
             width: 100%;
             min-height: 100vh;
             touch-action: pan-y;
+            /* Mobile performance optimizations */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* GPU acceleration for common transforms */
+        * {
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+        }
+
+        /* Optimize images for performance */
+        img {
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+            will-change: auto;
         }
 
         h1,
@@ -39,22 +59,24 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
+        /* Custom scrollbar - hide on mobile for performance */
+        @media (min-width: 768px) {
+            ::-webkit-scrollbar {
+                width: 6px;
+            }
 
-        ::-webkit-scrollbar-track {
-            background: var(--brand-black);
-        }
+            ::-webkit-scrollbar-track {
+                background: var(--brand-black);
+            }
 
-        ::-webkit-scrollbar-thumb {
-            background: #333;
-            border-radius: 3px;
-        }
+            ::-webkit-scrollbar-thumb {
+                background: #333;
+                border-radius: 3px;
+            }
 
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--brand-lime);
+            ::-webkit-scrollbar-thumb:hover {
+                background: var(--brand-lime);
+            }
         }
 
         .text-outline {
@@ -73,6 +95,18 @@
         @keyframes shine {
             to {
                 background-position: 200% center;
+            }
+        }
+
+        /* Reduce motion for users who prefer it */
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
             }
         }
     </style>
