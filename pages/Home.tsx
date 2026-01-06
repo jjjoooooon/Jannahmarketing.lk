@@ -24,7 +24,7 @@ const Home: React.FC = () => {
             <Marquee />
             <Story />
             <Ingredients />
-            <ProductShowcase />
+            {/* <ProductShowcase /> */}
             <Testimonials />
             <BlogSection />
             <SriLankaMap />
