@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 
 import Navbar from './components/Navbar';
@@ -9,7 +9,6 @@ import Contact from './pages/Contact';
 import Shop from './pages/Shop';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
-import Loader from './components/Loader';
 
 // ScrollToTop component to reset scroll on route change
 const ScrollToTop = () => {
@@ -23,20 +22,6 @@ const ScrollToTop = () => {
 };
 
 const App: React.FC = () => {
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        // Simulate initial asset loading
-        const timer = setTimeout(() => {
-            setLoading(false);
-        }, 2000);
-        return () => clearTimeout(timer);
-    }, []);
-
-    if (loading) {
-        return <Loader />;
-    }
-
     return (
         <Router>
             <ScrollToTop />
