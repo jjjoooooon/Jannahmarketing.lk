@@ -137,7 +137,7 @@ const SunstarModernHero = () => {
       </div>
 
       {/* Main Content Grid */}
-      <div className="relative z-10 flex-1 grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 px-4 sm:px-6 md:px-12 lg:px-16 py-6 sm:py-8 lg:py-12 max-w-7xl mx-auto items-center w-full">
+      <div className="relative z-10 flex-1 grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 px-4 sm:px-6 md:px-12 lg:px-16 pt-20 pb-6 sm:pt-32 sm:pb-8 lg:pt-40 lg:pb-12 max-w-7xl mx-auto items-center w-full">
 
         {/* Left: Content */}
         <div ref={contentRef} className="space-y-4 sm:space-y-6 lg:space-y-8 lg:pr-12 order-2 lg:order-1">
@@ -175,19 +175,19 @@ const SunstarModernHero = () => {
             </Link>
           </div>
 
-          {/* Nutritional Info */}
+          {/* Available Sizes */}
           <div className="flex gap-4 sm:gap-6 lg:gap-8 pt-4 sm:pt-6 border-t border-white/10">
             <div>
-              <div className="text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Calories</div>
-              <div className="text-2xl sm:text-3xl font-bold text-white">0</div>
-            </div>
-            <div>
-              <div className="text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Volume</div>
-              <div className="text-2xl sm:text-3xl font-bold text-white">500<span className="text-sm sm:text-lg">ml</span></div>
-            </div>
-            <div>
-              <div className="text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Sugar</div>
-              <div className="text-2xl sm:text-3xl font-bold text-white">0<span className="text-sm sm:text-lg">g</span></div>
+              <div className="text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Available in</div>
+              <div className="flex gap-2 text-white font-bold text-lg sm:text-xl">
+                <span>250ml</span>
+                <span className="text-gray-600">/</span>
+                <span>330ml</span>
+                <span className="text-gray-600">/</span>
+                <span>500ml</span>
+                <span className="text-gray-600">/</span>
+                <span>1.5L</span>
+              </div>
             </div>
           </div>
         </div>
