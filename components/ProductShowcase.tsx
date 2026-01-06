@@ -1,9 +1,9 @@
-import React, { useRef, useState, useEffect, memo } from 'react';
+import React, { useRef, useState, useEffect, memo, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform, MotionValue } from 'framer-motion';
 import { Product } from '../types';
 import { generateMarketingCopy } from '../services/geminiService';
-import Bubbles from './Bubbles';
+// import Bubbles from './Bubbles'; // Disable Bubbles for testing performance if needed
 
 // Import bottle images
 import orange from '../assets/orange.png';
@@ -85,19 +85,21 @@ const SHOWCASE_PRODUCTS: ExtendedProduct[] = [
 
 // --- Sub-Components ---
 
-// Memoized Bottle Image to prevent flickering/re-rendering
 const BottleImage = memo(({ src, alt }: { src: string; alt: string }) => (
-  <div className="relative w-auto h-[28dvh] md:h-[65vh] flex items-center justify-center will-change-transform transform-gpu">
-    {/* Glow Effect */}
-    <div className="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent blur-3xl opacity-50 scale-110 pointer-events-none" />
+  // Optimization: Removed blur-3xl which kills mobile FPS. Used simple opacity gradient.
+  <div className="relative w-auto h-[28dvh] md:h-[65vh] flex items-center justify-center transform-gpu">
+    {/* Optimized Glow: Simple radial gradient instead of blur filter */}
+    <div
+      className="absolute inset-0 opacity-40 scale-110 pointer-events-none"
+      style={{ background: 'radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%)' }}
+    />
 
-    {/* Actual Bottle */}
     <img
       src={src}
       alt={alt}
-      loading="lazy"
+      loading="eager" // Load these eager as they are the main show
       decoding="async"
-      className="relative w-auto h-full object-contain drop-shadow-2xl filter brightness-110"
+      className="relative w-auto h-full object-contain drop-shadow-xl" // Reduced shadow complexity
     />
   </div>
 ));
@@ -105,93 +107,98 @@ const BottleImage = memo(({ src, alt }: { src: string; alt: string }) => (
 interface ProductCardProps {
   product: ExtendedProduct;
   index: number;
+  total: number;
   progress: MotionValue<number>;
-  range: [number, number];
-  targetScale: number;
 }
 
-const ProductCard: React.FC<ProductCardProps> = memo(({ product, progress, range, targetScale }) => {
-  const container = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: container,
-    offset: ['start end', 'start start'],
-  });
-
-  const imageScale = useTransform(scrollYProgress, [0, 1], [1.2, 1]);
-  const scale = useTransform(progress, range, [1, targetScale]);
-
+const ProductCard: React.FC<ProductCardProps> = memo(({ product, index, total, progress }) => {
   const [aiText, setAiText] = useState<string>('');
+
+  // --- Optimization: Single Scroll Source ---
+  // Instead of creating a new useScroll for every card (expensive!), 
+  // we derive animation values from the PARENT progress passed down.
+
+  // Calculate when this specific card is active in the scroll timeline
+  // We divide the total scroll (0 to 1) into segments for each card
+  const step = 1 / total;
+  const start = index * step;
+  const end = start + step;
+
+  // Scale Effect: Stacking cards scale down slightly as they go up
+  const targetScale = 1 - ((total - index) * 0.05);
+
+  // We map the GLOBAL progress to this card's specific scale needs
+  // The range [0, 1] essentially says "listen to the whole scroll interaction"
+  // but we clamp it so it doesn't shrink infinitely.
+  const scale = useTransform(progress, [start, 1], [1, targetScale]);
+
+  // Parallax for image: As global progress moves, shift image slightly
+  const imageScale = useTransform(progress, [start, end], [1.1, 1]);
 
   useEffect(() => {
     let mounted = true;
-    // Helper to prevent memory leaks on unmount
     generateMarketingCopy(product.name).then(text => {
       if (mounted) setAiText(text);
     });
     return () => { mounted = false; };
   }, [product.name]);
 
-  // Split name once for display
   const [firstName, secondName] = product.name.split(' ');
 
   return (
-    <div ref={container} className="h-[100dvh] flex items-center justify-center sticky top-0 bg-[#050505] text-white overflow-hidden border-t border-white/5 pt-10 md:pt-0">
-      {/* Light bubbles specific to this card */}
-      <div className="absolute inset-0 pointer-events-none">
-        <Bubbles color={`${product.color}40`} />
-      </div>
+    // Height container needs to be strictly defined to prevent "half showing" glitch
+    <div className="h-[100dvh] flex items-center justify-center sticky top-0">
 
       <motion.div
-        style={{ scale, backgroundColor: product.color }}
-        className="relative flex flex-col md:flex-row w-[92vw] md:w-[90vw] h-[80dvh] md:h-[80vh] rounded-[2rem] overflow-hidden shadow-2xl origin-top will-change-transform transform-gpu"
+        style={{
+          scale,
+          backgroundColor: product.color,
+          // Force hardware acceleration to prevent repaint lag
+          transform: 'translateZ(0)'
+        }}
+        className="relative flex flex-col md:flex-row w-[95vw] md:w-[90vw] h-[90dvh] md:h-[85vh] rounded-[2rem] overflow-hidden shadow-xl origin-top will-change-transform"
       >
         {/* Text Content */}
-        <div className="w-full md:w-1/2 p-6 md:p-16 flex flex-col justify-center relative z-20 bg-black/20 backdrop-blur-sm md:bg-transparent h-[50%] md:h-auto order-2 md:order-1">
-          <div className="flex flex-col h-full justify-center">
+        <div className="w-full md:w-1/2 p-6 md:p-14 flex flex-col justify-center relative z-20 h-[45%] md:h-auto order-2 md:order-1">
+          {/* Removed backdrop-blur-sm for performance. Using simple semi-transparent bg */}
+          <div className="absolute inset-0 bg-black/10 md:bg-transparent pointer-events-none" />
+
+          <div className="relative z-10 flex flex-col h-full justify-center">
             <h3 className="text-[10px] md:text-xl font-bold uppercase tracking-widest mb-1 md:mb-2 opacity-80 font-['Inter'] text-white">
               {product.tagline}
             </h3>
 
-            <h2 className="text-3xl md:text-8xl font-black mb-2 md:mb-6 leading-[0.9] text-white font-['Plus_Jakarta_Sans'] uppercase tracking-tight">
+            <h2 className="text-4xl md:text-8xl font-black mb-2 md:mb-6 leading-[0.9] text-white font-['Plus_Jakarta_Sans'] uppercase tracking-tight">
               {firstName}<br />
               <span className="text-transparent text-outline">{secondName}</span>
             </h2>
 
-            <p className="text-xs md:text-xl font-medium mb-3 md:mb-8 max-w-md text-white/90 line-clamp-3 md:line-clamp-none font-['Inter']">
+            <p className="text-sm md:text-xl font-medium mb-3 md:mb-8 max-w-md text-white/90 line-clamp-3 md:line-clamp-none font-['Inter']">
               {product.description}
             </p>
 
-            <div className="mb-4 md:mb-6">
-              <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-white/60 mb-2">Available In</p>
+            {/* Sizes - Hidden on very small screens to save space if needed */}
+            <div className="mb-4 md:mb-6 hidden xs:block">
               <div className="flex flex-wrap gap-2">
                 {product.sizes.map(size => (
-                  <span key={size} className="text-[10px] md:text-xs px-2 py-1 md:px-3 md:py-1.5 rounded-full border border-white/20 text-white/80 bg-white/5">
+                  <span key={size} className="text-[10px] md:text-xs px-2 py-1 rounded-full border border-white/20 text-white/90 bg-white/10">
                     {size}
                   </span>
                 ))}
               </div>
             </div>
 
-            <div className="mb-3 md:mb-8 hidden md:block">
-              <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest bg-black/20 px-2 py-1 md:px-3 md:py-1 rounded text-white border border-white/20 font-['Inter']">
-                AI Generated Vibe:
-              </span>
-              <p className="italic text-white/90 mt-1 md:mt-2 text-[10px] md:text-sm font-medium font-['Inter'] line-clamp-2 min-h-[3em]">
-                "{aiText || 'Loading vibe...'}"
-              </p>
-            </div>
-
-            <Link to="/shop" className="self-start">
-              <button className="px-6 py-3 md:px-8 md:py-4 rounded-full bg-white text-black font-bold hover:bg-black hover:text-white border-2 border-white transition-all text-xs md:text-base active:scale-95 touch-manipulation font-['Plus_Jakarta_Sans'] uppercase tracking-wider">
+            <Link to="/shop" className="self-start mt-auto md:mt-0">
+              <button className="px-6 py-3 md:px-8 md:py-4 rounded-full bg-white text-black font-bold hover:bg-black hover:text-white border-2 border-white transition-colors text-xs md:text-base font-['Plus_Jakarta_Sans'] uppercase tracking-wider">
                 Taste It
               </button>
             </Link>
           </div>
         </div>
 
-        {/* Visual Content (Bottle) */}
-        <div className="w-full md:w-1/2 relative h-[50%] md:h-full overflow-hidden flex items-center justify-center bg-black/10 order-1 md:order-2">
-          <motion.div style={{ scale: imageScale }} className="relative z-10 w-full h-full flex items-center justify-center will-change-transform">
+        {/* Visual Content */}
+        <div className="w-full md:w-1/2 relative h-[55%] md:h-full overflow-hidden flex items-center justify-center bg-black/5 order-1 md:order-2">
+          <motion.div style={{ scale: imageScale }} className="relative z-10 w-full h-full flex items-center justify-center">
             <BottleImage src={product.image} alt={product.name} />
           </motion.div>
         </div>
@@ -203,35 +210,35 @@ const ProductCard: React.FC<ProductCardProps> = memo(({ product, progress, range
 // --- Main Component ---
 const ProductShowcase: React.FC = () => {
   const container = useRef<HTMLDivElement>(null);
+
+  // Fix for "Half showing": 
+  // We track scroll over a longer distance than just the content height
   const { scrollYProgress } = useScroll({
     target: container,
     offset: ['start start', 'end end'],
   });
 
   return (
-    <div id="flavors" ref={container} className="relative mt-0 md:mt-20">
-      {/* Sticky Label - Height 0 to prevent layout shift */}
-      <div className="sticky top-6 h-[0px] flex justify-center z-10 pointer-events-none mix-blend-difference text-white">
-        <h2 className="text-sm md:text-3xl font-bold uppercase tracking-widest bg-white/10 px-4 py-1.5 md:px-6 md:py-2 backdrop-blur-md rounded-full font-['Plus_Jakarta_Sans'] border border-white/20 shadow-lg">
+    // FIX: Add unnecessary bottom padding (pb-[25vh]) to ensure the last card 
+    // has "track" space to exist before the next section invades.
+    <div id="flavors" ref={container} className="relative bg-[#050505] pb-[10vh]">
+
+      {/* Sticky Header */}
+      <div className="sticky top-6 h-0 flex justify-center z-50 pointer-events-none mix-blend-difference text-white mb-20">
+        <h2 className="text-sm md:text-3xl font-bold uppercase tracking-widest bg-white/10 px-4 py-1.5 backdrop-blur-md rounded-full border border-white/20">
           Flavor Drop
         </h2>
       </div>
 
-      {SHOWCASE_PRODUCTS.map((product, index) => {
-        // Calculate scale target based on reverse index
-        const targetScale = 1 - ((SHOWCASE_PRODUCTS.length - index) * 0.05);
-
-        return (
-          <ProductCard
-            key={product.id}
-            index={index}
-            product={product}
-            progress={scrollYProgress}
-            range={[index * 0.25, 1]}
-            targetScale={targetScale}
-          />
-        );
-      })}
+      {SHOWCASE_PRODUCTS.map((product, index) => (
+        <ProductCard
+          key={product.id}
+          index={index}
+          total={SHOWCASE_PRODUCTS.length}
+          product={product}
+          progress={scrollYProgress}
+        />
+      ))}
     </div>
   );
 };
