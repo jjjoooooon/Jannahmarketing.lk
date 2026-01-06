@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, memo } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform, MotionValue } from 'framer-motion';
 import { Product } from '../types';
@@ -12,8 +12,15 @@ import cola from '../assets/cola.png';
 import creamsoda from '../assets/creamsoda.png';
 import nesta from '../assets/nesta.png';
 
-// Updated products array with actual bottle images
-const SHOWCASE_PRODUCTS: (Product & { image: string })[] = [
+// --- Constants & Types ---
+interface ExtendedProduct extends Product {
+  image: string;
+  sizes: readonly string[];
+}
+
+const PRODUCT_SIZES = ['250ml', '330ml', '750ml', '1050ml', '1.5L'] as const;
+
+const SHOWCASE_PRODUCTS: ExtendedProduct[] = [
   {
     id: 'orange',
     name: 'Sunstar Orange',
@@ -23,7 +30,8 @@ const SHOWCASE_PRODUCTS: (Product & { image: string })[] = [
     accent: '#FF8C00',
     flavorProfile: 'Zesty, Sweet, Sharp',
     imagePlaceholderColor: 'bg-orange-500',
-    image: orange
+    image: orange,
+    sizes: PRODUCT_SIZES
   },
   {
     id: 'ginger',
@@ -34,7 +42,8 @@ const SHOWCASE_PRODUCTS: (Product & { image: string })[] = [
     accent: '#CD853F',
     flavorProfile: 'Spicy, Bold, Invigorating',
     imagePlaceholderColor: 'bg-amber-700',
-    image: ginger
+    image: ginger,
+    sizes: PRODUCT_SIZES
   },
   {
     id: 'cola',
@@ -45,7 +54,8 @@ const SHOWCASE_PRODUCTS: (Product & { image: string })[] = [
     accent: '#4A2C2A',
     flavorProfile: 'Bold, Classic, Timeless',
     imagePlaceholderColor: 'bg-stone-800',
-    image: cola
+    image: cola,
+    sizes: PRODUCT_SIZES
   },
   {
     id: 'cream-soda',
@@ -56,7 +66,8 @@ const SHOWCASE_PRODUCTS: (Product & { image: string })[] = [
     accent: '#FF69B4',
     flavorProfile: 'Creamy, Dreamy, Sweet',
     imagePlaceholderColor: 'bg-pink-300',
-    image: creamsoda
+    image: creamsoda,
+    sizes: PRODUCT_SIZES
   },
   {
     id: 'nesta',
@@ -67,21 +78,40 @@ const SHOWCASE_PRODUCTS: (Product & { image: string })[] = [
     accent: '#00BCD4',
     flavorProfile: 'Refreshing, Fruity, Tropical',
     imagePlaceholderColor: 'bg-teal-500',
-    image: nesta
+    image: nesta,
+    sizes: PRODUCT_SIZES
   },
 ];
 
-// Single Product Card Component
+// --- Sub-Components ---
+
+// Memoized Bottle Image to prevent flickering/re-rendering
+const BottleImage = memo(({ src, alt }: { src: string; alt: string }) => (
+  <div className="relative w-auto h-[28dvh] md:h-[65vh] flex items-center justify-center will-change-transform transform-gpu">
+    {/* Glow Effect */}
+    <div className="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent blur-3xl opacity-50 scale-110 pointer-events-none" />
+
+    {/* Actual Bottle */}
+    <img
+      src={src}
+      alt={alt}
+      loading="lazy"
+      decoding="async"
+      className="relative w-auto h-full object-contain drop-shadow-2xl filter brightness-110"
+    />
+  </div>
+));
+
 interface ProductCardProps {
-  product: Product & { image: string };
+  product: ExtendedProduct;
   index: number;
   progress: MotionValue<number>;
   range: [number, number];
   targetScale: number;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product, index, progress, range, targetScale }) => {
-  const container = useRef(null);
+const ProductCard: React.FC<ProductCardProps> = memo(({ product, progress, range, targetScale }) => {
+  const container = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: container,
     offset: ['start end', 'start start'],
@@ -94,30 +124,39 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index, progress, ran
 
   useEffect(() => {
     let mounted = true;
+    // Helper to prevent memory leaks on unmount
     generateMarketingCopy(product.name).then(text => {
       if (mounted) setAiText(text);
     });
     return () => { mounted = false; };
   }, [product.name]);
 
+  // Split name once for display
+  const [firstName, secondName] = product.name.split(' ');
+
   return (
     <div ref={container} className="h-[100dvh] flex items-center justify-center sticky top-0 bg-[#050505] text-white overflow-hidden border-t border-white/5 pt-10 md:pt-0">
-      <Bubbles color={`${product.color}40`} />
+      {/* Light bubbles specific to this card */}
+      <div className="absolute inset-0 pointer-events-none">
+        <Bubbles color={`${product.color}40`} />
+      </div>
 
       <motion.div
         style={{ scale, backgroundColor: product.color }}
-        className="relative flex flex-col md:flex-row w-[92vw] md:w-[90vw] h-[80dvh] md:h-[80vh] rounded-[2rem] overflow-hidden shadow-2xl origin-top"
+        className="relative flex flex-col md:flex-row w-[92vw] md:w-[90vw] h-[80dvh] md:h-[80vh] rounded-[2rem] overflow-hidden shadow-2xl origin-top will-change-transform transform-gpu"
       >
         {/* Text Content */}
         <div className="w-full md:w-1/2 p-6 md:p-16 flex flex-col justify-center relative z-20 bg-black/20 backdrop-blur-sm md:bg-transparent h-[50%] md:h-auto order-2 md:order-1">
           <div className="flex flex-col h-full justify-center">
-            <h3 className="text-[10px] md:text-xl font-bold uppercase tracking-widest mb-1 md:mb-2 opacity-80 font-['Inter']" style={{ color: '#fff' }}>
+            <h3 className="text-[10px] md:text-xl font-bold uppercase tracking-widest mb-1 md:mb-2 opacity-80 font-['Inter'] text-white">
               {product.tagline}
             </h3>
+
             <h2 className="text-3xl md:text-8xl font-black mb-2 md:mb-6 leading-[0.9] text-white font-['Plus_Jakarta_Sans'] uppercase tracking-tight">
-              {product.name.split(' ')[0]}<br />
-              <span className="text-transparent text-outline">{product.name.split(' ')[1]}</span>
+              {firstName}<br />
+              <span className="text-transparent text-outline">{secondName}</span>
             </h2>
+
             <p className="text-xs md:text-xl font-medium mb-3 md:mb-8 max-w-md text-white/90 line-clamp-3 md:line-clamp-none font-['Inter']">
               {product.description}
             </p>
@@ -125,19 +164,23 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index, progress, ran
             <div className="mb-4 md:mb-6">
               <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-white/60 mb-2">Available In</p>
               <div className="flex flex-wrap gap-2">
-                {['250ml', '330ml', '750ml', '1050ml', '1.5L'].map(size => (
+                {product.sizes.map(size => (
                   <span key={size} className="text-[10px] md:text-xs px-2 py-1 md:px-3 md:py-1.5 rounded-full border border-white/20 text-white/80 bg-white/5">
                     {size}
                   </span>
                 ))}
               </div>
             </div>
+
             <div className="mb-3 md:mb-8 hidden md:block">
               <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest bg-black/20 px-2 py-1 md:px-3 md:py-1 rounded text-white border border-white/20 font-['Inter']">
                 AI Generated Vibe:
               </span>
-              <p className="italic text-white/90 mt-1 md:mt-2 text-[10px] md:text-sm font-medium font-['Inter'] line-clamp-2">"{aiText || 'Loading vibe...'}"</p>
+              <p className="italic text-white/90 mt-1 md:mt-2 text-[10px] md:text-sm font-medium font-['Inter'] line-clamp-2 min-h-[3em]">
+                "{aiText || 'Loading vibe...'}"
+              </p>
             </div>
+
             <Link to="/shop" className="self-start">
               <button className="px-6 py-3 md:px-8 md:py-4 rounded-full bg-white text-black font-bold hover:bg-black hover:text-white border-2 border-white transition-all text-xs md:text-base active:scale-95 touch-manipulation font-['Plus_Jakarta_Sans'] uppercase tracking-wider">
                 Taste It
@@ -146,30 +189,20 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, index, progress, ran
           </div>
         </div>
 
-        {/* Visual Content (Actual Bottle Image) */}
+        {/* Visual Content (Bottle) */}
         <div className="w-full md:w-1/2 relative h-[50%] md:h-full overflow-hidden flex items-center justify-center bg-black/10 order-1 md:order-2">
-          <motion.div style={{ scale: imageScale }} className="relative z-10 w-full h-full flex items-center justify-center">
-            {/* Bottle Image */}
-            <div className="relative w-auto h-[28dvh] md:h-[65vh] flex items-center justify-center">
-              {/* Glow Effect */}
-              <div className="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent blur-3xl opacity-50 scale-110" />
-
-              {/* Actual Bottle */}
-              <img
-                src={product.image}
-                alt={product.name}
-                className="relative w-auto h-full object-contain drop-shadow-2xl filter brightness-110"
-              />
-            </div>
+          <motion.div style={{ scale: imageScale }} className="relative z-10 w-full h-full flex items-center justify-center will-change-transform">
+            <BottleImage src={product.image} alt={product.name} />
           </motion.div>
         </div>
       </motion.div>
     </div>
   );
-};
+});
 
+// --- Main Component ---
 const ProductShowcase: React.FC = () => {
-  const container = useRef(null);
+  const container = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: container,
     offset: ['start start', 'end end'],
@@ -177,11 +210,17 @@ const ProductShowcase: React.FC = () => {
 
   return (
     <div id="flavors" ref={container} className="relative mt-0 md:mt-20">
-      <div className="sticky top-0 h-[8vh] flex items-center justify-center z-10 pointer-events-none mix-blend-difference text-white">
-        <h2 className="text-sm md:text-3xl font-bold uppercase tracking-widest bg-white/10 px-4 py-1.5 md:px-6 md:py-2 backdrop-blur-md rounded-full font-['Plus_Jakarta_Sans'] border border-white/20">Flavor Drop</h2>
+      {/* Sticky Label - Height 0 to prevent layout shift */}
+      <div className="sticky top-6 h-[0px] flex justify-center z-10 pointer-events-none mix-blend-difference text-white">
+        <h2 className="text-sm md:text-3xl font-bold uppercase tracking-widest bg-white/10 px-4 py-1.5 md:px-6 md:py-2 backdrop-blur-md rounded-full font-['Plus_Jakarta_Sans'] border border-white/20 shadow-lg">
+          Flavor Drop
+        </h2>
       </div>
+
       {SHOWCASE_PRODUCTS.map((product, index) => {
+        // Calculate scale target based on reverse index
         const targetScale = 1 - ((SHOWCASE_PRODUCTS.length - index) * 0.05);
+
         return (
           <ProductCard
             key={product.id}
@@ -197,4 +236,4 @@ const ProductShowcase: React.FC = () => {
   );
 };
 
-export default ProductShowcase;
+export default memo(ProductShowcase);
