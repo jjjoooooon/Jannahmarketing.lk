@@ -1,245 +1,254 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useMemo, useLayoutEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ChevronDown, Sparkles } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 
-// Import your bottle images
+// Import bottle images
 import orange from '../assets/orange.png';
 import ginger from '../assets/ginger.png';
 import cola from '../assets/cola.png';
 import creamsoda from '../assets/creamsoda.png';
 import nesta from '../assets/nesta.png';
 
-gsap.registerPlugin(ScrollTrigger);
+// --- Static Data (Moved outside to prevent re-creation) ---
+const FLAVORS = [
+  {
+    name: 'Orange',
+    tagline: 'Citrus Burst',
+    // Optimized: Using simple hex colors instead of complex tailwind gradients
+    bgGradient: 'radial-gradient(circle at 50% 50%, rgba(255, 107, 53, 0.4) 0%, transparent 70%)',
+    image: orange,
+    description: 'Pure sunshine in every sip'
+  },
+  {
+    name: 'Ginger',
+    tagline: 'Spiced Refresh',
+    bgGradient: 'radial-gradient(circle at 50% 50%, rgba(212, 165, 116, 0.4) 0%, transparent 70%)',
+    image: ginger,
+    description: 'Bold and invigorating'
+  },
+  {
+    name: 'Cola',
+    tagline: 'Classic Kick',
+    bgGradient: 'radial-gradient(circle at 50% 50%, rgba(45, 24, 16, 0.6) 0%, transparent 70%)',
+    image: cola,
+    description: 'Timeless carbonated perfection'
+  },
+  {
+    name: 'Cream Soda',
+    tagline: 'Smooth Vanilla',
+    bgGradient: 'radial-gradient(circle at 50% 50%, rgba(255, 182, 217, 0.4) 0%, transparent 70%)',
+    image: creamsoda,
+    description: 'Creamy, dreamy indulgence'
+  },
+  {
+    name: 'Nesta',
+    tagline: 'Tropical Escape',
+    bgGradient: 'radial-gradient(circle at 50% 50%, rgba(0, 203, 169, 0.4) 0%, transparent 70%)',
+    image: nesta,
+    description: 'Island vibes in a bottle'
+  }
+];
 
 const SunstarModernHero = () => {
   const [activeFlavor, setActiveFlavor] = useState(0);
-  const heroRef = useRef(null);
-  const bottleRef = useRef(null);
-  const contentRef = useRef(null);
+  const [isAnimating, setIsAnimating] = useState(false);
 
-  const flavors = [
-    {
-      name: 'Orange',
-      tagline: 'Citrus Burst',
-      color: '#FF6B35',
-      gradient: 'from-orange-400 via-orange-500 to-red-500',
-      image: orange,
-      description: 'Pure sunshine in every sip'
-    },
-    {
-      name: 'Ginger',
-      tagline: 'Spiced Refresh',
-      color: '#D4A574',
-      gradient: 'from-amber-400 via-yellow-600 to-orange-700',
-      image: ginger,
-      description: 'Bold and invigorating'
-    },
-    {
-      name: 'Cola',
-      tagline: 'Classic Kick',
-      color: '#2D1810',
-      gradient: 'from-stone-700 via-stone-900 to-black',
-      image: cola,
-      description: 'Timeless carbonated perfection'
-    },
-    {
-      name: 'Cream Soda',
-      tagline: 'Smooth Vanilla',
-      color: '#FFB6D9',
-      gradient: 'from-pink-300 via-pink-400 to-rose-500',
-      image: creamsoda,
-      description: 'Creamy, dreamy indulgence'
-    },
-    {
-      name: 'Nesta',
-      tagline: 'Tropical Escape',
-      color: '#00CBA9',
-      gradient: 'from-teal-400 via-emerald-500 to-green-600',
-      image: nesta,
-      description: 'Island vibes in a bottle'
-    }
-  ];
+  // Refs for animation targets
+  const containerRef = useRef<HTMLDivElement>(null);
+  const bottleRef = useRef<HTMLImageElement>(null);
+  const textGroupRef = useRef<HTMLDivElement>(null);
+  const bgRef = useRef<HTMLDivElement>(null);
 
+  // 1. Image Preloader (Prevents flashing on slow connections)
   useEffect(() => {
+    FLAVORS.forEach((flavor) => {
+      const img = new Image();
+      img.src = flavor.image;
+    });
+  }, []);
+
+  // 2. Initial Entrance Animation
+  useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      // Initial entrance animation
       const tl = gsap.timeline();
 
-      tl.from(contentRef.current.children, {
-        y: 80,
+      tl.from(bottleRef.current, {
+        x: 100,
         opacity: 0,
-        stagger: 0.15,
-        duration: 1,
+        rotation: 10,
+        duration: 1.2,
         ease: 'power3.out'
       })
-        .from(bottleRef.current, {
-          x: 200,
+        .from(textGroupRef.current?.children || [], {
+          y: 30,
           opacity: 0,
-          rotation: 15,
-          duration: 1.2,
-          ease: 'back.out(1.4)'
+          stagger: 0.1,
+          duration: 0.8,
+          ease: 'power2.out'
         }, '-=0.8');
 
-      // Continuous floating animation - disabled on mobile for performance
-      const isMobile = window.matchMedia('(max-width: 768px)').matches;
-      if (!isMobile) {
-        gsap.to(bottleRef.current, {
-          y: -20,
-          duration: 2.5,
-          repeat: -1,
-          yoyo: true,
-          ease: 'sine.inOut'
-        });
-      }
-
-    }, heroRef);
-
+    }, containerRef);
     return () => ctx.revert();
   }, []);
 
-  const changeFlavor = (index) => {
-    if (index === activeFlavor) return;
+  // 3. Optimized Switch Logic
+  const handleFlavorChange = (index: number) => {
+    if (index === activeFlavor || isAnimating) return;
+    setIsAnimating(true);
 
-    gsap.timeline()
-      .to(bottleRef.current, {
-        x: -100,
+    const tl = gsap.timeline({
+      onComplete: () => setIsAnimating(false)
+    });
+
+    // Step 1: Animate Out
+    tl.to(bottleRef.current, {
+      x: -50,
+      opacity: 0,
+      rotation: -10,
+      duration: 0.3,
+      ease: 'power1.in'
+    })
+      .to(textGroupRef.current, {
         opacity: 0,
-        rotation: -20,
-        duration: 0.4,
-        ease: 'power2.in'
+        x: -20,
+        duration: 0.2
+      }, 0) // Run concurrently
+
+      // Step 2: Swap State (Instant)
+      .call(() => {
+        setActiveFlavor(index);
       })
-      .call(() => setActiveFlavor(index))
+
+      // Step 3: Animate In
       .to(bottleRef.current, {
         x: 0,
         opacity: 1,
         rotation: 0,
-        duration: 0.6,
-        ease: 'back.out(1.4)'
-      });
-
-    gsap.fromTo(contentRef.current.children,
-      { opacity: 0, y: 20 },
-      { opacity: 1, y: 0, stagger: 0.1, duration: 0.6, ease: 'power2.out' }
-    );
+        duration: 0.5,
+        ease: 'back.out(1.2)'
+      })
+      .to(textGroupRef.current, {
+        opacity: 1,
+        x: 0,
+        duration: 0.4
+      }, '-=0.3');
   };
+
+  const currentData = FLAVORS[activeFlavor];
 
   return (
     <div
-      ref={heroRef}
-      className="relative w-full min-h-[100dvh] bg-[#050505] overflow-hidden flex flex-col"
+      ref={containerRef}
+      className="relative w-full min-h-[100dvh] bg-[#050505] overflow-hidden flex flex-col justify-center"
     >
-      {/* Animated Background Gradient */}
-      <div className="absolute inset-0 overflow-hidden">
+      {/* --- Optimized Background --- */}
+      {/* We use specific CSS backgrounds instead of heavy blur filters */}
+      <div className="absolute inset-0 z-0 transition-opacity duration-700 ease-in-out">
         <div
-          className={`absolute inset-0 bg-gradient-to-br ${flavors[activeFlavor].gradient} opacity-5 transition-all duration-1000`}
+          ref={bgRef}
+          className="absolute inset-0 opacity-40 transition-all duration-700"
+          style={{ background: currentData.bgGradient }}
         />
-        <div className="absolute -top-20 sm:-top-40 -right-20 sm:-right-40 w-48 h-48 sm:w-96 sm:h-96 bg-[#CCFF00]/5 rounded-full blur-3xl" />
-        <div className="absolute -bottom-20 sm:-bottom-40 -left-20 sm:-left-40 w-48 h-48 sm:w-96 sm:h-96 bg-[#CCFF00]/3 rounded-full blur-3xl" />
+        {/* Simple Vignette to focus center */}
+        <div className="absolute inset-0 bg-[radial-gradient(transparent,black_80%)]" />
       </div>
 
-      {/* Main Content Grid */}
-      <div className="relative z-10 flex-1 grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 px-4 sm:px-6 md:px-12 lg:px-16 pt-20 pb-6 sm:pt-32 sm:pb-8 lg:pt-40 lg:pb-12 max-w-7xl mx-auto items-center w-full">
+      {/* --- Main Content --- */}
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center pt-20">
 
-        {/* Left: Content */}
-        <div ref={contentRef} className="space-y-4 sm:space-y-6 lg:space-y-8 lg:pr-12 order-2 lg:order-1">
-          <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-white/5 rounded-full text-xs sm:text-sm font-bold text-white/60 border border-white/10 uppercase tracking-wider">
-            <div className="w-2 h-2 rounded-full bg-[#CCFF00] animate-pulse" />
-            Sri Lankan Heritage
+        {/* Left: Text Content */}
+        <div ref={textGroupRef} className="order-2 lg:order-1 flex flex-col items-start space-y-6">
+
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-full border border-white/10">
+            <span className="w-2 h-2 rounded-full bg-[#CCFF00] animate-pulse" />
+            <span className="text-xs font-bold text-white/80 uppercase tracking-widest">Sri Lankan Heritage</span>
           </div>
 
-          <div className="space-y-2 sm:space-y-4">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-white leading-none tracking-tight font-['Plus_Jakarta_Sans']">
-              {flavors[activeFlavor].name}
+          <div className="space-y-2">
+            <h1 className="text-5xl sm:text-7xl lg:text-8xl font-black text-white leading-none tracking-tight font-['Plus_Jakarta_Sans']">
+              {currentData.name}
             </h1>
-            <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-light text-[#CCFF00] italic">
-              {flavors[activeFlavor].tagline}
+            <p className="text-xl sm:text-3xl font-light text-[#CCFF00] italic font-['Inter']">
+              {currentData.tagline}
             </p>
           </div>
 
-          <p className="text-sm sm:text-base lg:text-lg text-gray-400 max-w-md leading-relaxed">
-            {flavors[activeFlavor].description}. Crafted with authentic Sri Lankan tradition and modern carbonation technology.
-          </p>
+          {/* Fixed height container to prevent layout shift during text swap */}
+          <div className="min-h-[3.5rem] flex items-center">
+            <p className="text-gray-400 text-sm sm:text-lg leading-relaxed max-w-lg">
+              {currentData.description}. Crafted with authentic Sri Lankan tradition.
+            </p>
+          </div>
 
-          <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4">
-            <Link
-              to="/shop"
-              className="group px-6 sm:px-8 py-3 sm:py-4 bg-[#CCFF00] text-black rounded-full font-black text-xs sm:text-sm hover:bg-white transition-all hover:shadow-lg hover:shadow-[#CCFF00]/40 flex items-center justify-center gap-2 uppercase tracking-widest"
-            >
+          <div className="flex flex-wrap gap-4 pt-4">
+            <Link to="/shop" className="px-8 py-3 bg-[#CCFF00] text-black rounded-full font-bold uppercase tracking-widest text-xs hover:scale-105 transition-transform">
               Explore Flavors
-              <ChevronDown className="w-4 h-4 rotate-[-90deg] group-hover:translate-x-1 transition-transform" />
             </Link>
-            <Link
-              to="/about"
-              className="px-6 sm:px-8 py-3 sm:py-4 bg-white/5 text-white rounded-full font-bold text-xs sm:text-sm hover:bg-white/10 transition-all border border-white/10 uppercase tracking-widest"
-            >
+            <Link to="/about" className="px-8 py-3 bg-white/5 text-white border border-white/10 rounded-full font-bold uppercase tracking-widest text-xs hover:bg-white/10 transition-colors">
               Learn More
             </Link>
           </div>
 
-          {/* Available Sizes */}
-          <div className="flex gap-4 sm:gap-6 lg:gap-8 pt-4 sm:pt-6 border-t border-white/10">
-            <div>
-              <div className="text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Available in</div>
-              <div className="flex gap-2 text-white font-bold text-lg sm:text-xl">
-                <span>250ml</span>
-                <span className="text-gray-600">/</span>
-                <span>330ml</span>
-                <span className="text-gray-600">/</span>
-                <span>500ml</span>
-                <span className="text-gray-600">/</span>
-                <span>1.5L</span>
-              </div>
+          {/* Sizes */}
+          <div className="pt-8 border-t border-white/10 w-full">
+            <p className="text-[10px] uppercase tracking-widest text-gray-500 mb-2">Available Sizes</p>
+            <div className="flex gap-4 text-white font-mono text-sm opacity-60">
+              <span>250ml</span>/<span>330ml</span>/<span>500ml</span>/<span>1.5L</span>
             </div>
           </div>
         </div>
 
-        {/* Right: Bottle Showcase */}
-        <div className="relative flex items-center justify-center lg:justify-end order-1 lg:order-2 min-h-[300px] sm:min-h-[400px] lg:min-h-0">
-          <div ref={bottleRef} className="relative w-full max-w-[250px] sm:max-w-[350px] md:max-w-md">
-            {/* Glow Effect */}
-            <div
-              className={`absolute inset-0 bg-gradient-to-br ${flavors[activeFlavor].gradient} blur-3xl opacity-20 scale-75 transition-all duration-1000`}
-            />
-
-            {/* Bottle Image */}
-            <img
-              src={flavors[activeFlavor].image}
-              alt={flavors[activeFlavor].name}
-              className="relative w-full h-auto drop-shadow-2xl z-10"
-            />
-
-            {/* Decorative Circle */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 sm:w-60 sm:h-60 md:w-72 md:h-72 border border-white/10 rounded-full -z-10" />
-          </div>
+        {/* Right: Bottle */}
+        <div className="order-1 lg:order-2 flex justify-center lg:justify-end relative h-[40vh] lg:h-[60vh]">
+          {/* Optimization: 
+            The "float" animation is now pure CSS (defined below). 
+            This runs on the Compositor Thread and doesn't block JS.
+          */}
+          <img
+            ref={bottleRef}
+            src={currentData.image}
+            alt={currentData.name}
+            className="h-full w-auto object-contain drop-shadow-2xl animate-float will-change-transform"
+            style={{ filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.5))' }}
+          />
         </div>
+
       </div>
 
-      {/* Flavor Selector */}
-      <div className="relative z-20 flex flex-wrap justify-center gap-2 sm:gap-3 px-4 sm:px-8 pb-8 sm:pb-12">
-        {flavors.map((flavor, index) => (
+      {/* --- Flavor Selector --- */}
+      <div className="relative z-20 w-full flex justify-center gap-2 sm:gap-4 px-4 pb-12 mt-12 lg:mt-0">
+        {FLAVORS.map((flavor, index) => (
           <button
             key={flavor.name}
-            onClick={() => changeFlavor(index)}
-            className={`group relative px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full font-bold text-xs sm:text-sm transition-all uppercase tracking-wider ${activeFlavor === index
-              ? 'bg-[#CCFF00] text-black shadow-lg shadow-[#CCFF00]/20'
-              : 'bg-white/5 text-gray-400 hover:bg-white/10 border border-white/10 hover:text-white'
-              }`}
+            onClick={() => handleFlavorChange(index)}
+            className={`
+              relative px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-300
+              ${activeFlavor === index
+                ? 'bg-[#CCFF00] text-black scale-110 shadow-[0_0_20px_rgba(204,255,0,0.3)]'
+                : 'bg-white/5 text-gray-500 hover:text-white hover:bg-white/10'}
+            `}
           >
-            <span className="relative z-10">{flavor.name}</span>
-            {activeFlavor === index && (
-              <div className={`absolute inset-0 bg-gradient-to-r ${flavor.gradient} opacity-30 rounded-full blur-sm`} />
-            )}
+            {flavor.name}
           </button>
         ))}
       </div>
 
       {/* Scroll Indicator */}
-      <div className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 sm:gap-2 text-gray-600 animate-bounce hidden sm:flex">
-        <span className="text-xs font-medium uppercase tracking-wider">Scroll</span>
-        <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5" />
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 animate-bounce hidden md:block">
+        <ChevronDown className="text-white/30" />
       </div>
+
+      {/* --- CSS for Float Animation --- */}
+      <style>{`
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-20px); }
+        }
+        .animate-float {
+          animation: float 6s ease-in-out infinite;
+        }
+      `}</style>
     </div>
   );
 };
