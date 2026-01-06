@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import SmoothScroll from './components/SmoothScroll';
+
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -40,22 +40,20 @@ const App: React.FC = () => {
     return (
         <Router>
             <ScrollToTop />
-            <SmoothScroll>
-                <div className="bg-[#050505] min-h-screen selection:bg-[#CCFF00] selection:text-black flex flex-col">
-                    <Navbar />
-                    <main className="flex-grow">
-                        <Routes>
-                            <Route path="/" element={<Home />} />
-                            <Route path="/about" element={<About />} />
-                            <Route path="/contact" element={<Contact />} />
-                            <Route path="/shop" element={<Shop />} />
-                            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-                            <Route path="/terms-of-service" element={<TermsOfService />} />
-                        </Routes>
-                    </main>
-                    <Footer />
-                </div>
-            </SmoothScroll>
+            <div className="bg-[#050505] min-h-screen selection:bg-[#CCFF00] selection:text-black flex flex-col">
+                <Navbar />
+                <main className="flex-grow">
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/about" element={<About />} />
+                        <Route path="/contact" element={<Contact />} />
+                        <Route path="/shop" element={<Shop />} />
+                        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                        <Route path="/terms-of-service" element={<TermsOfService />} />
+                    </Routes>
+                </main>
+                <Footer />
+            </div>
         </Router>
     );
 };

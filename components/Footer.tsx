@@ -40,7 +40,7 @@ const Footer: React.FC = () => {
             <ul className="space-y-4 text-gray-400 font-['Inter']">
               <li>hello@jannahmarketing.lk</li>
               <li>077 907 7134 / 075 438 5840</li>
-              <li>300,B Boliverian Village<br />Sainthamaruthu</li>
+              <li>B293 Boliverian Village<br />Sainthamaruthu</li>
             </ul>
           </div>
         </div>

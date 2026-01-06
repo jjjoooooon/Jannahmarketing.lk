@@ -35,7 +35,7 @@ const PrivacyPolicy: React.FC = () => {
                         <p className="text-gray-300">
                             Full name of legal entity: Jannah Marketing<br />
                             Email address: hello@jannahmarketing.lk<br />
-                            Postal address: 300,B Boliverian Village, Sainthamaruthu, Sri Lanka<br />
+                            Postal address: B293 Boliverian Village, Sainthamaruthu, Sri Lanka<br />
                             Telephone number: 077 907 7134
                         </p>
                     </section>

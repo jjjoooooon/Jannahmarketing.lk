@@ -61,7 +61,7 @@ const Contact: React.FC = () => {
         {
             icon: MapPin,
             title: 'Head Office',
-            details: ['300,B Boliverian Village', 'Sainthamaruthu'],
+            details: ['B293 Boliverian Village', 'Sainthamaruthu'],
             link: 'https://maps.google.com'
         },
         {
