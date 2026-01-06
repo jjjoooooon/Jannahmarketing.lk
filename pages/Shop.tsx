@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ShoppingCart, Plus, Minus, Star, Package, Truck, Shield } from 'lucide-react';
+import { ShoppingCart, Plus, Minus, Star, Package, Truck, Shield, Check, ArrowRight } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
+import { Link } from 'react-router-dom';
+import { useCart, BottleSize, SIZE_PRICES } from '../context/CartContext';
 
 // Import product images
 import orange from '../assets/orange.webp';
@@ -13,7 +15,6 @@ import nesta from '../assets/nesta.webp';
 interface Product {
     id: string;
     name: string;
-    price: number;
     image: string;
     description: string;
     inStock: boolean;
@@ -25,7 +26,6 @@ const products: Product[] = [
     {
         id: '1',
         name: 'Sunstar Orange',
-        price: 150,
         image: orange,
         description: 'Explosive orange zest with sparkling finish',
         inStock: true,
@@ -35,7 +35,6 @@ const products: Product[] = [
     {
         id: '2',
         name: 'Sunstar Ginger',
-        price: 150,
         image: ginger,
         description: 'Bold ginger kick with natural extracts',
         inStock: true,
@@ -45,7 +44,6 @@ const products: Product[] = [
     {
         id: '3',
         name: 'Sunstar Cola',
-        price: 150,
         image: cola,
         description: 'Classic cola taste, zero sugar',
         inStock: true,
@@ -55,7 +53,6 @@ const products: Product[] = [
     {
         id: '4',
         name: 'Sunstar Cream Soda',
-        price: 150,
         image: creamsoda,
         description: 'Creamy vanilla heaven in every sip',
         inStock: true,
@@ -65,7 +62,6 @@ const products: Product[] = [
     {
         id: '5',
         name: 'Sunstar Nesta',
-        price: 150,
         image: nesta,
         description: 'Refreshing peach tea with tropical vibes',
         inStock: true,
@@ -75,39 +71,17 @@ const products: Product[] = [
 ];
 
 const Shop: React.FC = () => {
-    const [cart, setCart] = useState<{ [key: string]: number }>({});
+    const { addToCart, totalItems, totalPrice } = useCart();
+    const [selectedSizes, setSelectedSizes] = useState<{ [key: string]: BottleSize }>({});
 
-    const addToCart = (productId: string) => {
-        setCart(prev => ({
-            ...prev,
-            [productId]: (prev[productId] || 0) + 1
-        }));
+    const handleSizeSelect = (productId: string, size: BottleSize) => {
+        setSelectedSizes(prev => ({ ...prev, [productId]: size }));
     };
 
-    const removeFromCart = (productId: string) => {
-        setCart(prev => {
-            const newCart = { ...prev };
-            if (newCart[productId] && newCart[productId] > 1) {
-                newCart[productId]--;
-            } else {
-                delete newCart[productId];
-            }
-            return newCart;
-        });
+    const handleAddToCart = (product: Product) => {
+        const size = selectedSizes[product.id] || '250ml'; // Default to 250ml
+        addToCart({ id: product.id, name: product.name, image: product.image }, size);
     };
-
-    const getTotalItems = () => {
-        return Object.values(cart).reduce((sum: number, qty: number) => sum + qty, 0);
-    };
-
-    const getTotalPrice = () => {
-        return Object.entries(cart).reduce((sum: number, [productId, qty]: [string, number]) => {
-            const product = products.find(p => p.id === productId);
-            return sum + (product?.price || 0) * qty;
-        }, 0);
-    };
-
-
 
     return (
         <div className="bg-[#050505] min-h-screen text-white">
@@ -188,126 +162,121 @@ const Shop: React.FC = () => {
             <section className="py-20">
                 <div className="container mx-auto px-6">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {products.map((product, i) => (
-                            <motion.div
-                                key={product.id}
-                                initial={{ opacity: 0, y: 30 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: i * 0.1 }}
-                                className="group"
-                            >
-                                <div className="p-6 rounded-2xl border border-white/10 bg-white/5 hover:border-[#CCFF00]/30 transition-all h-full flex flex-col">
-                                    {/* Product Image */}
-                                    <div
-                                        className="relative h-64 mb-6 flex items-center justify-center overflow-hidden rounded-xl transition-colors duration-500"
-                                        style={{ backgroundColor: `${product.color}10` }}
-                                    >
-                                        {/* Colored Ambient Glow */}
+                        {products.map((product, i) => {
+                            const currentSize = selectedSizes[product.id] || '250ml';
+                            const currentPrice = SIZE_PRICES[currentSize];
+
+                            return (
+                                <motion.div
+                                    key={product.id}
+                                    initial={{ opacity: 0, y: 30 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ delay: i * 0.1 }}
+                                    className="group"
+                                >
+                                    <div className="p-6 rounded-2xl border border-white/10 bg-white/5 hover:border-[#CCFF00]/30 transition-all h-full flex flex-col">
+                                        {/* Product Image */}
                                         <div
-                                            className="absolute inset-0 blur-3xl opacity-20 transition-opacity duration-500 group-hover:opacity-30"
-                                            style={{ backgroundColor: product.color }}
-                                        />
+                                            className="relative h-64 mb-6 flex items-center justify-center overflow-hidden rounded-xl transition-colors duration-500"
+                                            style={{ backgroundColor: `${product.color}10` }}
+                                        >
+                                            {/* Colored Ambient Glow */}
+                                            <div
+                                                className="absolute inset-0 blur-3xl opacity-20 transition-opacity duration-500 group-hover:opacity-30"
+                                                style={{ backgroundColor: product.color }}
+                                            />
 
-                                        {/* White Glow Behind Bottle */}
-                                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-white blur-[60px] opacity-40 rounded-full pointer-events-none" />
+                                            {/* White Glow Behind Bottle */}
+                                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-white blur-[60px] opacity-40 rounded-full pointer-events-none" />
 
-                                        <img
-                                            src={product.image}
-                                            alt={product.name}
-                                            className="h-full w-auto object-contain group-hover:scale-110 transition-transform duration-500 relative z-10 drop-shadow-2xl"
-                                        />
-                                    </div>
-
-                                    {/* Product Info */}
-                                    <div className="flex-1">
-                                        <div className="flex items-center gap-1 mb-2">
-                                            <Star className="w-4 h-4 text-[#CCFF00] fill-[#CCFF00]" />
-                                            <span className="text-sm font-bold">{product.rating}</span>
-                                            <span className="text-xs text-gray-500 ml-1">(250+ reviews)</span>
+                                            <img
+                                                src={product.image}
+                                                alt={product.name}
+                                                className="h-full w-auto object-contain group-hover:scale-110 transition-transform duration-500 relative z-10 drop-shadow-2xl"
+                                            />
                                         </div>
 
-                                        <h3 className="text-2xl font-black mb-2 font-['Plus_Jakarta_Sans']">
-                                            {product.name}
-                                        </h3>
-                                        <p className="text-gray-400 text-sm mb-4">{product.description}</p>
-
-                                        <div className="mb-4">
-                                            <p className="text-xs text-gray-500 font-bold uppercase tracking-wider mb-2">Available Sizes</p>
-                                            <div className="flex flex-wrap gap-2">
-                                                {['250ml', '330ml', '750ml', '1050ml', '1.5L'].map(size => (
-                                                    <span key={size} className="text-xs px-2 py-1 rounded border border-white/20 text-gray-300">
-                                                        {size}
-                                                    </span>
-                                                ))}
+                                        {/* Product Info */}
+                                        <div className="flex-1">
+                                            <div className="flex items-center gap-1 mb-2">
+                                                <Star className="w-4 h-4 text-[#CCFF00] fill-[#CCFF00]" />
+                                                <span className="text-sm font-bold">{product.rating}</span>
+                                                <span className="text-xs text-gray-500 ml-1">(250+ reviews)</span>
                                             </div>
-                                        </div>
 
-                                        <div className="flex items-center justify-between mt-auto pt-4 border-t border-white/10">
-                                            <div>
-                                                <span className="text-2xl font-black text-[#CCFF00]">LKR {product.price}</span>
-                                                <span className="text-sm text-gray-500 ml-2">/ bottle</span>
-                                            </div>
-                                        </div>
-                                    </div>
+                                            <h3 className="text-2xl font-black mb-2 font-['Plus_Jakarta_Sans']">
+                                                {product.name}
+                                            </h3>
+                                            <p className="text-gray-400 text-sm mb-4">{product.description}</p>
 
-                                    {/* Add to Cart */}
-                                    <div className="mt-4">
-                                        {cart[product.id] ? (
-                                            <div className="flex items-center justify-between gap-4">
-                                                <div className="flex items-center gap-3 flex-1 bg-white/5 rounded-full p-1">
-                                                    <button
-                                                        onClick={() => removeFromCart(product.id)}
-                                                        className="w-10 h-10 rounded-full bg-white/10 hover:bg-[#CCFF00] hover:text-black transition-all flex items-center justify-center"
-                                                    >
-                                                        <Minus className="w-4 h-4" />
-                                                    </button>
-                                                    <span className="flex-1 text-center font-bold">{cart[product.id]}</span>
-                                                    <button
-                                                        onClick={() => addToCart(product.id)}
-                                                        className="w-10 h-10 rounded-full bg-white/10 hover:bg-[#CCFF00] hover:text-black transition-all flex items-center justify-center"
-                                                    >
-                                                        <Plus className="w-4 h-4" />
-                                                    </button>
+                                            <div className="mb-6">
+                                                <p className="text-xs text-gray-500 font-bold uppercase tracking-wider mb-2">Select Size</p>
+                                                <div className="flex flex-wrap gap-2">
+                                                    {(Object.keys(SIZE_PRICES) as BottleSize[]).map(size => (
+                                                        <button
+                                                            key={size}
+                                                            onClick={() => handleSizeSelect(product.id, size)}
+                                                            className={`text-xs px-3 py-1.5 rounded-lg border transition-all ${currentSize === size
+                                                                ? 'border-[#CCFF00] bg-[#CCFF00]/10 text-[#CCFF00] font-bold'
+                                                                : 'border-white/20 text-gray-400 hover:border-white/40'
+                                                                }`}
+                                                        >
+                                                            {size}
+                                                        </button>
+                                                    ))}
                                                 </div>
                                             </div>
-                                        ) : (
+
+                                            <div className="flex items-center justify-between mt-auto pt-4 border-t border-white/10">
+                                                <div>
+                                                    <span className="text-2xl font-black text-[#CCFF00]">LKR {currentPrice}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Add to Cart */}
+                                        <div className="mt-4">
                                             <button
-                                                onClick={() => addToCart(product.id)}
-                                                className="w-full px-6 py-3 bg-[#CCFF00] text-black font-black rounded-full hover:bg-white transition-all flex items-center justify-center gap-2 uppercase tracking-wider"
+                                                onClick={() => handleAddToCart(product)}
+                                                className="w-full px-6 py-3 bg-[#CCFF00] text-black font-black rounded-full hover:bg-white transition-all flex items-center justify-center gap-2 uppercase tracking-wider active:scale-95"
                                             >
                                                 <ShoppingCart className="w-5 h-5" />
                                                 <span>Add to Cart</span>
                                             </button>
-                                        )}
+                                        </div>
                                     </div>
-                                </div>
-                            </motion.div>
-                        ))}
+                                </motion.div>
+                            );
+                        })}
                     </div>
                 </div>
             </section>
 
             {/* Floating Cart Summary */}
-            {getTotalItems() > 0 && (
+            {totalItems > 0 && (
                 <motion.div
                     initial={{ y: 100, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
-                    className="fixed bottom-8 right-8 p-6 rounded-2xl border border-[#CCFF00]/30 bg-[#050505] shadow-2xl z-50"
+                    className="fixed bottom-8 right-8 p-6 rounded-2xl border border-[#CCFF00]/30 bg-[#050505] shadow-2xl z-50 max-w-sm w-full mx-4 md:mx-0"
                 >
                     <div className="flex items-center gap-4 mb-4">
-                        <ShoppingCart className="w-6 h-6 text-[#CCFF00]" />
+                        <div className="p-3 bg-[#CCFF00]/10 rounded-full">
+                            <ShoppingCart className="w-6 h-6 text-[#CCFF00]" />
+                        </div>
                         <div>
-                            <div className="font-bold font-['Plus_Jakarta_Sans']">Cart Summary</div>
-                            <div className="text-sm text-gray-400">{getTotalItems()} items</div>
+                            <div className="font-bold font-['Plus_Jakarta_Sans'] text-lg">Cart Summary</div>
+                            <div className="text-sm text-gray-400">{totalItems} items selected</div>
                         </div>
                     </div>
-                    <div className="text-2xl font-black text-[#CCFF00] mb-4">
-                        LKR {getTotalPrice().toLocaleString()}
+                    <div className="text-3xl font-black text-[#CCFF00] mb-6">
+                        LKR {totalPrice.toLocaleString()}
                     </div>
-                    <button className="w-full px-6 py-3 bg-[#CCFF00] text-black font-black rounded-full hover:bg-white transition-all uppercase tracking-wider">
-                        Checkout
-                    </button>
+                    <Link to="/checkout" className="block w-full">
+                        <button className="w-full px-6 py-4 bg-[#CCFF00] text-black font-black rounded-xl hover:bg-white transition-all uppercase tracking-wider flex items-center justify-center gap-2">
+                            Proceed to Checkout <ArrowRight size={20} />
+                        </button>
+                    </Link>
                 </motion.div>
             )}
         </div>
