@@ -125,8 +125,8 @@ const Testimonials: React.FC = () => {
           className="mt-12 md:mt-16 flex flex-wrap justify-center items-center gap-6 md:gap-12 text-center"
         >
           <div className="text-center">
-            <div className="text-3xl md:text-4xl font-black text-white mb-1 font-['Plus_Jakarta_Sans']">10K+</div>
-            <div className="text-xs md:text-sm text-gray-500 uppercase tracking-wider font-bold">Happy Customers</div>
+            <div className="text-3xl md:text-4xl font-black text-white mb-1 font-['Plus_Jakarta_Sans']">10+</div>
+            <div className="text-xs md:text-sm text-gray-500 uppercase tracking-wider font-bold">Total Distributers</div>
           </div>
           <div className="hidden md:block w-px h-12 bg-white/10" />
           <div className="text-center">

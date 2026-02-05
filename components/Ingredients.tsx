@@ -3,12 +3,12 @@ import { motion } from 'framer-motion';
 import { Zap, Leaf, Droplets, Wind, Sun, BatteryCharging } from 'lucide-react';
 
 const ingredients = [
-  { icon: Zap, title: "Ionized Energy", desc: "Charged particles for instant uptake." },
-  { icon: Leaf, title: "Organic Extracts", desc: "Sourced from vertical farms." },
-  { icon: Droplets, title: "Deep Sea Aqua", desc: "Filtered through volcanic rock." },
+  { icon: Zap, title: "PURIFIED WATER", desc: "We use highly treated, triple-filtered water to ensure absolute purity and safety." },
+  { icon: Leaf, title: "HIGH CARBONATION", desc: "Delivers the strong, crisp kick and fizz that you expect from a premium soda." },
+  { icon: Droplets, title: "PREMIUM INGREDIENTS", desc: "Made with high-quality, food-grade ingredients that meet international safety standards." },
   { icon: Sun, title: "Solar Infusion", desc: "Vitamin D boosted naturally." },
-  { icon: Wind, title: "Nano Bubbles", desc: "Smoother mouthfeel, longer fizz." },
-  { icon: BatteryCharging, title: "Electrolytes", desc: "Hydration at a cellular level." },
+  { icon: Wind, title: "PERFECT DIGESTION", desc: "The ideal beverage to have with your meal to help settle the stomach." },
+  { icon: BatteryCharging, title: "CONSISTENT TASTE", desc: "A reliable formula that ensures the same refreshing experience in every bottle." },
 ];
 
 const Ingredients: React.FC = () => {
@@ -36,7 +36,7 @@ const Ingredients: React.FC = () => {
               className="bg-white/5 border border-white/10 p-6 md:p-8 rounded-2xl group transition-colors duration-300 relative overflow-hidden hover:border-[#CCFF00]/50"
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-[#CCFF00] blur-[100px] opacity-0 group-hover:opacity-10 transition-opacity duration-500" />
-              
+
               <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/5 flex items-center justify-center mb-4 md:mb-6 text-[#CCFF00] group-hover:bg-[#CCFF00] group-hover:text-black transition-colors duration-300">
                 <item.icon size={24} className="md:w-7 md:h-7" />
               </div>

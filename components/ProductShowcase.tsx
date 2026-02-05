@@ -25,60 +25,60 @@ const SHOWCASE_PRODUCTS: ExtendedProduct[] = [
   {
     id: 'orange',
     name: 'Sunstar Orange',
-    tagline: 'Citrus Burst',
-    description: 'Explosive orange zest with a sparkling finish that wakes up your senses.',
-    color: '#FF8C00',
-    accent: '#FF8C00',
-    flavorProfile: 'Zesty, Sweet, Sharp',
-    imagePlaceholderColor: 'bg-orange-500',
+    tagline: 'The Taste of Sunshine',
+    description: 'A refreshing citrus beverage that captures the vibrant flavor of sun-ripened oranges. A timeless choice for the whole family.',
+    color: '#F37021', // Classic Orange
+    accent: '#F37021',
+    flavorProfile: 'Citrus, Bright, Refreshing',
+    imagePlaceholderColor: 'bg-orange-600',
     image: orange,
     sizes: PRODUCT_SIZES
   },
   {
     id: 'ginger',
     name: 'Solar Ginger',
-    tagline: 'Spiced Refresh',
-    description: 'Real ginger root extract delivers a bold, spicy kick that burns so good.',
-    color: '#CD853F',
-    accent: '#CD853F',
-    flavorProfile: 'Spicy, Bold, Invigorating',
-    imagePlaceholderColor: 'bg-amber-700',
+    tagline: 'A Traditional Favorite',
+    description: 'Inspired by authentic recipes, this ginger drink provides a warm, spicy finish that perfectly complements any meal.',
+    color: '#005432', // Deep EGB Green
+    accent: '#D4AF37', // Gold accent
+    flavorProfile: 'Spicy, Warm, Authentic',
+    imagePlaceholderColor: 'bg-green-900',
     image: ginger,
     sizes: PRODUCT_SIZES
   },
   {
     id: 'cola',
     name: 'Midnight Cola',
-    tagline: 'Classic Kick',
-    description: 'Deep, rich cola notes with the perfect balance of sweetness and carbonation.',
-    color: '#4A2C2A',
-    accent: '#4A2C2A',
-    flavorProfile: 'Bold, Classic, Timeless',
-    imagePlaceholderColor: 'bg-stone-800',
+    tagline: 'Classic Refreshment',
+    description: 'A rich and sparkling cola with a smooth finish. Crafted to provide an energizing lift and satisfying taste.',
+    color: '#2B1B17', // Cola Brown-Black
+    accent: '#ED1C24', // Classic Red accent
+    flavorProfile: 'Bold, Sparkling, Smooth',
+    imagePlaceholderColor: 'bg-black',
     image: cola,
     sizes: PRODUCT_SIZES
   },
   {
     id: 'cream-soda',
     name: 'Cream Dream',
-    tagline: 'Smooth Vanilla',
-    description: 'Creamy vanilla heaven with a bubbly twist. Pure indulgence in every sip.',
-    color: '#FF69B4',
-    accent: '#FF69B4',
-    flavorProfile: 'Creamy, Dreamy, Sweet',
-    imagePlaceholderColor: 'bg-pink-300',
+    tagline: 'An Island Tradition',
+    description: 'The beloved bright and creamy favorite. Known for its unique smoothness and nostalgic vanilla aroma.',
+    color: '#00A651', // Classic Sri Lankan Cream Soda Green
+    accent: '#00A651',
+    flavorProfile: 'Creamy, Sweet, Iconic',
+    imagePlaceholderColor: 'bg-green-500',
     image: creamsoda,
     sizes: PRODUCT_SIZES
   },
   {
     id: 'nesta',
     name: 'Nesta Ice',
-    tagline: 'Tropical Escape',
-    description: 'Refreshing peach-infused tea with island vibes and a crisp finish.',
-    color: '#00BCD4',
-    accent: '#00BCD4',
-    flavorProfile: 'Refreshing, Fruity, Tropical',
-    imagePlaceholderColor: 'bg-teal-500',
+    tagline: 'Pure Iced Tea',
+    description: 'A sophisticated blend of premium tea with a hint of peach. Carefully brewed for a clean and thirst-quenching experience.',
+    color: '#D2691E', // Tea/Amber
+    accent: '#008B8B', // Teal accent
+    flavorProfile: 'Refined, Fruity, Balanced',
+    imagePlaceholderColor: 'bg-amber-800',
     image: nesta,
     sizes: PRODUCT_SIZES
   },
@@ -223,7 +223,7 @@ const ProductShowcase: React.FC = () => {
     <div id="flavors" ref={container} className="relative bg-[#050505] pb-[10vh]">
 
       {/* Sticky Header */}
-      <div className="sticky top-6 h-12 flex justify-center z-50 pointer-events-none mix-blend-difference text-white mb-20">
+      <div className="sticky top-5 h-12 flex justify-center z-50 pointer-events-none mix-blend-difference text-white mb-20">
         <h2 className="text-sm md:text-3xl font-bold uppercase tracking-widest bg-white/10 px-4 py-1.5 backdrop-blur-md rounded-full border border-white/20">
           Flavor Drop
         </h2>

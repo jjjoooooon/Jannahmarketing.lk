@@ -43,7 +43,7 @@ const Newsletter: React.FC = () => {
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
 
-      <div className="container mx-auto px-6 relative z-10 text-center">
+      <div className="container max-w-7xl mx-auto px-6 relative z-10 text-center">
         <h2 className="text-4xl md:text-8xl font-black font-['Plus_Jakarta_Sans'] mb-4 md:mb-6 uppercase tracking-tighter leading-none">
           Don't Miss <br /> The Drop
         </h2>
