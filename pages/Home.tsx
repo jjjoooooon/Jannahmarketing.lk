@@ -42,7 +42,7 @@ const Home: React.FC = () => {
             <Testimonials />
             <SriLankaMap />
             <DistributorCTA />
-            <Newsletter />
+            {/* <Newsletter /> */}
         </main>
     );
 };
