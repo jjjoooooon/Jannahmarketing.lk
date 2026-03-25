@@ -4,6 +4,8 @@ import { Helmet } from 'react-helmet-async';
 import { ArrowLeft, Trash2, Send, Mail, MessageCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import SearchableComboBox from '../components/SearchableComboBox';
+import { UNIQUE_CITIES } from '../data/cities';
 
 const Checkout: React.FC = () => {
     const { cart, removeFromCart, updateQuantity, totalPrice, totalItems } = useCart();
@@ -188,25 +190,14 @@ const Checkout: React.FC = () => {
                                 />
                             </div>
 
-                            <div className="space-y-2">
-                                <label className="text-sm font-bold text-gray-400 uppercase tracking-wider">District</label>
-                                <select
-                                    name="district"
-                                    required
-                                    value={formData.district}
-                                    onChange={handleInputChange}
-                                    className="w-full bg-[#050505] border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-[#CCFF00] transition-colors text-gray-300"
-                                >
-                                    <option value="">Select District</option>
-                                    <option value="Colombo">Colombo</option>
-                                    <option value="Gampaha">Gampaha</option>
-                                    <option value="Kalutara">Kalutara</option>
-                                    <option value="Kandy">Kandy</option>
-                                    <option value="Galle">Galle</option>
-                                    <option value="Matara">Matara</option>
-                                    {/* Add more districts as needed */}
-                                </select>
-                            </div>
+                            <SearchableComboBox
+                                label="City / District"
+                                options={UNIQUE_CITIES}
+                                value={formData.district}
+                                onChange={(value) => setFormData(prev => ({ ...prev, district: value }))}
+                                placeholder="Search for your city..."
+                                required
+                            />
 
                             <div className="space-y-2">
                                 <label className="text-sm font-bold text-gray-400 uppercase tracking-wider">Purpose / Note</label>
