@@ -7,13 +7,13 @@ const About: React.FC = () => {
     const values = [
         {
             icon: Heart,
-            title: 'Passion for Quality',
-            description: 'Every bottle is crafted with care, using only the finest natural ingredients.'
+            title: 'Unbeatable Taste',
+            description: 'We focus on delivering that perfect, crisp soda experience that keeps you coming back for more.'
         },
         {
             icon: Leaf,
-            title: 'Sustainability First',
-            description: 'Committed to 100% recyclable packaging and eco-friendly production methods.'
+            title: 'Maximum Fizz',
+            description: 'Highly carbonated and perfectly flavored to give you that refreshing kick in every sip.'
         },
         {
             icon: Users,
@@ -28,26 +28,26 @@ const About: React.FC = () => {
     ];
 
     const milestones = [
-        { year: '2015', event: 'Sunstar Founded', desc: 'Started with a vision for healthier refreshments' },
-        { year: '2018', event: 'National Launch', desc: 'Expanded to stores across Sri Lanka' },
-        { year: '2021', event: 'Zero Sugar Line', desc: 'Introduced our revolutionary zero-sugar formula' },
-        { year: '2024', event: '10K+ Retailers', desc: 'Now available in thousands of locations nationwide' }
+        { year: '2023', event: 'Jannah Marketing Founded', desc: 'Started in Sainthamaruthu with a vision to create the perfect soda' },
+        { year: '2024', event: 'Sunstar Brand Launch', desc: 'Introduced our 5 core flavors to the Eastern Province' },
+        { year: '2025', event: 'Island-wide Expansion', desc: 'Now distributing across all over Sri Lanka, reaching many provinces' },
+        { year: '2026', event: 'A Growing Name', desc: 'Becoming a household favorite for refreshing carbonated drinks' }
     ];
 
     return (
-        <div className="bg-[#050505] min-h-screen text-white">
+        <div className="bg-brand-black min-h-screen text-white">
             <Helmet>
-                <title>About Sunstar - Our Story & Values | Premium Sri Lankan Beverages</title>
-                <meta name="description" content="Founded in 2015, Sunstar brings authentic Sri Lankan flavors to life. Learn about our journey, values, and commitment to quality refreshments. 10K+ happy customers trust us." />
+                <title>About Jannah Marketing - The Story of Sunstar Soda</title>
+                <meta name="description" content="Founded in 2023 in Sainthamaruthu, Jannah Marketing (Pvt) Ltd is a fast-growing beverage company. Learn how Sunstar soda is taking over Sri Lanka." />
                 <link rel="canonical" href="https://jannahmarketing.lk/about" />
 
                 {/* Open Graph */}
-                <meta property="og:title" content="About Sunstar - Our Story & Values" />
-                <meta property="og:description" content="Founded in 2015, Sunstar brings authentic Sri Lankan flavors to life. Learn about our journey, values, and commitment to quality." />
+                <meta property="og:title" content="About Jannah Marketing - Our Journey" />
+                <meta property="og:description" content="Founded in 2023, Jannah Marketing brings you the refreshing Sunstar soda. From Sainthamaruthu to all over Sri Lanka." />
                 <meta property="og:image" content="https://jannahmarketing.lk/og-sunstar-about.jpg" />
                 <meta property="og:url" content="https://jannahmarketing.lk/about" />
                 <meta property="og:type" content="website" />
-                <meta property="og:site_name" content="Sunstar" />
+                <meta property="og:site_name" content="Jannah Marketing" />
 
                 {/* Twitter Card */}
                 <meta name="twitter:card" content="summary_large_image" />
@@ -58,8 +58,8 @@ const About: React.FC = () => {
             {/* Hero Section */}
             <section className="relative py-20 md:py-32 overflow-hidden">
                 <div className="absolute inset-0 opacity-5">
-                    <div className="absolute top-20 right-20 w-96 h-96 bg-[#CCFF00] rounded-full blur-[120px]" />
-                    <div className="absolute bottom-20 left-20 w-96 h-96 bg-[#CCFF00] rounded-full blur-[120px]" />
+                    <div className="absolute top-20 right-20 w-96 h-96 bg-brand-lime rounded-full blur-[120px]" />
+                    <div className="absolute bottom-20 left-20 w-96 h-96 bg-brand-lime rounded-full blur-[120px]" />
                 </div>
 
                 <div className="container mx-auto px-6 relative z-10">
@@ -68,15 +68,15 @@ const About: React.FC = () => {
                         animate={{ opacity: 1, y: 0 }}
                         className="text-center max-w-4xl mx-auto"
                     >
-                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#CCFF00]/10 rounded-full border border-[#CCFF00]/20 mb-6">
-                            <Target className="w-4 h-4 text-[#CCFF00]" />
-                            <span className="text-[#CCFF00] font-bold uppercase tracking-wider text-xs">About Us</span>
+                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-brand-lime/10 rounded-full border border-brand-lime/20 mb-6">
+                            <Target className="w-4 h-4 text-brand-lime" />
+                            <span className="text-brand-lime font-bold uppercase tracking-wider text-xs">About Us</span>
                         </div>
                         <h1 className="text-4xl md:text-7xl font-black mb-6 font-['Plus_Jakarta_Sans']">
-                            Refreshing Lives Since 2015
+                            Refreshing Sri Lanka Since 2023
                         </h1>
                         <p className="text-lg md:text-xl text-gray-400 leading-relaxed">
-                            Sunstar is more than just a beverage company. We're on a mission to revolutionize how people enjoy refreshment - combining bold flavors, natural ingredients, and zero compromises.
+                            Jannah Marketing (Pvt) Ltd is on a mission to bring high-quality, flavorful carbonated sodas to every corner of Sri Lanka. Starting from our roots in Sainthamaruthu, we've grown into a national name for bold refreshment.
                         </p>
                     </motion.div>
                 </div>
@@ -94,13 +94,13 @@ const About: React.FC = () => {
                             <h2 className="text-3xl md:text-5xl font-black mb-6 font-['Plus_Jakarta_Sans']">Our Story</h2>
                             <div className="space-y-4 text-gray-400 leading-relaxed">
                                 <p>
-                                    Founded in 2015, Sunstar was born from a simple idea: people deserve better beverages. No artificial sweeteners, no excessive sugar, just pure, refreshing taste from natural ingredients.
+                                    Jannah Marketing (Pvt) Ltd was founded in 2023 with a simple goal: to make a soda that people actually love. We aren't here for the boardroom talk; we're here for the fizz.
                                 </p>
                                 <p>
-                                    We started small, crafting our first batches in a local facility in Sri Lanka. Today, we're proud to serve thousands of customers across the nation, offering five distinct flavors that cater to every taste preference.
+                                    We started in Sainthamaruthu, where our local community first got a taste of Sunstar. The response was incredible, and within just a couple of years, we've expanded from the East to distribute across many provinces all over Sri Lanka.
                                 </p>
                                 <p>
-                                    Every bottle tells our story - a commitment to quality, sustainability, and the belief that great taste doesn't require compromise.
+                                    Whether it's the kick of our Ginger or the sweetness of our Orange, every Sunstar bottle is packed with flavors that hit the spot. We are a growing team, dedicated to fueling the island with the best carbonated drinks.
                                 </p>
                             </div>
                         </motion.div>
@@ -116,7 +116,7 @@ const About: React.FC = () => {
                                 alt="Sunstar Story"
                                 className="w-full h-full object-cover"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+                            <div className="absolute inset-0 bg-linear-to-t from-black/80 to-transparent" />
                         </motion.div>
                     </div>
                 </div>
@@ -145,9 +145,9 @@ const About: React.FC = () => {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ delay: i * 0.1 }}
-                                className="p-6 rounded-2xl border border-white/10 bg-white/5 hover:border-[#CCFF00]/30 transition-all"
+                                className="p-6 rounded-2xl border border-white/10 bg-white/5 hover:border-brand-lime/30 transition-all"
                             >
-                                <value.icon className="w-12 h-12 text-[#CCFF00] mb-4" />
+                                <value.icon className="w-12 h-12 text-brand-lime mb-4" />
                                 <h3 className="text-xl font-bold mb-2 font-['Plus_Jakarta_Sans']">{value.title}</h3>
                                 <p className="text-gray-400 text-sm">{value.description}</p>
                             </motion.div>
@@ -179,10 +179,10 @@ const About: React.FC = () => {
                                 className="flex gap-8 mb-12 last:mb-0"
                             >
                                 <div className="flex flex-col items-center">
-                                    <div className="w-16 h-16 rounded-full bg-[#CCFF00] flex items-center justify-center font-black text-black text-sm">
+                                    <div className="w-16 h-16 rounded-full bg-brand-lime flex items-center justify-center font-black text-black text-sm">
                                         {milestone.year}
                                     </div>
-                                    {i < milestones.length - 1 && <div className="w-0.5 h-full bg-[#CCFF00]/20 mt-2" />}
+                                    {i < milestones.length - 1 && <div className="w-0.5 h-full bg-brand-lime/20 mt-2" />}
                                 </div>
                                 <div className="flex-1 pb-12">
                                     <h3 className="text-2xl font-bold mb-2 font-['Plus_Jakarta_Sans']">{milestone.event}</h3>
@@ -212,7 +212,7 @@ const About: React.FC = () => {
                                 transition={{ delay: i * 0.1 }}
                                 className="text-center"
                             >
-                                <div className="text-4xl md:text-6xl font-black text-[#CCFF00] mb-2 font-['Plus_Jakarta_Sans']">
+                                <div className="text-4xl md:text-6xl font-black text-brand-lime mb-2 font-['Plus_Jakarta_Sans']">
                                     {stat.num}
                                 </div>
                                 <div className="text-gray-400 text-sm uppercase tracking-wider font-bold">{stat.label}</div>

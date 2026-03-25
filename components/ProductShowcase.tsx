@@ -25,11 +25,11 @@ const SHOWCASE_PRODUCTS: ExtendedProduct[] = [
   {
     id: 'orange',
     name: 'Sunstar Orange',
-    tagline: 'The Taste of Sunshine',
-    description: 'A refreshing citrus beverage that captures the vibrant flavor of sun-ripened oranges. A timeless choice for the whole family.',
+    tagline: 'The Classic Refresh',
+    description: 'The soda that everybody loves. It\'s sweet, tangy, and has that perfect orange kick that makes you want more.',
     color: '#F37021', // Classic Orange
     accent: '#F37021',
-    flavorProfile: 'Citrus, Bright, Refreshing',
+    flavorProfile: 'Sweet, Zesty, Classic',
     imagePlaceholderColor: 'bg-orange-600',
     image: orange,
     sizes: PRODUCT_SIZES
@@ -37,11 +37,11 @@ const SHOWCASE_PRODUCTS: ExtendedProduct[] = [
   {
     id: 'ginger',
     name: 'Solar Ginger',
-    tagline: 'A Traditional Favorite',
-    description: 'Inspired by authentic recipes, this ginger drink provides a warm, spicy finish that perfectly complements any meal.',
+    tagline: 'That Spicy Kick',
+    description: 'If you like that real ginger burn, this is for you. It\'s bold, it\'s spicy, and it\'s the best partner for your favorite Sri Lankan rice and curry.',
     color: '#005432', // Deep EGB Green
     accent: '#D4AF37', // Gold accent
-    flavorProfile: 'Spicy, Warm, Authentic',
+    flavorProfile: 'Spicy, Strong, Bold',
     imagePlaceholderColor: 'bg-green-900',
     image: ginger,
     sizes: PRODUCT_SIZES
@@ -49,11 +49,11 @@ const SHOWCASE_PRODUCTS: ExtendedProduct[] = [
   {
     id: 'cola',
     name: 'Midnight Cola',
-    tagline: 'Classic Refreshment',
-    description: 'A rich and sparkling cola with a smooth finish. Crafted to provide an energizing lift and satisfying taste.',
+    tagline: 'Nothing Beats Cola',
+    description: 'A deep, rich cola flavor with maximum fizz. Whether you\'re at a party or just thirsty, this is the one you reach for.',
     color: '#2B1B17', // Cola Brown-Black
     accent: '#ED1C24', // Classic Red accent
-    flavorProfile: 'Bold, Sparkling, Smooth',
+    flavorProfile: 'Bold, Fizzy, Rich',
     imagePlaceholderColor: 'bg-black',
     image: cola,
     sizes: PRODUCT_SIZES
@@ -61,11 +61,11 @@ const SHOWCASE_PRODUCTS: ExtendedProduct[] = [
   {
     id: 'cream-soda',
     name: 'Cream Dream',
-    tagline: 'An Island Tradition',
-    description: 'The beloved bright and creamy favorite. Known for its unique smoothness and nostalgic vanilla aroma.',
+    tagline: 'Smooth and Sweet',
+    description: 'That classic green soda we all grew up with. It\'s sweet, creamy, and has that vanilla vibe that takes you back to childhood.',
     color: '#00A651', // Classic Sri Lankan Cream Soda Green
     accent: '#00A651',
-    flavorProfile: 'Creamy, Sweet, Iconic',
+    flavorProfile: 'Creamy, Vanilla, Sweet',
     imagePlaceholderColor: 'bg-green-500',
     image: creamsoda,
     sizes: PRODUCT_SIZES
@@ -73,11 +73,11 @@ const SHOWCASE_PRODUCTS: ExtendedProduct[] = [
   {
     id: 'nesta',
     name: 'Nesta Ice',
-    tagline: 'Pure Iced Tea',
-    description: 'A sophisticated blend of premium tea with a hint of peach. Carefully brewed for a clean and thirst-quenching experience.',
+    tagline: 'Refreshing Peach Tea',
+    description: 'A cool mix of tea and peach. It\'s not just a drink; it\'s a vibe. Perfect for a hot afternoon when you need something light and fruity.',
     color: '#D2691E', // Tea/Amber
     accent: '#008B8B', // Teal accent
-    flavorProfile: 'Refined, Fruity, Balanced',
+    flavorProfile: 'Fruity, Cool, Light',
     imagePlaceholderColor: 'bg-amber-800',
     image: nesta,
     sizes: PRODUCT_SIZES
@@ -146,7 +146,7 @@ const ProductCard: React.FC<ProductCardProps> = memo(({ product, index, total, p
 
   return (
     // Height container needs to be strictly defined to prevent "half showing" glitch
-    <div className="h-[100dvh] flex items-center justify-center sticky top-0">
+    <div className="h-dvh flex items-center justify-center sticky top-0">
 
       <motion.div
         style={{
@@ -155,7 +155,7 @@ const ProductCard: React.FC<ProductCardProps> = memo(({ product, index, total, p
           // Force hardware acceleration to prevent repaint lag
           transform: 'translateZ(0)'
         }}
-        className="relative flex flex-col md:flex-row w-[95vw] md:w-[90vw] h-[90dvh] md:h-[85vh] rounded-[2rem] overflow-hidden shadow-xl origin-top will-change-transform"
+        className="relative flex flex-col md:flex-row w-[95vw] md:w-[90vw] h-[90dvh] md:h-[85vh] rounded-4xl overflow-hidden shadow-xl origin-top will-change-transform"
       >
         {/* Text Content */}
         <div className="w-full md:w-1/2 p-6 md:p-14 flex flex-col justify-center relative z-20 h-[45%] md:h-auto order-2 md:order-1">
@@ -220,7 +220,7 @@ const ProductShowcase: React.FC = () => {
   return (
     // FIX: Add unnecessary bottom padding (pb-[25vh]) to ensure the last card 
     // has "track" space to exist before the next section invades.
-    <div id="flavors" ref={container} className="relative bg-[#050505] pb-[10vh]">
+    <div id="flavors" ref={container} className="relative bg-brand-black pb-[10vh]">
 
       {/* Sticky Header */}
       <div className="sticky top-5 h-12 flex justify-center z-50 pointer-events-none mix-blend-difference text-white mb-20">

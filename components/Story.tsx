@@ -6,7 +6,7 @@ import story1 from '../assets/banner.webp'
 
 const Story: React.FC = () => {
   return (
-    <section id="our-story" className="relative py-12 md:py-32 bg-[#050505] overflow-hidden">
+    <section id="our-story" className="relative py-12 md:py-32 bg-brand-black overflow-hidden">
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
 
@@ -18,11 +18,11 @@ const Story: React.FC = () => {
             transition={{ duration: 0.8 }}
             className="relative order-2 lg:order-1"
           >
-            <div className="relative rounded-3xl overflow-hidden border border-white/10 aspect-square lg:aspect-[4/5] group">
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10" />
+            <div className="relative rounded-3xl overflow-hidden border border-white/10 aspect-square lg:aspect-4/5 group">
+              <div className="absolute inset-0 bg-linear-to-t from-black via-transparent to-transparent z-10" />
               <img
                 src={story1}
-                alt="Sunstar Energy Drink"
+                alt="Sunstar Carbonated Soda"
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
 
@@ -34,7 +34,7 @@ const Story: React.FC = () => {
                       <p className="text-gray-300 text-sm font-medium mb-1">Market Growth</p>
                       <h4 className="text-3xl font-black text-white">+240%</h4>
                     </div>
-                    <div className="w-12 h-12 bg-[#CCFF00] rounded-full flex items-center justify-center text-black">
+                    <div className="w-12 h-12 bg-brand-lime rounded-full flex items-center justify-center text-black">
                       <TrendingUp className="w-6 h-6" />
                     </div>
                   </div>
@@ -43,8 +43,8 @@ const Story: React.FC = () => {
             </div>
 
             {/* Decorative Elements */}
-            <div className="absolute -top-10 -left-10 w-32 h-32 bg-[#CCFF00] rounded-full blur-[80px] opacity-20" />
-            <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-[#CCFF00] rounded-full blur-[80px] opacity-20" />
+            <div className="absolute -top-10 -left-10 w-32 h-32 bg-brand-lime rounded-full blur-[80px] opacity-20" />
+            <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-brand-lime rounded-full blur-[80px] opacity-20" />
           </motion.div>
 
           {/* Content Side */}
@@ -53,10 +53,10 @@ const Story: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-[#CCFF00]/10 rounded-full border border-[#CCFF00]/20 mb-6"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-brand-lime/10 rounded-full border border-brand-lime/20 mb-6"
             >
-              <Zap className="w-4 h-4 text-[#CCFF00]" />
-              <span className="text-[#CCFF00] font-bold uppercase tracking-wider text-xs">The Origin</span>
+              <Zap className="w-4 h-4 text-brand-lime" />
+              <span className="text-brand-lime font-bold uppercase tracking-wider text-xs">The Birthplace</span>
             </motion.div>
 
             <motion.h2
@@ -66,8 +66,8 @@ const Story: React.FC = () => {
               transition={{ delay: 0.1 }}
               className="text-4xl md:text-6xl font-black text-white mb-6 font-['Plus_Jakarta_Sans'] leading-tight"
             >
-              Fueling the <br />
-              <span className="text-[#CCFF00]">New Generation</span>
+              From Sainthamaruthu <br />
+              <span className="text-brand-lime">To The Island</span>
             </motion.h2>
 
             <motion.p
@@ -77,7 +77,7 @@ const Story: React.FC = () => {
               transition={{ delay: 0.2 }}
               className="text-gray-400 text-lg mb-8 leading-relaxed font-['Inter']"
             >
-              Sunstar wasn't created in a boardroom. It was born from a need for cleaner, longer-lasting energy. We stripped away the crash-inducing sugars and synthetic fillers to create a pure kinetic transfer system.
+              Jannah Marketing (Pvt) Ltd didn't start in a corporate office. We started in Sainthamaruthu back in 2023, driven by a simple love for that perfect soda fizz. We wanted to create a drink that hits different—powerful carbonation and bold, refreshing flavors.
             </motion.p>
 
             <motion.div
@@ -89,20 +89,20 @@ const Story: React.FC = () => {
             >
               <div className="flex gap-4">
                 <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
-                  <Clock className="w-6 h-6 text-[#CCFF00]" />
+                  <Clock className="w-6 h-6 text-brand-lime" />
                 </div>
                 <div>
-                  <h4 className="text-white font-bold text-lg">Sustained Power</h4>
-                  <p className="text-gray-500 text-sm">No crash, just focus.</p>
+                  <h4 className="text-white font-bold text-lg">Maximum Fizz</h4>
+                  <p className="text-gray-500 text-sm">High carbonation for that real kick.</p>
                 </div>
               </div>
               <div className="flex gap-4">
                 <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
-                  <Trophy className="w-6 h-6 text-[#CCFF00]" />
+                  <Trophy className="w-6 h-6 text-brand-lime" />
                 </div>
                 <div>
-                  <h4 className="text-white font-bold text-lg">Premium Ingredients</h4>
-                  <p className="text-gray-500 text-sm">Sourced globally.</p>
+                  <h4 className="text-white font-bold text-lg">Bold Flavors</h4>
+                  <p className="text-gray-500 text-sm">Perfectly crafted taste.</p>
                 </div>
               </div>
             </motion.div>
@@ -115,7 +115,7 @@ const Story: React.FC = () => {
             >
               <Link
                 to="/about"
-                className="inline-flex items-center gap-2 text-white font-bold hover:text-[#CCFF00] transition-colors group"
+                className="inline-flex items-center gap-2 text-white font-bold hover:text-brand-lime transition-colors group"
               >
                 Read our full story
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

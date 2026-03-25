@@ -3,24 +3,24 @@ import { motion } from 'framer-motion';
 import { Zap, Leaf, Droplets, Wind, Sun, BatteryCharging } from 'lucide-react';
 
 const ingredients = [
-  { icon: Zap, title: "PURIFIED WATER", desc: "We use highly treated, triple-filtered water to ensure absolute purity and safety." },
-  { icon: Leaf, title: "HIGH CARBONATION", desc: "Delivers the strong, crisp kick and fizz that you expect from a premium soda." },
-  { icon: Droplets, title: "PREMIUM INGREDIENTS", desc: "Made with high-quality, food-grade ingredients that meet international safety standards." },
-  { icon: Sun, title: "Solar Infusion", desc: "Vitamin D boosted naturally." },
-  { icon: Wind, title: "PERFECT DIGESTION", desc: "The ideal beverage to have with your meal to help settle the stomach." },
-  { icon: BatteryCharging, title: "CONSISTENT TASTE", desc: "A reliable formula that ensures the same refreshing experience in every bottle." },
+  { icon: Zap, title: "TRIPLE FILTERED WATER", desc: "Our water goes through high-tech filtration to ensure every sip is as pure as it gets." },
+  { icon: Leaf, title: "HIGH CARBONATION", desc: "We don't do weak bubbles. Sunstar is packed with the crisp, sharp fizz that soda lovers crave." },
+  { icon: Droplets, title: "BOLD FLAVORING", desc: "Our artificial flavors are carefully crafted to deliver that punchy, nostalgic taste in every bottle." },
+  { icon: Sun, title: "PERFECT CHILL", desc: "Designed to be served ice cold, our soda holds its carbonation longer for maximum refreshment." },
+  { icon: Wind, title: "CLEAN FINISH", desc: "No weird aftertaste here. Just a smooth, refreshing finish that clears the palate." },
+  { icon: BatteryCharging, title: "CONSISTENT QUALITY", desc: "Same great fizz, same bold flavor. From Sainthamaruthu to your doorstep, every time." },
 ];
 
 const Ingredients: React.FC = () => {
   return (
-    <section className="py-20 md:py-32 bg-[#050505] relative">
+    <section className="py-20 md:py-32 bg-brand-black relative">
       <div className="container mx-auto px-6">
         <div className="text-center mb-12 md:mb-20">
           <h2 className="text-3xl md:text-6xl font-extrabold font-['Plus_Jakarta_Sans'] text-white mb-4 uppercase tracking-tight">
-            The <span className="text-[#CCFF00]">Formula</span>
+            The <span className="text-brand-lime">Formula</span>
           </h2>
           <p className="text-gray-400 max-w-2xl mx-auto text-base md:text-lg font-light font-['Inter']">
-            We stripped away the junk and rebuilt the soda from the molecular level up. High tech, high taste.
+            We've perfected the science of the fizz. High carbonation, bold flavors, and zero excuses. This is soda how it should be.
           </p>
         </div>
 
@@ -33,11 +33,11 @@ const Ingredients: React.FC = () => {
               transition={{ delay: i * 0.1 }}
               viewport={{ once: true }}
               whileHover={{ scale: 1.02, backgroundColor: "rgba(255, 255, 255, 0.05)" }}
-              className="bg-white/5 border border-white/10 p-6 md:p-8 rounded-2xl group transition-colors duration-300 relative overflow-hidden hover:border-[#CCFF00]/50"
+              className="bg-white/5 border border-white/10 p-6 md:p-8 rounded-2xl group transition-colors duration-300 relative overflow-hidden hover:border-brand-lime/50"
             >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-[#CCFF00] blur-[100px] opacity-0 group-hover:opacity-10 transition-opacity duration-500" />
+              <div className="absolute top-0 right-0 w-32 h-32 bg-brand-lime blur-[100px] opacity-0 group-hover:opacity-10 transition-opacity duration-500" />
 
-              <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/5 flex items-center justify-center mb-4 md:mb-6 text-[#CCFF00] group-hover:bg-[#CCFF00] group-hover:text-black transition-colors duration-300">
+              <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/5 flex items-center justify-center mb-4 md:mb-6 text-brand-lime group-hover:bg-brand-lime group-hover:text-black transition-colors duration-300">
                 <item.icon size={24} className="md:w-7 md:h-7" />
               </div>
               <h3 className="text-lg md:text-xl font-bold text-white font-['Plus_Jakarta_Sans'] mb-2 md:mb-3 uppercase tracking-wide">

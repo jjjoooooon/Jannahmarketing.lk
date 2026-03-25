@@ -11,11 +11,11 @@ const LOCATIONS = [
         district: 'Ampara',
         x: 82,
         y: 68,
-        type: 'Flagship Store',
-        address: 'B293 Boliverian Village, Sainthamaruthu',
+        type: 'Home Base & Factory',
+        address: 'Jannah Marketing (Pvt) Ltd, Sainthamaruthu',
         stock: 'High',
         flavors: ['Orange', 'Cola', 'Ginger', 'Nesta', 'Cream Soda'],
-        shops: 7
+        shops: 'Expanding'
     },
     {
         id: 'kandy',
@@ -88,7 +88,7 @@ const SriLankaMap: React.FC = () => {
         <section className="py-20 md:py-32 bg-[#050505] relative overflow-hidden border-t border-white/5">
             {/* Background Elements */}
             <div className="absolute inset-0 opacity-10 pointer-events-none">
-                <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,_#CCFF00_1px,_transparent_1px)] bg-[length:40px_40px]" />
+                <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,var(--color-brand-lime)_1px,transparent_1px)] bg-[length:40px_40px]" />
             </div>
 
             <div className="container mx-auto px-6 relative z-10">
@@ -99,14 +99,14 @@ const SriLankaMap: React.FC = () => {
                         viewport={{ once: true }}
                         className="inline-flex items-center gap-2 px-4 py-2 bg-[#CCFF00]/10 rounded-full border border-[#CCFF00]/20 mb-4"
                     >
-                        <Navigation className="w-4 h-4 text-[#CCFF00]" />
-                        <span className="text-[#CCFF00] font-bold uppercase tracking-wider text-xs">Island-wide Availability</span>
+                        <Navigation className="w-4 h-4 text-brand-lime" />
+                        <span className="text-brand-lime font-bold uppercase tracking-wider text-xs">Island-wide Availability</span>
                     </motion.div>
                     <h2 className="text-3xl md:text-6xl font-black text-white mb-6 font-['Plus_Jakarta_Sans']">
-                        Find Your <span className="text-[#CCFF00]">Fuel</span>
+                        Island-wide <span className="text-brand-lime">Freshness</span>
                     </h2>
                     <p className="text-gray-400 max-w-2xl mx-auto text-lg font-['Inter']">
-                        Select a district to see availability. We are expanding rapidly across the island.
+                        From our humble beginnings in Sainthamaruthu, we've expanded rapidly. We now distribute our refreshing Sunstar sodas to every province in Sri Lanka.
                     </p>
                 </div>
 
@@ -114,7 +114,7 @@ const SriLankaMap: React.FC = () => {
                     {/* Map Container */}
                     <div className="relative w-full aspect-[4/5] md:aspect-square lg:aspect-[4/5] max-w-2xl mx-auto shadow-2xl overflow-hidden p-8 flex items-center justify-center">
                         {/* Grid Overlay */}
-                        {/* <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" /> */}
+                        {/* <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-size-[40px_40px] pointer-events-none" /> */}
 
                         <div className="relative w-full h-full">
                             <svg
@@ -129,7 +129,7 @@ const SriLankaMap: React.FC = () => {
                                         id={location.id}
                                         name={location.name}
                                         d={location.path}
-                                        className="fill-[#1a1a1a] stroke-[#333] stroke-[1px] transition-all duration-300 hover:fill-[#CCFF00] hover:opacity-50 focus:outline-none cursor-pointer"
+                                        className="fill-[#1a1a1a] stroke-[#333] stroke-[1px] transition-all duration-300 hover:fill-brand-lime hover:opacity-50 focus:outline-none cursor-pointer"
                                         onClick={() => handleLocationClick(location.id, location.name)}
                                         onMouseEnter={() => setHoveredLocation(location.name)}
                                         onMouseLeave={() => setHoveredLocation(null)}
@@ -149,10 +149,10 @@ const SriLankaMap: React.FC = () => {
                                 >
                                     <div className="relative -translate-x-1/2 -translate-y-1/2">
                                         {/* Blinking Effect */}
-                                        <div className={`absolute inset-0 rounded-full blur-md animate-pulse ${activeLocation?.id === loc.id ? 'bg-[#CCFF00] opacity-80 w-8 h-8 -m-2' : 'bg-[#CCFF00] opacity-40 w-4 h-4'}`} />
+                                        <div className={`absolute inset-0 rounded-full blur-md animate-pulse ${activeLocation?.id === loc.id ? 'bg-brand-lime opacity-80 w-8 h-8 -m-2' : 'bg-brand-lime opacity-40 w-4 h-4'}`} />
 
                                         {/* Pin Core */}
-                                        <div className={`relative w-4 h-4 rounded-full border-2 transition-colors duration-300 ${activeLocation?.id === loc.id ? 'bg-[#CCFF00] border-black' : 'bg-black border-[#CCFF00]'}`} />
+                                        <div className={`relative w-4 h-4 rounded-full border-2 transition-colors duration-300 ${activeLocation?.id === loc.id ? 'bg-brand-lime border-black' : 'bg-black border-brand-lime'}`} />
 
                                         {/* Label on Hover/Active */}
                                         <div className={`absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-black/80 backdrop-blur border border-white/10 rounded text-[10px] font-bold uppercase tracking-wider text-white whitespace-nowrap transition-all duration-300 ${activeLocation?.id === loc.id ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 group-hover:opacity-100 group-hover:translate-y-0'}`}>
@@ -170,7 +170,7 @@ const SriLankaMap: React.FC = () => {
                                     initial={{ opacity: 0, y: 10 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0 }}
-                                    className="absolute bottom-8 left-1/2 -translate-x-1/2 bg-black/80 backdrop-blur border border-[#CCFF00]/30 px-4 py-2 rounded-full text-[#CCFF00] font-bold text-sm uppercase tracking-wider pointer-events-none z-20 whitespace-nowrap"
+                                    className="absolute bottom-8 left-1/2 -translate-x-1/2 bg-black/80 backdrop-blur border border-brand-lime/30 px-4 py-2 rounded-full text-brand-lime font-bold text-sm uppercase tracking-wider pointer-events-none z-20 whitespace-nowrap"
                                 >
                                     {hoveredLocation}
                                 </motion.div>
@@ -188,7 +188,7 @@ const SriLankaMap: React.FC = () => {
                                     animate={{ opacity: 1, x: 0 }}
                                     exit={{ opacity: 0, x: -20 }}
                                     transition={{ duration: 0.3 }}
-                                    className="bg-[#111] border border-white/10 rounded-3xl p-8 relative overflow-hidden group"
+                                    className="bg-[#111] rounded-3xl p-8 relative overflow-hidden group border border-brand-lime/20"
                                 >
                                     <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
                                         <button onClick={() => setActiveLocation(null)} className="p-2 hover:bg-white/10 rounded-full transition-colors">
@@ -196,9 +196,9 @@ const SriLankaMap: React.FC = () => {
                                         </button>
                                     </div>
 
-                                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#CCFF00]/10 rounded-full text-[#CCFF00] text-xs font-bold uppercase tracking-wider mb-6">
+                                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-brand-lime/10 rounded-full text-brand-lime text-xs font-bold uppercase tracking-wider mb-6">
                                         <MapPin className="w-3 h-3" />
-                                        {activeLocation.name}
+                                        {activeLocation.name} {activeLocation.id === 'sainthamaruthu' && '(Our Home)'}
                                     </div>
 
                                     <h3 className="text-3xl font-black text-white mb-2 font-['Plus_Jakarta_Sans']">{activeLocation.type}</h3>
@@ -217,7 +217,7 @@ const SriLankaMap: React.FC = () => {
                                                 <Package className="w-4 h-4" />
                                                 Stock Level
                                             </div>
-                                            <div className={`text-2xl font-black ${activeLocation.stock === 'High' ? 'text-[#CCFF00]' : activeLocation.stock === 'Medium' ? 'text-yellow-500' : 'text-red-500'}`}>
+                                            <div className={`text-2xl font-black ${activeLocation.stock === 'High' ? 'text-brand-lime' : activeLocation.stock === 'Medium' ? 'text-yellow-500' : 'text-red-500'}`}>
                                                 {activeLocation.stock}
                                             </div>
                                         </div>
@@ -227,7 +227,7 @@ const SriLankaMap: React.FC = () => {
                                         <div className="text-xs text-gray-500 uppercase tracking-wider font-bold mb-3">Available Flavors</div>
                                         <div className="flex flex-wrap gap-2">
                                             {activeLocation.flavors.map((flavor) => (
-                                                <span key={flavor} className="px-3 py-1.5 bg-white/5 border border-white/10 rounded-lg text-xs font-medium text-gray-300 hover:border-[#CCFF00]/30 hover:text-white transition-colors cursor-default">
+                                                <span key={flavor} className="px-3 py-1.5 bg-white/5 border border-white/10 rounded-lg text-xs font-medium text-gray-300 hover:border-brand-lime/30 hover:text-white transition-colors cursor-default">
                                                     {flavor}
                                                 </span>
                                             ))}
@@ -241,8 +241,8 @@ const SriLankaMap: React.FC = () => {
                                     exit={{ opacity: 0 }}
                                     className="flex flex-col items-center justify-center text-center p-8 border border-white/5 rounded-3xl bg-white/[0.02] h-full min-h-[400px]"
                                 >
-                                    <div className="w-16 h-16 rounded-full bg-[#CCFF00]/10 flex items-center justify-center mb-6 animate-pulse">
-                                        <MapPin className="w-8 h-8 text-[#CCFF00]" />
+                                    <div className="w-16 h-16 rounded-full bg-brand-lime/10 flex items-center justify-center mb-6 animate-pulse">
+                                        <MapPin className="w-8 h-8 text-brand-lime" />
                                     </div>
                                     <h3 className="text-xl font-bold text-white mb-2">Select a District</h3>
                                     <p className="text-gray-500 max-w-xs">
