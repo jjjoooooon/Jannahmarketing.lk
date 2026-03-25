@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Menu, X, Users, Instagram, Twitter, Facebook } from 'lucide-react';
+import { Menu, X, Users, ShoppingCart, Instagram, Twitter, Facebook } from 'lucide-react';
+import { useCart } from '../context/CartContext';
 import { motion, AnimatePresence, useScroll, useMotionValueEvent, Variants } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
 import logo from '../assets/sunstar_logo.webp';
@@ -53,6 +54,7 @@ const Navbar: React.FC = () => {
 
   const { scrollY } = useScroll();
   const location = useLocation();
+  const { totalItems, setIsDrawerOpen } = useCart();
 
   // Optimized Scroll Logic
   useMotionValueEvent(scrollY, "change", (latest) => {
@@ -148,7 +150,21 @@ const Navbar: React.FC = () => {
             ))}
           </div>
 
-          <div className="hidden md:flex items-center">
+          {/* --- Desktop Actions --- */}
+          <div className="hidden md:flex items-center gap-4">
+            {/* Cart Icon */}
+            <button
+              onClick={() => setIsDrawerOpen(true)}
+              className="relative p-2 text-white hover:text-[#CCFF00] transition-colors group"
+            >
+              <ShoppingCart size={24} />
+              {totalItems > 0 && (
+                <span className="absolute -top-1 -right-1 bg-[#CCFF00] text-black text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-[#050505] group-hover:scale-110 transition-transform">
+                  {totalItems}
+                </span>
+              )}
+            </button>
+
             <Link to="/contact">
               <motion.button
                 whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(204, 255, 0, 0.4)" }}
@@ -161,14 +177,30 @@ const Navbar: React.FC = () => {
             </Link>
           </div>
 
-          {/* --- Mobile Toggle --- */}
-          <button
-            className="md:hidden text-white z-50 p-2 focus:outline-none relative touch-manipulation"
-            onClick={() => setIsOpen(!isOpen)}
-            aria-label={isOpen ? "Close Menu" : "Open Menu"}
-          >
-            {isOpen ? <X size={28} className="text-[#CCFF00]" /> : <Menu size={28} />}
-          </button>
+          {/* --- Mobile Controls --- */}
+          <div className="flex md:hidden items-center gap-4">
+            {/* Mobile Cart Icon */}
+            <button
+              onClick={() => setIsDrawerOpen(true)}
+              className="relative p-2 text-white active:text-[#CCFF00] transition-colors"
+              aria-label="Open Cart"
+            >
+              <ShoppingCart size={24} />
+              {totalItems > 0 && (
+                <span className="absolute -top-1 -right-1 bg-[#CCFF00] text-black text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-[#050505]">
+                  {totalItems}
+                </span>
+              )}
+            </button>
+
+            <button
+              className="text-white z-50 p-2 focus:outline-none relative touch-manipulation"
+              onClick={() => setIsOpen(!isOpen)}
+              aria-label={isOpen ? "Close Menu" : "Open Menu"}
+            >
+              {isOpen ? <X size={28} className="text-[#CCFF00]" /> : <Menu size={28} />}
+            </button>
+          </div>
         </div>
       </motion.nav>
 
@@ -229,6 +261,23 @@ const Navbar: React.FC = () => {
                 className="border-t border-white/10 pt-8"
               >
                 <div className="flex flex-col space-y-6">
+                  {/* Cart Mobile */}
+                  <div className="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/10">
+                    <div className="flex items-center gap-3">
+                      <ShoppingCart size={20} className="text-[#CCFF00]" />
+                      <span className="text-white font-bold uppercase tracking-widest text-xs">My Cart</span>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setIsOpen(false);
+                        setIsDrawerOpen(true);
+                      }}
+                      className="px-4 py-2 bg-[#CCFF00] text-black text-xs font-black rounded-full uppercase tracking-widest"
+                    >
+                      {totalItems} Items
+                    </button>
+                  </div>
+
                   {/* Action Button */}
                   <Link to="/contact" className="w-full">
                     <button className="w-full py-4 rounded-full bg-[#CCFF00] text-black font-bold uppercase text-sm tracking-widest active:scale-[0.98] transition-transform flex items-center justify-center gap-2">

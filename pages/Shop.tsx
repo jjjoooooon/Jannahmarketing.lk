@@ -277,32 +277,6 @@ const Shop: React.FC = () => {
                 </div>
             </section>
 
-            {/* Floating Cart Summary */}
-            {totalItems > 0 && (
-                <motion.div
-                    initial={{ y: -100, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    className="fixed top-24 right-4 md:right-8 p-4 rounded-2xl border border-[#CCFF00]/30 bg-[#050505]/90 backdrop-blur-md shadow-2xl z-50 max-w-xs w-full"
-                >
-                    <div className="flex items-center gap-3 mb-3">
-                        <div className="p-2 bg-[#CCFF00]/10 rounded-full">
-                            <ShoppingCart className="w-5 h-5 text-[#CCFF00]" />
-                        </div>
-                        <div>
-                            <div className="font-bold font-['Plus_Jakarta_Sans'] text-base">Cart Summary</div>
-                            <div className="text-xs text-gray-400">{totalItems} items selected</div>
-                        </div>
-                    </div>
-                    <div className="text-2xl font-black text-[#CCFF00] mb-3">
-                        LKR {totalPrice.toLocaleString()}
-                    </div>
-                    <Link to="/checkout" className="block w-full">
-                        <button className="w-full px-4 py-3 bg-[#CCFF00] text-black font-bold rounded-xl hover:bg-white transition-all uppercase tracking-wider flex items-center justify-center gap-2 text-sm">
-                            Checkout <ArrowRight size={16} />
-                        </button>
-                    </Link>
-                </motion.div>
-            )}
         </div>
     );
 };

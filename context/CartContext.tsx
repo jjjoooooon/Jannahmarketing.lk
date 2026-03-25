@@ -25,8 +25,9 @@ interface CartContextType {
     removeFromCart: (productId: string, size: BottleSize) => void;
     updateQuantity: (productId: string, size: BottleSize, delta: number) => void;
     clearCart: () => void;
-    totalItems: number;
     totalPrice: number;
+    isDrawerOpen: boolean;
+    setIsDrawerOpen: (isOpen: boolean) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -36,6 +37,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const saved = localStorage.getItem('cart');
         return saved ? JSON.parse(saved) : [];
     });
+
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     useEffect(() => {
         localStorage.setItem('cart', JSON.stringify(cart));
@@ -51,15 +54,17 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
                         : item
                 );
             }
-            return [...prev, {
+            const newItem = {
                 productId: product.id,
                 productName: product.name,
                 size,
                 price: SIZE_PRICES[size],
                 quantity: 1,
                 image: product.image
-            }];
+            };
+            return [...prev, newItem];
         });
+        setIsDrawerOpen(true); // Open drawer when item added
     };
 
     const removeFromCart = (productId: string, size: BottleSize) => {
@@ -82,7 +87,17 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
     return (
-        <CartContext.Provider value={{ cart, addToCart, removeFromCart, updateQuantity, clearCart, totalItems, totalPrice }}>
+        <CartContext.Provider value={{
+            cart,
+            addToCart,
+            removeFromCart,
+            updateQuantity,
+            clearCart,
+            totalItems,
+            totalPrice,
+            isDrawerOpen,
+            setIsDrawerOpen
+        }}>
             {children}
         </CartContext.Provider>
     );

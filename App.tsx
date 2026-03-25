@@ -8,6 +8,7 @@ import About from './pages/About';
 import Contact from './pages/Contact';
 import Shop from './pages/Shop';
 import Checkout from './pages/Checkout';
+import CartDrawer from './components/CartDrawer';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 
@@ -29,8 +30,9 @@ const App: React.FC = () => {
         <CartProvider>
             <Router>
                 <ScrollToTop />
-                <div className="bg-[#050505] min-h-screen selection:bg-[#CCFF00] selection:text-black flex flex-col">
+                <div className="bg-[#050505] min-h-screen selection:bg-[#CCFF00] selection:text-black flex flex-col overflow-x-hidden">
                     <Navbar />
+                    <CartDrawer />
                     <main className="flex-grow">
                         <Routes>
                             <Route path="/" element={<Home />} />
