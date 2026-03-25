@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, memo, useMemo } from 'react';
+import React, { useRef, memo, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform, MotionValue } from 'framer-motion';
 import { Product } from '../types';
@@ -113,36 +113,15 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = memo(({ product, index, total, progress }) => {
-  const [aiText, setAiText] = useState<string>('');
-
-  // --- Optimization: Single Scroll Source ---
-  // Instead of creating a new useScroll for every card (expensive!), 
-  // we derive animation values from the PARENT progress passed down.
-
-  // Calculate when this specific card is active in the scroll timeline
-  // We divide the total scroll (0 to 1) into segments for each card
   const step = 1 / total;
   const start = index * step;
   const end = start + step;
 
-  // Scale Effect: Stacking cards scale down slightly as they go up
-  const targetScale = 1 - ((total - index) * 0.05);
+  // Stacking effect with clamping for performance
+  const scale = useTransform(progress, [start, 1], [1, 1 - ((total - index) * 0.05)], { clamp: true });
+  const imageScale = useTransform(progress, [start, end], [1.1, 1], { clamp: true });
 
-  // We map the GLOBAL progress to this card's specific scale needs
-  // The range [0, 1] essentially says "listen to the whole scroll interaction"
-  // but we clamp it so it doesn't shrink infinitely.
-  const scale = useTransform(progress, [start, 1], [1, targetScale]);
-
-  // Parallax for image: As global progress moves, shift image slightly
-  const imageScale = useTransform(progress, [start, end], [1.1, 1]);
-
-  // --- Optimization: Static Text ---
-  // Removed AI generation for performance. Using static description from product data.
-  useEffect(() => {
-    setAiText(product.description);
-  }, [product.description]);
-
-  const [firstName, secondName] = product.name.split(' ');
+  const [firstName, secondName] = useMemo(() => product.name.split(' '), [product.name]);
 
   return (
     // Height container needs to be strictly defined to prevent "half showing" glitch
@@ -152,10 +131,9 @@ const ProductCard: React.FC<ProductCardProps> = memo(({ product, index, total, p
         style={{
           scale,
           backgroundColor: product.color,
-          // Force hardware acceleration to prevent repaint lag
           transform: 'translateZ(0)'
         }}
-        className="relative flex flex-col md:flex-row w-[95vw] md:w-[90vw] h-[90dvh] md:h-[85vh] rounded-4xl overflow-hidden shadow-xl origin-top will-change-transform"
+        className="relative flex flex-col md:flex-row w-[95vw] md:w-[90vw] h-[90dvh] md:h-[85vh] rounded-4xl overflow-hidden shadow-xl origin-top will-change-transform transform-gpu"
       >
         {/* Text Content */}
         <div className="w-full md:w-1/2 p-6 md:p-14 flex flex-col justify-center relative z-20 h-[45%] md:h-auto order-2 md:order-1">
@@ -167,7 +145,7 @@ const ProductCard: React.FC<ProductCardProps> = memo(({ product, index, total, p
               {product.tagline}
             </h3>
 
-            <h2 className="text-4xl md:text-8xl font-black mb-2 md:mb-6 leading-[0.9] text-white font-['Plus_Jakarta_Sans'] uppercase tracking-tight">
+            <h2 className="text-4xl md:text-8xl font-black mb-2 md:mb-6 leading-[0.9] text-white font-display uppercase tracking-tight">
               {firstName}<br />
               <span className="text-transparent text-outline">{secondName}</span>
             </h2>
@@ -188,7 +166,7 @@ const ProductCard: React.FC<ProductCardProps> = memo(({ product, index, total, p
             </div>
 
             <Link to="/shop" className="self-start mt-auto md:mt-0">
-              <button className="px-6 py-3 md:px-8 md:py-4 rounded-full bg-white text-black font-bold hover:bg-black hover:text-white border-2 border-white transition-colors text-xs md:text-base font-['Plus_Jakarta_Sans'] uppercase tracking-wider">
+              <button className="px-6 py-3 md:px-8 md:py-4 rounded-full bg-white text-black font-bold hover:bg-black hover:text-white border-2 border-white transition-all text-xs md:text-base font-display uppercase tracking-wider active:scale-95">
                 Taste It
               </button>
             </Link>
@@ -224,7 +202,7 @@ const ProductShowcase: React.FC = () => {
 
       {/* Sticky Header */}
       <div className="sticky top-5 h-12 flex justify-center z-50 pointer-events-none mix-blend-difference text-white mb-20">
-        <h2 className="text-sm md:text-3xl font-bold uppercase tracking-widest bg-white/10 px-4 py-1.5 backdrop-blur-md rounded-full border border-white/20">
+        <h2 className="text-sm md:text-3xl font-bold uppercase tracking-widest bg-white/10 px-6 py-2 backdrop-blur-md rounded-full border border-white/20 font-display">
           Flavor Drop
         </h2>
       </div>

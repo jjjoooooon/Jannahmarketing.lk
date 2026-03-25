@@ -112,11 +112,8 @@ const Navbar: React.FC = () => {
         <div className="container mx-auto px-6 flex justify-between items-center relative z-50">
 
           {/* --- Logo --- */}
-          <Link to="/" aria-label="Home" className="z-50 block">
-            <motion.div
-              className="flex items-center space-x-2 cursor-pointer group"
-              whileTap={{ scale: 0.95 }}
-            >
+          <Link to="/" aria-label="Home" className="z-50 block transition-transform active:scale-95 group">
+            <div className="flex items-center space-x-2">
               <div className="relative">
                 <div className="absolute inset-0 bg-brand-lime blur-md opacity-20 rounded-full" />
                 <img
@@ -128,10 +125,10 @@ const Navbar: React.FC = () => {
                   height="40"
                 />
               </div>
-              <span className="text-xl md:text-2xl font-black tracking-tighter text-white font-['Plus_Jakarta_Sans']">
+              <span className="text-xl md:text-2xl font-black tracking-tighter text-white font-display">
                 SUNSTAR
               </span>
-            </motion.div>
+            </div>
           </Link>
 
           {/* --- Desktop Menu --- */}
@@ -140,7 +137,7 @@ const Navbar: React.FC = () => {
               <Link
                 key={item.name}
                 to={item.href}
-                className={`relative text-sm uppercase tracking-widest font-bold transition-colors font-['Inter'] group ${location.pathname === item.href ? 'text-white' : 'text-gray-400 hover:text-white'
+                className={`relative text-sm uppercase tracking-widest font-bold transition-colors font-sans group ${location.pathname === item.href ? 'text-white' : 'text-gray-400 hover:text-white'
                   }`}
               >
                 {item.name}
@@ -166,14 +163,12 @@ const Navbar: React.FC = () => {
             </button>
 
             <Link to="/contact">
-              <motion.button
-                whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(204, 255, 0, 0.4)" }}
-                whileTap={{ scale: 0.95 }}
-                className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-brand-lime text-black font-bold text-xs uppercase tracking-widest font-display hover:bg-white transition-colors"
+              <button
+                className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-brand-lime text-black font-bold text-xs uppercase tracking-widest font-display hover:bg-white hover:shadow-[0_0_20px_rgba(204,255,0,0.4)] active:scale-95 transition-all"
               >
                 <span>Join 150+ Distributors</span>
                 <Users size={16} />
-              </motion.button>
+              </button>
             </Link>
           </div>
 
@@ -287,7 +282,7 @@ const Navbar: React.FC = () => {
 
                   {/* Contact & Socials */}
                   <div className="flex justify-between items-end">
-                    <div className="text-white/40 text-xs font-['Inter'] uppercase tracking-widest space-y-1">
+                    <div className="text-white/40 text-xs font-sans uppercase tracking-widest space-y-1 text-left">
                       <p>hello@sunstar.com</p>
                       <p>+94 77 123 4567</p>
                     </div>

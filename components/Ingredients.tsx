@@ -1,5 +1,4 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { memo } from 'react';
 import { Zap, Leaf, Droplets, Wind, Sun, BatteryCharging } from 'lucide-react';
 
 const ingredients = [
@@ -11,47 +10,43 @@ const ingredients = [
   { icon: BatteryCharging, title: "CONSISTENT QUALITY", desc: "Same great fizz, same bold flavor. From Sainthamaruthu to your doorstep, every time." },
 ];
 
-const Ingredients: React.FC = () => {
+const Ingredients: React.FC = memo(() => {
   return (
     <section className="py-20 md:py-32 bg-brand-black relative">
       <div className="container mx-auto px-6">
-        <div className="text-center mb-12 md:mb-20">
-          <h2 className="text-3xl md:text-6xl font-extrabold font-['Plus_Jakarta_Sans'] text-white mb-4 uppercase tracking-tight">
+        <div className="text-center mb-12 md:mb-20 animate-fade-in-up">
+          <h2 className="text-3xl md:text-6xl font-black font-display text-white mb-4 uppercase tracking-tighter">
             The <span className="text-brand-lime">Formula</span>
           </h2>
-          <p className="text-gray-400 max-w-2xl mx-auto text-base md:text-lg font-light font-['Inter']">
+          <p className="text-gray-400 max-w-2xl mx-auto text-base md:text-lg font-medium font-sans">
             We've perfected the science of the fizz. High carbonation, bold flavors, and zero excuses. This is soda how it should be.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {ingredients.map((item, i) => (
-            <motion.div
+            <div
               key={i}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 }}
-              viewport={{ once: true }}
-              whileHover={{ scale: 1.02, backgroundColor: "rgba(255, 255, 255, 0.05)" }}
-              className="bg-white/5 border border-white/10 p-6 md:p-8 rounded-2xl group transition-colors duration-300 relative overflow-hidden hover:border-brand-lime/50"
+              className="bg-white/5 border border-white/10 p-6 md:p-8 rounded-2xl group transition-all duration-300 relative overflow-hidden hover:border-brand-lime/50 animate-fade-in-up opacity-0 hover:scale-[1.02] active:scale-95 cursor-default"
+              style={{ animationDelay: `${i * 100}ms` }}
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-brand-lime blur-[100px] opacity-0 group-hover:opacity-10 transition-opacity duration-500" />
 
               <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/5 flex items-center justify-center mb-4 md:mb-6 text-brand-lime group-hover:bg-brand-lime group-hover:text-black transition-colors duration-300">
                 <item.icon size={24} className="md:w-7 md:h-7" />
               </div>
-              <h3 className="text-lg md:text-xl font-bold text-white font-['Plus_Jakarta_Sans'] mb-2 md:mb-3 uppercase tracking-wide">
+              <h3 className="text-lg md:text-xl font-bold text-white font-display mb-2 md:mb-3 uppercase tracking-wide">
                 {item.title}
               </h3>
-              <p className="text-gray-400 text-sm leading-relaxed font-['Inter']">
+              <p className="text-gray-400 text-sm leading-relaxed font-sans">
                 {item.desc}
               </p>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>
     </section>
   );
-};
+});
 
 export default Ingredients;

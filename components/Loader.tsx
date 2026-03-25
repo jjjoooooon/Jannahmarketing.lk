@@ -1,84 +1,68 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { memo } from 'react';
 
-const Loader: React.FC = () => {
+const Loader: React.FC = memo(() => {
     return (
-        <div className="fixed inset-0 bg-[#050505] flex items-center justify-center z-50 overflow-hidden">
+        <div className="fixed inset-0 bg-brand-black flex items-center justify-center z-50 overflow-hidden">
             <div className="relative flex flex-col items-center justify-center">
                 {/* Central Abstract Symbol */}
                 <div className="relative w-24 h-24 mb-12">
                     {/* Outer Ring */}
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 1, ease: "easeOut" }}
-                        className="absolute inset-0 border border-[#CCFF00]/20 rounded-full"
-                    />
+                    <div className="absolute inset-0 border border-brand-lime/20 rounded-full animate-scale-in" />
 
                     {/* Rotating Arc */}
-                    <motion.div
-                        animate={{ rotate: 360 }}
-                        transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                        className="absolute inset-0 rounded-full border-t border-[#CCFF00] opacity-80"
-                    />
+                    <div className="absolute inset-0 rounded-full border-t border-brand-lime opacity-80 animate-spin-slow" />
 
                     {/* Inner Pulse */}
-                    <motion.div
-                        animate={{
-                            scale: [0.8, 1, 0.8],
-                            opacity: [0.3, 0.6, 0.3],
-                        }}
-                        transition={{
-                            duration: 3,
-                            repeat: Infinity,
-                            ease: "easeInOut"
-                        }}
-                        className="absolute inset-8 bg-[#CCFF00] rounded-full blur-md"
-                    />
+                    <div className="absolute inset-8 bg-brand-lime rounded-full blur-md animate-pulse-slow" />
 
                     {/* Core Dot */}
-                    <div className="absolute inset-0 m-auto w-2 h-2 bg-[#CCFF00] rounded-full" />
+                    <div className="absolute inset-0 m-auto w-2 h-2 bg-brand-lime rounded-full" />
                 </div>
 
                 {/* Typography */}
-                <div className="text-center space-y-4">
-                    <motion.h1
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.2, duration: 0.8 }}
-                        className="text-3xl font-bold font-['Plus_Jakarta_Sans'] tracking-[0.3em] text-white"
-                    >
+                <div className="text-center space-y-4 animate-fade-in-up">
+                    <h1 className="text-3xl font-black font-display tracking-[0.3em] text-white">
                         SUNSTAR
-                    </motion.h1>
+                    </h1>
 
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.5, duration: 0.8 }}
-                        className="flex items-center justify-center gap-2"
-                    >
-                        <span className="h-[1px] w-8 bg-[#CCFF00]/30" />
-                        <span className="text-[10px] uppercase tracking-widest text-[#CCFF00]/80">Premium Energy</span>
-                        <span className="h-[1px] w-8 bg-[#CCFF00]/30" />
-                    </motion.div>
+                    <div className="flex items-center justify-center gap-2 opacity-80">
+                        <span className="h-px w-8 bg-brand-lime/30" />
+                        <span className="text-[10px] uppercase tracking-widest text-brand-lime">Maximum Fizz</span>
+                        <span className="h-px w-8 bg-brand-lime/30" />
+                    </div>
                 </div>
 
                 {/* Minimal Progress Line */}
-                <div className="absolute bottom-20 left-1/2 -translate-x-1/2 w-48 h-[1px] bg-white/10 overflow-hidden">
-                    <motion.div
-                        initial={{ x: '-100%' }}
-                        animate={{ x: '100%' }}
-                        transition={{
-                            duration: 1.5,
-                            repeat: Infinity,
-                            ease: "easeInOut"
-                        }}
-                        className="w-full h-full bg-gradient-to-r from-transparent via-[#CCFF00] to-transparent opacity-50"
-                    />
+                <div className="absolute bottom-20 left-1/2 -translate-x-1/2 w-48 h-px bg-white/10 overflow-hidden">
+                    <div className="w-full h-full bg-linear-to-r from-transparent via-brand-lime to-transparent opacity-50 animate-shimmer" />
                 </div>
             </div>
+
+            <style>{`
+                @keyframes spin-slow {
+                    from { transform: rotate(0deg); }
+                    to { transform: rotate(360deg); }
+                }
+                @keyframes pulse-slow {
+                    0%, 100% { transform: scale(0.8); opacity: 0.3; }
+                    50% { transform: scale(1); opacity: 0.6; }
+                }
+                @keyframes shimmer {
+                    from { transform: translateX(-100%); }
+                    to { transform: translateX(100%); }
+                }
+                .animate-spin-slow {
+                    animation: spin-slow 3s linear infinite;
+                }
+                .animate-pulse-slow {
+                    animation: pulse-slow 3s ease-in-out infinite;
+                }
+                .animate-shimmer {
+                    animation: shimmer 1.5s ease-in-out infinite;
+                }
+            `}</style>
         </div>
     );
-};
+});
 
 export default Loader;
