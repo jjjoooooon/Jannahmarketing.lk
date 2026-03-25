@@ -14,7 +14,6 @@ const SOCIAL_LINKS = [
 const EXPLORE_LINKS = [
   { name: 'Our Flavors', path: '/shop' },
   { name: 'The Lab', path: '/about' },
-  { name: 'News & Resources', path: '/' },
   { name: 'Contact Us', path: '/contact' },
 ];
 
