@@ -96,7 +96,7 @@ const Navbar: React.FC = () => {
   // Optimized Background Class: Removed backdrop-blur for mobile performance
   const navBackgroundClass = useMemo(() =>
     scrolled || isOpen || location.pathname !== '/'
-      ? 'bg-[#050505]/95 py-3 border-b border-white/5 shadow-lg' // Solid high-opacity bg is much faster than blur
+      ? 'bg-brand-black/95 py-3 border-b border-white/5 shadow-lg'
       : 'bg-transparent py-4 md:py-6 border-b border-transparent',
     [scrolled, isOpen, location.pathname]);
 
@@ -118,7 +118,7 @@ const Navbar: React.FC = () => {
               whileTap={{ scale: 0.95 }}
             >
               <div className="relative">
-                <div className="absolute inset-0 bg-[#CCFF00] blur-md opacity-20 rounded-full" />
+                <div className="absolute inset-0 bg-brand-lime blur-md opacity-20 rounded-full" />
                 <img
                   src={logo}
                   alt="Sunstar Logo"
@@ -144,7 +144,7 @@ const Navbar: React.FC = () => {
                   }`}
               >
                 {item.name}
-                <span className={`absolute -bottom-1 left-0 h-[2px] bg-[#CCFF00] transition-all duration-300 group-hover:w-full box-shadow-[0_0_10px_#CCFF00] ${location.pathname === item.href ? 'w-full' : 'w-0'
+                <span className={`absolute -bottom-1 left-0 h-[2px] bg-brand-lime transition-all duration-300 group-hover:w-full box-shadow-[0_0_10px_#CCFF00] ${location.pathname === item.href ? 'w-full' : 'w-0'
                   }`} />
               </Link>
             ))}
@@ -155,11 +155,11 @@ const Navbar: React.FC = () => {
             {/* Cart Icon */}
             <button
               onClick={() => setIsDrawerOpen(true)}
-              className="relative p-2 text-white hover:text-[#CCFF00] transition-colors group"
+              className="relative p-2 text-white hover:text-brand-lime transition-colors group"
             >
               <ShoppingCart size={24} />
               {totalItems > 0 && (
-                <span className="absolute -top-1 -right-1 bg-[#CCFF00] text-black text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-[#050505] group-hover:scale-110 transition-transform">
+                <span className="absolute -top-1 -right-1 bg-brand-lime text-black text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-brand-black group-hover:scale-110 transition-transform">
                   {totalItems}
                 </span>
               )}
@@ -169,7 +169,7 @@ const Navbar: React.FC = () => {
               <motion.button
                 whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(204, 255, 0, 0.4)" }}
                 whileTap={{ scale: 0.95 }}
-                className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#CCFF00] text-black font-bold text-xs uppercase tracking-widest font-['Plus_Jakarta_Sans'] hover:bg-white transition-colors"
+                className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-brand-lime text-black font-bold text-xs uppercase tracking-widest font-display hover:bg-white transition-colors"
               >
                 <span>Join 150+ Distributors</span>
                 <Users size={16} />
@@ -182,12 +182,12 @@ const Navbar: React.FC = () => {
             {/* Mobile Cart Icon */}
             <button
               onClick={() => setIsDrawerOpen(true)}
-              className="relative p-2 text-white active:text-[#CCFF00] transition-colors"
+              className="relative p-2 text-white active:text-brand-lime transition-colors"
               aria-label="Open Cart"
             >
               <ShoppingCart size={24} />
               {totalItems > 0 && (
-                <span className="absolute -top-1 -right-1 bg-[#CCFF00] text-black text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-[#050505]">
+                <span className="absolute -top-1 -right-1 bg-brand-lime text-black text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-brand-black">
                   {totalItems}
                 </span>
               )}
@@ -198,7 +198,7 @@ const Navbar: React.FC = () => {
               onClick={() => setIsOpen(!isOpen)}
               aria-label={isOpen ? "Close Menu" : "Open Menu"}
             >
-              {isOpen ? <X size={28} className="text-[#CCFF00]" /> : <Menu size={28} />}
+              {isOpen ? <X size={28} className="text-brand-lime" /> : <Menu size={28} />}
             </button>
           </div>
         </div>
@@ -213,8 +213,7 @@ const Navbar: React.FC = () => {
             initial="initial"
             animate="animate"
             exit="exit"
-            // Use transform-gpu to force GPU rendering for the slide animation
-            className="fixed inset-0 bg-[#050505] z-40 flex flex-col h-[100dvh] w-full origin-top overflow-hidden transform-gpu"
+            className="fixed inset-0 bg-brand-black z-40 flex flex-col h-dvh w-full origin-top overflow-hidden transform-gpu"
           >
             {/* Grid Background - Static & Optimized */}
             <div className="absolute inset-0 z-0 opacity-10 pointer-events-none"
@@ -241,8 +240,8 @@ const Navbar: React.FC = () => {
                     <motion.div variants={LINK_ITEM_VARIANTS}>
                       <Link
                         to={item.href}
-                        className={`text-5xl font-black font-['Plus_Jakarta_Sans'] uppercase tracking-tighter block py-2 transition-colors ${location.pathname === item.href
-                          ? 'text-[#CCFF00]'
+                        className={`text-5xl font-black font-display uppercase tracking-tighter block py-2 transition-colors ${location.pathname === item.href
+                          ? 'text-brand-lime'
                           : 'text-white/50 active:text-white' // "active" is better than "hover" for touch
                           }`}
                       >
@@ -264,7 +263,7 @@ const Navbar: React.FC = () => {
                   {/* Cart Mobile */}
                   <div className="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/10">
                     <div className="flex items-center gap-3">
-                      <ShoppingCart size={20} className="text-[#CCFF00]" />
+                      <ShoppingCart size={20} className="text-brand-lime" />
                       <span className="text-white font-bold uppercase tracking-widest text-xs">My Cart</span>
                     </div>
                     <button
@@ -272,7 +271,7 @@ const Navbar: React.FC = () => {
                         setIsOpen(false);
                         setIsDrawerOpen(true);
                       }}
-                      className="px-4 py-2 bg-[#CCFF00] text-black text-xs font-black rounded-full uppercase tracking-widest"
+                      className="px-4 py-2 bg-brand-lime text-black text-xs font-black rounded-full uppercase tracking-widest"
                     >
                       {totalItems} Items
                     </button>
@@ -280,7 +279,7 @@ const Navbar: React.FC = () => {
 
                   {/* Action Button */}
                   <Link to="/contact" className="w-full">
-                    <button className="w-full py-4 rounded-full bg-[#CCFF00] text-black font-bold uppercase text-sm tracking-widest active:scale-[0.98] transition-transform flex items-center justify-center gap-2">
+                    <button className="w-full py-4 rounded-full bg-brand-lime text-black font-bold uppercase text-sm tracking-widest active:scale-[0.98] transition-transform flex items-center justify-center gap-2">
                       <span>Become a Distributor</span>
                       <Users size={18} />
                     </button>
@@ -295,7 +294,7 @@ const Navbar: React.FC = () => {
 
                     <div className="flex space-x-4">
                       {SOCIAL_LINKS.map((Icon, i) => (
-                        <div key={i} className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white/50 active:text-[#CCFF00] active:border-[#CCFF00] transition-colors">
+                        <div key={i} className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white/50 active:text-brand-lime active:border-brand-lime transition-colors">
                           <Icon size={18} />
                         </div>
                       ))}

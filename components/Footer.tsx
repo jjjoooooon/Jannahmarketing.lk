@@ -27,7 +27,7 @@ const Footer: React.FC = () => {
   const scrollToTop = () => window.scrollTo(0, 0);
 
   return (
-    <footer className="bg-[#050505] text-white py-12 md:py-20 border-t border-white/10 font-['Inter']">
+    <footer className="bg-brand-black text-white py-12 md:py-20 border-t border-white/10 font-sans">
       <div className="container mx-auto px-6">
 
         {/* Top Section */}
@@ -42,7 +42,7 @@ const Footer: React.FC = () => {
                 className="w-12 h-12 object-contain"
                 loading="lazy"
               />
-              <h2 className="text-5xl font-black font-['Plus_Jakarta_Sans'] tracking-tighter text-[#CCFF00]">
+              <h2 className="text-5xl font-black font-display tracking-tighter text-brand-lime">
                 SUNSTAR
               </h2>
             </div>
@@ -54,7 +54,7 @@ const Footer: React.FC = () => {
                 <a
                   key={i}
                   href={href}
-                  className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-[#CCFF00] hover:text-black hover:border-[#CCFF00] transition-all duration-300 group"
+                  className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-brand-lime hover:text-black hover:border-brand-lime transition-all duration-300 group"
                   aria-label="Social Link"
                 >
                   <Icon size={20} className="group-hover:scale-110 transition-transform" />
@@ -69,7 +69,7 @@ const Footer: React.FC = () => {
             <ul className="space-y-4 text-gray-400">
               {EXPLORE_LINKS.map((link) => (
                 <li key={link.name}>
-                  <Link to={link.path} className="hover:text-[#CCFF00] transition-colors">
+                  <Link to={link.path} className="hover:text-brand-lime transition-colors">
                     {link.name}
                   </Link>
                 </li>
@@ -85,9 +85,9 @@ const Footer: React.FC = () => {
                 const IconComponent = info.icon;
                 return (
                   <li key={index} className="flex items-start justify-center md:justify-start gap-3">
-                    <IconComponent className="w-5 h-5 text-[#CCFF00] flex-shrink-0 mt-0.5" />
+                    <IconComponent className="w-5 h-5 text-brand-lime shrink-0 mt-0.5" />
                     {info.href ? (
-                      <a href={info.href} className="hover:text-[#CCFF00] transition-colors">
+                      <a href={info.href} className="hover:text-brand-lime transition-colors">
                         {info.text}
                       </a>
                     ) : (
@@ -101,11 +101,11 @@ const Footer: React.FC = () => {
         </div>
 
         {/* Bottom Section - Optimized Alignment */}
-        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-600 font-mono uppercase tracking-wider">
+        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-400 font-sans font-medium tracking-tight">
 
           {/* Copyright & Developer Credits - Stacked nicely on mobile */}
           <div className="flex flex-col md:flex-row items-center text-center md:text-left gap-2 md:gap-4 mb-4 md:mb-0">
-            <p>&copy; 2024 - 2026 Jannah Marketing (PVT) Ltd.</p>
+            <p>&copy; 2023 - 2026 Jannah Marketing (PVT) Ltd.</p>
             <span className="hidden md:block text-white/20">|</span>
             <p>
               Developed by{' '}
@@ -113,7 +113,7 @@ const Footer: React.FC = () => {
                 href="https://inzeedo.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-[#CCFF00] transition-colors font-bold text-gray-500"
+                className="hover:text-brand-lime transition-colors font-bold text-gray-400"
               >
                 Inzeedo (PVT) Ltd
               </a>
@@ -122,10 +122,10 @@ const Footer: React.FC = () => {
 
           {/* Policy Links */}
           <div className="flex flex-wrap justify-center gap-4 md:gap-6">
-            <Link to="/privacy-policy" onClick={scrollToTop} className="hover:text-[#CCFF00] transition-colors">
+            <Link to="/privacy-policy" onClick={scrollToTop} className="hover:text-brand-lime transition-colors">
               Privacy Policy
             </Link>
-            <Link to="/terms-of-service" onClick={scrollToTop} className="hover:text-[#CCFF00] transition-colors">
+            <Link to="/terms-of-service" onClick={scrollToTop} className="hover:text-brand-lime transition-colors">
               Terms of Service
             </Link>
           </div>
