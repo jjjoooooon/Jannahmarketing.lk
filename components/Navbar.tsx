@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Menu, X, ShoppingBag, Instagram, Twitter, Facebook } from 'lucide-react';
+import { Menu, X, Users, Instagram, Twitter, Facebook } from 'lucide-react';
 import { motion, AnimatePresence, useScroll, useMotionValueEvent, Variants } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
 import logo from '../assets/sunstar_logo.webp';
@@ -148,16 +148,15 @@ const Navbar: React.FC = () => {
             ))}
           </div>
 
-          {/* --- Desktop Actions --- */}
           <div className="hidden md:flex items-center">
-            <Link to="/shop">
+            <Link to="/contact">
               <motion.button
                 whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(204, 255, 0, 0.4)" }}
                 whileTap={{ scale: 0.95 }}
                 className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#CCFF00] text-black font-bold text-xs uppercase tracking-widest font-['Plus_Jakarta_Sans'] hover:bg-white transition-colors"
               >
-                <span>Shop</span>
-                <ShoppingBag size={16} />
+                <span>Join 150+ Distributors</span>
+                <Users size={16} />
               </motion.button>
             </Link>
           </div>
@@ -231,9 +230,10 @@ const Navbar: React.FC = () => {
               >
                 <div className="flex flex-col space-y-6">
                   {/* Action Button */}
-                  <Link to="/shop" className="w-full">
-                    <button className="w-full py-4 rounded-full bg-[#CCFF00] text-black font-bold uppercase text-sm tracking-widest active:scale-[0.98] transition-transform">
-                      Shop Now
+                  <Link to="/contact" className="w-full">
+                    <button className="w-full py-4 rounded-full bg-[#CCFF00] text-black font-bold uppercase text-sm tracking-widest active:scale-[0.98] transition-transform flex items-center justify-center gap-2">
+                      <span>Become a Distributor</span>
+                      <Users size={18} />
                     </button>
                   </Link>
 
