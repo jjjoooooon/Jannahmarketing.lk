@@ -1,8 +1,71 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ShoppingCart, Trash2, Plus, Minus, ArrowRight, ShoppingBag } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useCart } from '../context/CartContext';
+import { useCart, CartItem } from '../context/CartContext';
+
+// Memoized individual cart item component
+const CartItemRow = memo(({
+    item,
+    onUpdateQuantity,
+    onRemove
+}: {
+    item: CartItem;
+    onUpdateQuantity: (id: string, size: any, delta: number) => void;
+    onRemove: (id: string, size: any) => void;
+}) => {
+    return (
+        <motion.div
+            layout
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            className="flex gap-4 group"
+        >
+            <div className="w-24 h-24 bg-white/5 rounded-2xl p-2 flex-shrink-0 border border-white/5 group-hover:border-brand-lime/30 transition-colors">
+                <img src={item.image} alt={item.productName} className="w-full h-full object-contain" />
+            </div>
+            <div className="flex-grow flex flex-col justify-between py-1">
+                <div>
+                    <div className="flex justify-between items-start mb-1">
+                        <h3 className="font-bold text-white font-['Plus_Jakarta_Sans']">{item.productName}</h3>
+                        <button
+                            onClick={() => onRemove(item.productId, item.size)}
+                            className="text-gray-500 hover:text-red-500 transition-colors p-1"
+                        >
+                            <Trash2 size={16} />
+                        </button>
+                    </div>
+                    <p className="text-xs text-brand-lime font-bold uppercase tracking-wider">{item.size}</p>
+                </div>
+
+                <div className="flex justify-between items-center mt-2">
+                    <div className="flex items-center bg-white/5 rounded-lg p-1 border border-white/10">
+                        <button
+                            onClick={() => onUpdateQuantity(item.productId, item.size, -1)}
+                            className="w-7 h-7 flex items-center justify-center hover:bg-brand-lime hover:text-black rounded-md transition-all text-gray-400"
+                        >
+                            <Minus size={14} />
+                        </button>
+                        <span className="w-8 text-center text-sm font-bold text-white">{item.quantity}</span>
+                        <button
+                            onClick={() => onUpdateQuantity(item.productId, item.size, 1)}
+                            className="w-7 h-7 flex items-center justify-center hover:bg-brand-lime hover:text-black rounded-md transition-all text-gray-400"
+                        >
+                            <Plus size={14} />
+                        </button>
+                    </div>
+                    <div className="text-right">
+                        <p className="text-sm font-black text-white">LKR {(item.price * item.quantity).toLocaleString()}</p>
+                        <p className="text-[10px] text-gray-500">LKR {item.price.toLocaleString()} ea</p>
+                    </div>
+                </div>
+            </div>
+        </motion.div>
+    );
+});
+
+CartItemRow.displayName = 'CartItemRow';
 
 const CartDrawer: React.FC = () => {
     const { cart, removeFromCart, updateQuantity, totalPrice, isDrawerOpen, setIsDrawerOpen, totalItems } = useCart();
@@ -36,7 +99,7 @@ const CartDrawer: React.FC = () => {
                         className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100]"
                     />
 
-                    {/* Drawer */}
+                    {/* Drawer container with layout prop to handle list changes smoothly */}
                     <motion.div
                         initial={{ x: '100%' }}
                         animate={{ x: 0 }}
@@ -65,67 +128,38 @@ const CartDrawer: React.FC = () => {
 
                         {/* Cart Items */}
                         <div className="flex-grow overflow-y-auto p-6 space-y-6 custom-scrollbar">
-                            {cart.length > 0 ? (
-                                cart.map((item) => (
-                                    <div key={`${item.productId}-${item.size}`} className="flex gap-4 group">
-                                        <div className="w-24 h-24 bg-white/5 rounded-2xl p-2 flex-shrink-0 border border-white/5 group-hover:border-[#CCFF00]/30 transition-colors">
-                                            <img src={item.image} alt={item.productName} className="w-full h-full object-contain" />
-                                        </div>
-                                        <div className="flex-grow flex flex-col justify-between py-1">
-                                            <div>
-                                                <div className="flex justify-between items-start mb-1">
-                                                    <h3 className="font-bold text-white font-['Plus_Jakarta_Sans']">{item.productName}</h3>
-                                                    <button
-                                                        onClick={() => removeFromCart(item.productId, item.size)}
-                                                        className="text-gray-500 hover:text-red-500 transition-colors p-1"
-                                                    >
-                                                        <Trash2 size={16} />
-                                                    </button>
-                                                </div>
-                                                <p className="text-xs text-brand-lime font-bold uppercase tracking-wider">{item.size}</p>
-                                            </div>
-
-                                            <div className="flex justify-between items-center mt-2">
-                                                <div className="flex items-center bg-white/5 rounded-lg p-1 border border-white/10">
-                                                    <button
-                                                        onClick={() => updateQuantity(item.productId, item.size, -1)}
-                                                        className="w-7 h-7 flex items-center justify-center hover:bg-brand-lime hover:text-black rounded-md transition-all text-gray-400"
-                                                    >
-                                                        <Minus size={14} />
-                                                    </button>
-                                                    <span className="w-8 text-center text-sm font-bold text-white">{item.quantity}</span>
-                                                    <button
-                                                        onClick={() => updateQuantity(item.productId, item.size, 1)}
-                                                        className="w-7 h-7 flex items-center justify-center hover:bg-brand-lime hover:text-black rounded-md transition-all text-gray-400"
-                                                    >
-                                                        <Plus size={14} />
-                                                    </button>
-                                                </div>
-                                                <div className="text-right">
-                                                    <p className="text-sm font-black text-white">LKR {(item.price * item.quantity).toLocaleString()}</p>
-                                                    <p className="text-[10px] text-gray-500">LKR {item.price.toLocaleString()} ea</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))
-                            ) : (
-                                <div className="h-full flex flex-col items-center justify-center text-center space-y-6 py-20">
-                                    <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center animate-pulse">
-                                        <ShoppingBag size={40} className="text-gray-600" />
-                                    </div>
-                                    <div>
-                                        <h3 className="text-xl font-bold text-white mb-2">Cart is Empty</h3>
-                                        <p className="text-gray-500 max-w-[200px] mx-auto text-sm">Looks like you haven't added any drinks yet.</p>
-                                    </div>
-                                    <button
-                                        onClick={() => setIsDrawerOpen(false)}
-                                        className="px-8 py-3 bg-brand-lime/10 text-brand-lime font-bold rounded-full border border-brand-lime/20 hover:bg-brand-lime hover:text-black transition-all uppercase text-xs tracking-widest"
+                            <AnimatePresence mode="popLayout">
+                                {cart.length > 0 ? (
+                                    cart.map((item) => (
+                                        <CartItemRow
+                                            key={`${item.productId}-${item.size}`}
+                                            item={item}
+                                            onUpdateQuantity={updateQuantity}
+                                            onRemove={removeFromCart}
+                                        />
+                                    ))
+                                ) : (
+                                    <motion.div
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        className="h-full flex flex-col items-center justify-center text-center space-y-6 py-20"
                                     >
-                                        Start Shopping
-                                    </button>
-                                </div>
-                            )}
+                                        <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center animate-pulse">
+                                            <ShoppingBag size={40} className="text-gray-600" />
+                                        </div>
+                                        <div>
+                                            <h3 className="text-xl font-bold text-white mb-2">Cart is Empty</h3>
+                                            <p className="text-gray-500 max-w-[200px] mx-auto text-sm">Looks like you haven't added any drinks yet.</p>
+                                        </div>
+                                        <button
+                                            onClick={() => setIsDrawerOpen(false)}
+                                            className="px-8 py-3 bg-brand-lime/10 text-brand-lime font-bold rounded-full border border-brand-lime/20 hover:bg-brand-lime hover:text-black transition-all uppercase text-xs tracking-widest"
+                                        >
+                                            Start Shopping
+                                        </button>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
                         </div>
 
                         {/* Footer */}
@@ -163,4 +197,4 @@ const CartDrawer: React.FC = () => {
     );
 };
 
-export default CartDrawer;
+export default memo(CartDrawer);

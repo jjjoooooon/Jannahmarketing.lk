@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 
 export type BottleSize = '250ml' | '330ml' | '750ml' | '1050ml' | '1.5L';
 
@@ -44,7 +44,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         localStorage.setItem('cart', JSON.stringify(cart));
     }, [cart]);
 
-    const addToCart = (product: { id: string; name: string; image: string }, size: BottleSize) => {
+    const addToCart = useCallback((product: { id: string; name: string; image: string }, size: BottleSize) => {
         setCart(prev => {
             const existing = prev.find(item => item.productId === product.id && item.size === size);
             if (existing) {
@@ -64,14 +64,14 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
             };
             return [...prev, newItem];
         });
-        setIsDrawerOpen(true); // Open drawer when item added
-    };
+        setIsDrawerOpen(true);
+    }, []);
 
-    const removeFromCart = (productId: string, size: BottleSize) => {
+    const removeFromCart = useCallback((productId: string, size: BottleSize) => {
         setCart(prev => prev.filter(item => !(item.productId === productId && item.size === size)));
-    };
+    }, []);
 
-    const updateQuantity = (productId: string, size: BottleSize, delta: number) => {
+    const updateQuantity = useCallback((productId: string, size: BottleSize, delta: number) => {
         setCart(prev => prev.map(item => {
             if (item.productId === productId && item.size === size) {
                 const newQty = Math.max(0, item.quantity + delta);
@@ -79,25 +79,27 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
             }
             return item;
         }).filter(item => item.quantity > 0));
-    };
+    }, []);
 
-    const clearCart = () => setCart([]);
+    const clearCart = useCallback(() => setCart([]), []);
 
-    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-    const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const totalItems = useMemo(() => cart.reduce((sum, item) => sum + item.quantity, 0), [cart]);
+    const totalPrice = useMemo(() => cart.reduce((sum, item) => sum + (item.price * item.quantity), 0), [cart]);
+
+    const value = useMemo(() => ({
+        cart,
+        addToCart,
+        removeFromCart,
+        updateQuantity,
+        clearCart,
+        totalItems,
+        totalPrice,
+        isDrawerOpen,
+        setIsDrawerOpen
+    }), [cart, addToCart, removeFromCart, updateQuantity, clearCart, totalItems, totalPrice, isDrawerOpen, setIsDrawerOpen]);
 
     return (
-        <CartContext.Provider value={{
-            cart,
-            addToCart,
-            removeFromCart,
-            updateQuantity,
-            clearCart,
-            totalItems,
-            totalPrice,
-            isDrawerOpen,
-            setIsDrawerOpen
-        }}>
+        <CartContext.Provider value={value}>
             {children}
         </CartContext.Provider>
     );
