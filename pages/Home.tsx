@@ -1,16 +1,15 @@
-import React from 'react';
+import React, { memo, lazy, Suspense } from 'react';
 import Hero from '../components/Hero';
 import Marquee from '../components/Marquee';
 import Story from '../components/Story';
 import Ingredients from '../components/Ingredients';
 import ProductShowcase from '../components/ProductShowcase';
-import Testimonials from '../components/Testimonials';
-import SriLankaMap from '../components/SriLankaMap';
-import DistributorCTA from '../components/DistributorCTA';
-import Newsletter from '../components/Newsletter';
 import { Helmet } from 'react-helmet-async';
 
-
+// Lazy load below-the-fold components for performance
+const Testimonials = lazy(() => import('../components/Testimonials'));
+const SriLankaMap = lazy(() => import('../components/SriLankaMap'));
+const DistributorCTA = lazy(() => import('../components/DistributorCTA'));
 
 const Home: React.FC = () => {
     return (
@@ -34,17 +33,20 @@ const Home: React.FC = () => {
                 <meta name="twitter:description" content="Sri Lanka's growing soda brand. 5 flavors, island-wide distribution. Founded 2023." />
                 <meta name="twitter:image" content="https://jannahmarketing.lk/og-sunstar-home.jpg" />
             </Helmet>
+
             <Hero />
             <Marquee />
             <Story />
             <Ingredients />
             <ProductShowcase />
-            <Testimonials />
-            <SriLankaMap />
-            <DistributorCTA />
-            {/* <Newsletter /> */}
+
+            <Suspense fallback={<div className="h-96 bg-brand-black animate-pulse" />}>
+                <Testimonials />
+                <SriLankaMap />
+                <DistributorCTA />
+            </Suspense>
         </main>
     );
 };
 
-export default Home;
+export default memo(Home);

@@ -126,5 +126,17 @@
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
-    }
+    }/* Advanced Performance: Skip rendering off-screen sections */
+section {
+    content-visibility: auto;
+    contain-intrinsic-size: 0 500px;
+}
+
+/* Hardware acceleration for specific animated components */
+.animate-fade-in-up,
+.animate-fade-in-right,
+.animate-scale-in {
+    will-change: transform, opacity;
+    transform: translateZ(0);
+}
 }
