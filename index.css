@@ -25,19 +25,11 @@
         @apply font-display;
     }
 
-    /* GPU acceleration for common transforms */
-    * {
-        -webkit-transform: translateZ(0);
-        transform: translateZ(0);
-        -webkit-backface-visibility: hidden;
-        backface-visibility: hidden;
-    }
-
-    /* Optimize images for performance */
+    /* Prevent layout shifts on images — always reserve space */
     img {
-        -webkit-transform: translateZ(0);
-        transform: translateZ(0);
-        will-change: auto;
+        display: block;
+        max-width: 100%;
+        height: auto;
     }
 }
 
@@ -65,29 +57,36 @@
         animation: fade-in-right 0.8s ease-out forwards;
         opacity: 0;
     }
+
+    /* GPU compositing hint — only on elements that animate */
+    .transform-gpu {
+        will-change: transform;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+    }
 }
 
 @keyframes fade-in-up {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translate3d(0, 20px, 0);
     }
 
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translate3d(0, 0, 0);
     }
 }
 
 @keyframes fade-in-right {
     from {
         opacity: 0;
-        transform: translateX(20px);
+        transform: translate3d(20px, 0, 0);
     }
 
     to {
         opacity: 1;
-        transform: translateX(0);
+        transform: translate3d(0, 0, 0);
     }
 }
 
@@ -126,17 +125,11 @@
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
-    }/* Advanced Performance: Skip rendering off-screen sections */
-section {
-    content-visibility: auto;
-    contain-intrinsic-size: 0 500px;
+    }
 }
 
-/* Hardware acceleration for specific animated components */
-.animate-fade-in-up,
-.animate-fade-in-right,
-.animate-scale-in {
-    will-change: transform, opacity;
-    transform: translateZ(0);
-}
+/* CLS Prevention: sections need explicit intrinsic size for content-visibility */
+section {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 600px;
 }

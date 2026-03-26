@@ -31,11 +31,13 @@ const Marquee: React.FC = () => {
 
       <style>{`
         @keyframes marquee {
-          from { transform: translateX(0); }
-          to { transform: translateX(-50%); }
+          from { transform: translate3d(0, 0, 0); }
+          to   { transform: translate3d(-50%, 0, 0); }
         }
         .animate-marquee {
           animation: marquee 60s linear infinite;
+          will-change: transform;
+          backface-visibility: hidden;
         }
       `}</style>
     </div>

@@ -115,7 +115,7 @@ const SunstarModernHero = () => {
             }`}
           style={{ backfaceVisibility: 'hidden' }}
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-full border border-white/10 animate-fade-in translate-y-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-full border border-white/10 animate-fade-in">
             <span className="w-2 h-2 rounded-full bg-brand-lime animate-pulse" />
             <span className="text-xs font-bold text-white/80 uppercase tracking-widest">Sri Lankan Heritage</span>
           </div>
@@ -169,8 +169,8 @@ const SunstarModernHero = () => {
             loading="eager"
             decoding="async"
             className={`h-full w-auto object-contain drop-shadow-2xl animate-float-gpu will-change-transform z-10 transition-all duration-500 ease-out ${direction === 'in'
-                ? 'opacity-100 translate-x-0 rotate-0 scale-100'
-                : 'opacity-0 translate-x-20 rotate-12 scale-90'
+              ? 'opacity-100 translate-x-0 rotate-0 scale-100'
+              : 'opacity-0 translate-x-20 rotate-12 scale-90'
               }`}
             style={{
               filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.5))',
@@ -181,7 +181,7 @@ const SunstarModernHero = () => {
       </div>
 
       {/* --- Flavor Selector --- */}
-      <div className="z-50 absolute bottom-8 left-0 w-full flex justify-center gap-2 lg:fixed lg:right-10 lg:top-1/2 lg:-translate-y-1/2 lg:w-auto lg:flex-col lg:items-end lg:gap-4 lg:bottom-auto lg:left-auto">
+      <div className="z-50 absolute bottom-8 left-0 w-full flex justify-center gap-2 lg:absolute lg:right-10 lg:top-1/2 lg:-translate-y-1/2 lg:w-auto lg:flex-col lg:items-end lg:gap-4 lg:bottom-auto lg:left-auto">
         {FLAVORS.map((flavor, index) => (
           <FlavorButton
             key={flavor.name}
