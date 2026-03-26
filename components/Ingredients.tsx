@@ -1,7 +1,7 @@
-import React, { memo } from 'react';
+import React, { memo, useEffect, useRef, useState } from 'react';
 import { Zap, Leaf, Droplets, Wind, Sun, BatteryCharging } from 'lucide-react';
 
-const ingredients = [
+const INGREDIENTS = [
   { icon: Zap, title: "TRIPLE FILTERED WATER", desc: "Our water goes through high-tech filtration to ensure every sip is as pure as it gets." },
   { icon: Leaf, title: "HIGH CARBONATION", desc: "We don't do weak bubbles. Sunstar is packed with the crisp, sharp fizz that soda lovers crave." },
   { icon: Droplets, title: "BOLD FLAVORING", desc: "Our artificial flavors are carefully crafted to deliver that punchy, nostalgic taste in every bottle." },
@@ -10,11 +10,53 @@ const ingredients = [
   { icon: BatteryCharging, title: "CONSISTENT QUALITY", desc: "Same great fizz, same bold flavor. From Sainthamaruthu to your doorstep, every time." },
 ];
 
+// Memoized single card — prevents re-renders of all cards when parent updates
+const IngredientCard = memo(({ item, visible, delay }: { item: typeof INGREDIENTS[0]; visible: boolean; delay: number }) => (
+  <div
+    className="bg-white/5 border border-white/10 p-6 md:p-8 rounded-2xl group relative overflow-hidden hover:border-brand-lime/50 hover:scale-[1.02] active:scale-95 cursor-default transition-all duration-300 will-change-transform"
+    style={{
+      opacity: visible ? 1 : 0,
+      transform: visible ? 'translate3d(0, 0, 0)' : 'translate3d(0, 24px, 0)',
+      transition: `opacity 0.6s ease-out ${delay}ms, transform 0.6s ease-out ${delay}ms`,
+    }}
+  >
+    {/* Glow on hover — opacity-only, compositor-safe */}
+    <div className="absolute top-0 right-0 w-24 h-24 bg-brand-lime blur-[60px] opacity-0 group-hover:opacity-10 transition-opacity duration-500 pointer-events-none" />
+
+    <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/5 flex items-center justify-center mb-4 md:mb-6 text-brand-lime group-hover:bg-brand-lime group-hover:text-black transition-colors duration-300">
+      <item.icon size={24} />
+    </div>
+    <h3 className="text-lg md:text-xl font-bold text-white font-display mb-2 md:mb-3 uppercase tracking-wide">{item.title}</h3>
+    <p className="text-gray-400 text-sm leading-relaxed font-sans">{item.desc}</p>
+  </div>
+));
+
 const Ingredients: React.FC = memo(() => {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setVisible(true); observer.disconnect(); } },
+      { threshold: 0.1 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <section className="py-20 md:py-32 bg-brand-black relative">
       <div className="container mx-auto px-6">
-        <div className="text-center mb-12 md:mb-20 animate-fade-in-up">
+        <div
+          ref={ref}
+          className="text-center mb-12 md:mb-20 transition-all duration-700 ease-out will-change-transform"
+          style={{
+            opacity: visible ? 1 : 0,
+            transform: visible ? 'translate3d(0, 0, 0)' : 'translate3d(0, 20px, 0)',
+          }}
+        >
           <h2 className="text-3xl md:text-6xl font-black font-display text-white mb-4 uppercase tracking-tighter">
             The <span className="text-brand-lime">Formula</span>
           </h2>
@@ -24,24 +66,8 @@ const Ingredients: React.FC = memo(() => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-          {ingredients.map((item, i) => (
-            <div
-              key={i}
-              className="bg-white/5 border border-white/10 p-6 md:p-8 rounded-2xl group transition-all duration-300 relative overflow-hidden hover:border-brand-lime/50 animate-fade-in-up opacity-0 hover:scale-[1.02] active:scale-95 cursor-default"
-              style={{ animationDelay: `${i * 100}ms` }}
-            >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-brand-lime blur-[100px] opacity-0 group-hover:opacity-10 transition-opacity duration-500" />
-
-              <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/5 flex items-center justify-center mb-4 md:mb-6 text-brand-lime group-hover:bg-brand-lime group-hover:text-black transition-colors duration-300">
-                <item.icon size={24} className="md:w-7 md:h-7" />
-              </div>
-              <h3 className="text-lg md:text-xl font-bold text-white font-display mb-2 md:mb-3 uppercase tracking-wide">
-                {item.title}
-              </h3>
-              <p className="text-gray-400 text-sm leading-relaxed font-sans">
-                {item.desc}
-              </p>
-            </div>
+          {INGREDIENTS.map((item, i) => (
+            <IngredientCard key={item.title} item={item} visible={visible} delay={i * 80} />
           ))}
         </div>
       </div>
