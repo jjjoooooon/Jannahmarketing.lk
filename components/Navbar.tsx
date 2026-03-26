@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef, memo } from 'react';
 import { Menu, X, Users, ShoppingCart, Instagram, Twitter, Facebook } from 'lucide-react';
 import { useCart } from '../context/CartContext';
-import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
 import logo from '../assets/sunstar_logo.webp';
 
@@ -15,38 +14,6 @@ const MENU_ITEMS = [
 
 const SOCIAL_LINKS = [Instagram, Twitter, Facebook];
 
-// --- Optimized Animation Variants ---
-const NAV_VARIANTS: Variants = {
-  visible: { y: 0 },
-  hidden: { y: '-100%' },
-};
-
-const MENU_CONTAINER_VARIANTS: Variants = {
-  initial: { scaleY: 0, transformOrigin: "top" },
-  animate: {
-    scaleY: 1,
-    transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] }
-  },
-  exit: {
-    scaleY: 0,
-    transition: { delay: 0.3, duration: 0.4, ease: [0.22, 1, 0.36, 1] }
-  }
-};
-
-const LINK_CONTAINER_VARIANTS: Variants = {
-  initial: { transition: { staggerChildren: 0.05, staggerDirection: -1 } },
-  open: { transition: { delayChildren: 0.2, staggerChildren: 0.05 } }
-};
-
-const LINK_ITEM_VARIANTS: Variants = {
-  initial: { y: 50, opacity: 0 },
-  open: {
-    y: 0,
-    opacity: 1,
-    transition: { duration: 0.4, ease: "easeOut" }
-  }
-};
-
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
@@ -55,22 +22,19 @@ const Navbar: React.FC = () => {
   const location = useLocation();
   const { totalItems, setIsDrawerOpen } = useCart();
 
-  // Optimized Scroll Logic: Native passive listener instead of Framer Motion
+  // Scroll Logic
   useEffect(() => {
     const handleScroll = () => {
       const latest = window.scrollY;
       const previous = prevScrollY.current;
 
-      // Logic for hiding navbar - only on mobile/small desktop when user scrolls down
       if (latest > previous && latest > 150 && !isOpen) {
         setHidden(true);
       } else {
         setHidden(false);
       }
 
-      // Logic for background style
       setScrolled(latest > 50);
-
       prevScrollY.current = latest;
     };
 
@@ -78,7 +42,7 @@ const Navbar: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [isOpen]);
 
-  // Lock body scroll efficiently
+  // Body Scroll Lock
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -93,7 +57,7 @@ const Navbar: React.FC = () => {
     };
   }, [isOpen]);
 
-  // Handle route change closing
+  // Route change closing
   useEffect(() => {
     setIsOpen(false);
   }, [location.pathname]);
@@ -106,12 +70,9 @@ const Navbar: React.FC = () => {
 
   return (
     <>
-      <motion.nav
-        variants={NAV_VARIANTS}
-        animate={hidden ? "hidden" : "visible"}
-        transition={{ duration: 0.35, ease: "easeInOut" }}
-        className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 will-change-transform ${navBackgroundClass}`}
-        style={{ transform: 'translateZ(0)' }}
+      <nav
+        className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 will-change-transform ${navBackgroundClass} ${hidden ? '-translate-y-full' : 'translate-y-0'}`}
+        style={{ transform: hidden ? 'translate3d(0, -100%, 0)' : 'translate3d(0, 0, 0)' }}
       >
         <div className="container mx-auto px-6 flex justify-between items-center relative z-50">
           <Link to="/" aria-label="Home" className="z-50 block transition-transform active:scale-95 group">
@@ -124,12 +85,13 @@ const Navbar: React.FC = () => {
             </div>
           </Link>
 
+          {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-12">
             {MENU_ITEMS.map((item) => (
               <Link
                 key={item.name}
                 to={item.href}
-                className={`relative text-sm uppercase tracking-widest font-bold transition-colors font-sans group ${location.pathname === item.href ? 'text-white' : 'text-gray-400 hover:text-white'}`}
+                className={`relative text-[10px] uppercase tracking-[0.2em] font-black transition-colors font-sans group ${location.pathname === item.href ? 'text-brand-lime' : 'text-gray-400 hover:text-white'}`}
               >
                 {item.name}
                 <span className={`absolute -bottom-1 left-0 h-[2px] bg-brand-lime transition-all duration-300 group-hover:w-full ${location.pathname === item.href ? 'w-full' : 'w-0'}`} />
@@ -150,6 +112,7 @@ const Navbar: React.FC = () => {
             </Link>
           </div>
 
+          {/* Mobile UI */}
           <div className="flex md:hidden items-center gap-4">
             <button onClick={() => setIsDrawerOpen(true)} className="relative p-2 text-white active:text-brand-lime transition-colors" aria-label="Open Cart">
               <ShoppingCart size={24} />
@@ -160,56 +123,60 @@ const Navbar: React.FC = () => {
             </button>
           </div>
         </div>
-      </motion.nav>
+      </nav>
 
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div key="mobile-menu" variants={MENU_CONTAINER_VARIANTS} initial="initial" animate="animate" exit="exit" className="fixed inset-0 bg-brand-black z-40 flex flex-col h-dvh w-full origin-top overflow-hidden transform-gpu">
-            <div className="absolute inset-0 z-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
-            <div className="flex flex-col justify-between h-full w-full px-6 pt-24 pb-10 z-10 relative">
-              <motion.div variants={LINK_CONTAINER_VARIANTS} initial="initial" animate="open" exit="initial" className="flex flex-col space-y-2">
-                {MENU_ITEMS.map((item) => (
-                  <div key={item.name} className="overflow-hidden">
-                    <motion.div variants={LINK_ITEM_VARIANTS}>
-                      <Link to={item.href} className={`text-5xl font-black font-display uppercase tracking-tighter block py-2 transition-colors ${location.pathname === item.href ? 'text-brand-lime' : 'text-white/50 active:text-white'}`}>{item.name}</Link>
-                    </motion.div>
-                  </div>
-                ))}
-              </motion.div>
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4, duration: 0.4 }} className="border-t border-white/10 pt-8">
-                <div className="flex flex-col space-y-6">
-                  <div className="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/10">
-                    <div className="flex items-center gap-3">
-                      <ShoppingCart size={20} className="text-brand-lime" />
-                      <span className="text-white font-bold uppercase tracking-widest text-xs">My Cart</span>
-                    </div>
-                    <button onClick={() => { setIsOpen(false); setIsDrawerOpen(true); }} className="px-4 py-2 bg-brand-lime text-black text-xs font-black rounded-full uppercase tracking-widest">{totalItems} Items</button>
-                  </div>
-                  <Link to="/contact" className="w-full">
-                    <button className="w-full py-4 rounded-full bg-brand-lime text-black font-bold uppercase text-sm tracking-widest active:scale-[0.98] transition-transform flex items-center justify-center gap-2">
-                      <span>Become a Distributor</span>
-                      <Users size={18} />
-                    </button>
-                  </Link>
-                  <div className="flex justify-between items-end">
-                    <div className="text-white/40 text-xs font-sans uppercase tracking-widest space-y-1 text-left">
-                      <p>hello@sunstar.com</p>
-                      <p>+94 77 123 4567</p>
-                    </div>
-                    <div className="flex space-x-4">
-                      {SOCIAL_LINKS.map((Icon, i) => (
-                        <div key={i} className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white/50 active:text-brand-lime transition-colors">
-                          <Icon size={18} />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+      {/* Mobile Menu Overlay */}
+      <div
+        className={`fixed inset-0 bg-brand-black z-40 flex flex-col h-dvh w-full origin-top overflow-hidden transform-gpu transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isOpen ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'}`}
+        style={{ pointerEvents: isOpen ? 'auto' : 'none' }}
+      >
+        <div className="absolute inset-0 z-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+        <div className="flex flex-col justify-between h-full w-full px-6 pt-24 pb-10 z-10 relative">
+          <div className="flex flex-col space-y-2">
+            {MENU_ITEMS.map((item, i) => (
+              <Link
+                key={item.name}
+                to={item.href}
+                className={`text-5xl font-black font-display uppercase tracking-tighter block py-2 transition-all duration-500 ${isOpen ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'} ${location.pathname === item.href ? 'text-brand-lime' : 'text-white/50 active:text-white'}`}
+                style={{ transitionDelay: `${i * 50 + 200}ms` }}
+              >
+                {item.name}
+              </Link>
+            ))}
+          </div>
+
+          <div className={`border-t border-white/10 pt-8 transition-all duration-700 delay-400 ${isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+            <div className="flex flex-col space-y-6">
+              <div className="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/10">
+                <div className="flex items-center gap-3">
+                  <ShoppingCart size={20} className="text-brand-lime" />
+                  <span className="text-white font-black uppercase tracking-widest text-[10px]">My Cart</span>
                 </div>
-              </motion.div>
+                <button onClick={() => { setIsOpen(false); setIsDrawerOpen(true); }} className="px-4 py-2 bg-brand-lime text-black text-[10px] font-black rounded-full uppercase tracking-widest leading-none">{totalItems} Items</button>
+              </div>
+              <Link to="/contact" className="w-full">
+                <button className="w-full py-4 rounded-full bg-brand-lime text-black font-bold uppercase text-sm tracking-widest active:scale-[0.98] transition-transform flex items-center justify-center gap-2">
+                  <span>Become a Distributor</span>
+                  <Users size={18} />
+                </button>
+              </Link>
+              <div className="flex justify-between items-end">
+                <div className="text-white/40 text-[10px] font-black uppercase tracking-widest space-y-1 text-left leading-relaxed">
+                  <p>hello@jannahmarketing.lk</p>
+                  <p>+94 77 907 7134</p>
+                </div>
+                <div className="flex space-x-4">
+                  {SOCIAL_LINKS.map((Icon, i) => (
+                    <div key={i} className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white/50 active:text-brand-lime transition-all active:scale-95">
+                      <Icon size={18} />
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </div>
+        </div>
+      </div>
     </>
   );
 };
