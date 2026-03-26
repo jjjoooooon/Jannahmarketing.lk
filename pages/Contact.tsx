@@ -1,9 +1,74 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, memo, useEffect, useRef, useCallback } from 'react';
 import { Mail, Phone, MapPin, Send, Facebook, Instagram, Twitter, Clock, CheckCircle, AlertCircle } from 'lucide-react';
 import DistributorCTA from '../components/DistributorCTA';
 import { Helmet } from 'react-helmet-async';
 import emailjs from '@emailjs/browser';
+
+// --- Static Data ---
+const CONTACT_INFO = [
+    {
+        icon: Phone,
+        title: 'Phone',
+        details: ['077 907 7134'],
+        link: 'tel:0779077134'
+    },
+    {
+        icon: Mail,
+        title: 'Email',
+        details: ['hello@jannahmarketing.lk', 'inquiry@jannahmarketing.lk'],
+        link: 'mailto:hello@jannahmarketing.lk'
+    },
+    {
+        icon: MapPin,
+        title: 'Head Office',
+        details: ['B293 Boliverian Village', 'Sainthamaruthu'],
+        link: 'https://maps.google.com'
+    },
+    {
+        icon: Clock,
+        title: 'Business Hours',
+        details: ['Mon - Fri: 9:00 AM - 6:00 PM', 'Sat: 9:00 AM - 2:00 PM'],
+        link: null
+    }
+];
+
+const SOCIAL_LINKS = [
+    { icon: Facebook, link: '#' },
+    { icon: Instagram, link: '#' },
+    { icon: Twitter, link: '#' }
+];
+
+// --- Sub-Components ---
+const InfoCard = memo(({ info, visible, delay }: { info: typeof CONTACT_INFO[0], visible: boolean, delay: number }) => (
+    <div
+        className="flex gap-4 p-4 rounded-xl border border-white/10 bg-white/5 hover:border-brand-lime/30 transition-all duration-300 will-change-transform"
+        style={{
+            opacity: visible ? 1 : 0,
+            transform: visible ? 'translate3d(0, 0, 0)' : 'translate3d(-20px, 0, 0)',
+            transition: `opacity 0.6s ease-out ${delay}ms, transform 0.6s ease-out ${delay}ms`
+        }}
+    >
+        <div className="flex-shrink-0">
+            <div className="w-12 h-12 rounded-full bg-brand-lime/10 flex items-center justify-center">
+                <info.icon className="w-6 h-6 text-brand-lime" />
+            </div>
+        </div>
+        <div>
+            <h3 className="font-bold mb-1 font-display">{info.title}</h3>
+            {info.details.map((detail, idx) => (
+                <p key={idx} className="text-sm text-gray-400 font-sans">
+                    {info.link && idx === 0 ? (
+                        <a href={info.link} className="hover:text-brand-lime transition-colors">
+                            {detail}
+                        </a>
+                    ) : (
+                        detail
+                    )}
+                </p>
+            ))}
+        </div>
+    </div>
+));
 
 const Contact: React.FC = () => {
     const [formData, setFormData] = useState({
@@ -15,13 +80,47 @@ const Contact: React.FC = () => {
 
     const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    // Intersection Observer for scroll animations
+    const heroRef = useRef<HTMLDivElement>(null);
+    const contentRef = useRef<HTMLDivElement>(null);
+    const mapRef = useRef<HTMLDivElement>(null);
+
+    const [heroVisible, setHeroVisible] = useState(false);
+    const [contentVisible, setContentVisible] = useState(false);
+    const [mapVisible, setMapVisible] = useState(false);
+
+    useEffect(() => {
+        const observerOptions = { threshold: 0.1 };
+
+        const heroObserver = new IntersectionObserver(([entry]) => {
+            if (entry.isIntersecting) { setHeroVisible(true); heroObserver.disconnect(); }
+        }, observerOptions);
+
+        const contentObserver = new IntersectionObserver(([entry]) => {
+            if (entry.isIntersecting) { setContentVisible(true); contentObserver.disconnect(); }
+        }, observerOptions);
+
+        const mapObserver = new IntersectionObserver(([entry]) => {
+            if (entry.isIntersecting) { setMapVisible(true); mapObserver.disconnect(); }
+        }, observerOptions);
+
+        if (heroRef.current) heroObserver.observe(heroRef.current);
+        if (contentRef.current) contentObserver.observe(contentRef.current);
+        if (mapRef.current) mapObserver.observe(mapRef.current);
+
+        return () => {
+            heroObserver.disconnect();
+            contentObserver.disconnect();
+            mapObserver.disconnect();
+        };
+    }, []);
+
+    const handleSubmit = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
         setStatus('sending');
 
-        // REPLACE THESE WITH YOUR ACTUAL EMAILJS CREDENTIALS
         const SERVICE_ID = 'service_q5ks567';
-        const TEMPLATE_ID = 'template_olrefpj'; // You might want a separate template for newsletter
+        const TEMPLATE_ID = 'template_olrefpj';
         const PUBLIC_KEY = 'c0QlLfxOR3zDbpgHF';
 
         try {
@@ -43,183 +142,111 @@ const Contact: React.FC = () => {
             console.error('EmailJS Error:', error);
             setStatus('error');
         }
-    };
-
-    const contactInfo = [
-        {
-            icon: Phone,
-            title: 'Phone',
-            details: ['077 907 7134'],
-            link: 'tel:0779077134'
-        },
-        {
-            icon: Mail,
-            title: 'Email',
-            details: ['hello@jannahmarketing.lk', 'inquiry@jannahmarketing.lk'],
-            link: 'mailto:hello@jannahmarketing.lk'
-        },
-        {
-            icon: MapPin,
-            title: 'Head Office',
-            details: ['B293 Boliverian Village', 'Sainthamaruthu'],
-            link: 'https://maps.google.com'
-        },
-        {
-            icon: Clock,
-            title: 'Business Hours',
-            details: ['Mon - Fri: 9:00 AM - 6:00 PM', 'Sat: 9:00 AM - 2:00 PM'],
-            link: null
-        }
-    ];
+    }, [formData]);
 
     return (
-        <div className="bg-[#050505] min-h-screen text-white">
+        <div className="bg-brand-black min-h-screen text-white overflow-x-hidden">
             <Helmet>
-                <title>Contact Sunstar - Get in Touch | B293 Sainthamaruthu</title>
-                <meta name="description" content="Contact Sunstar for inquiries, distributor opportunities, or support. Located in Sainthamaruthu, Sri Lanka. Call 077 907 7134 or email hello@jannahmarketing.lk" />
+                <title>Contact Jannah Marketing - Get in Touch | Sainthamaruthu</title>
+                <meta name="description" content="Contact Jannah Marketing for inquiries or distributor opportunities. Located in Sainthamaruthu, Sri Lanka. Call 077 907 7134." />
                 <link rel="canonical" href="https://jannahmarketing.lk/contact" />
-
-                {/* Open Graph */}
-                <meta property="og:title" content="Contact Sunstar - Get in Touch" />
-                <meta property="og:description" content="Contact Sunstar for inquiries, distributor opportunities, or support. Call 077 907 7134 or email hello@jannahmarketing.lk" />
-                <meta property="og:image" content="https://jannahmarketing.lk/og-sunstar-contact.jpg" />
-                <meta property="og:url" content="https://jannahmarketing.lk/contact" />
-                <meta property="og:type" content="website" />
-                <meta property="og:site_name" content="Sunstar" />
-
-                {/* Twitter Card */}
-                <meta name="twitter:card" content="summary_large_image" />
-                <meta name="twitter:title" content="Contact Sunstar - Get in Touch" />
-                <meta name="twitter:description" content="Contact Sunstar for inquiries or distributor opportunities. Call 077 907 7134" />
-                <meta name="twitter:image" content="https://jannahmarketing.lk/og-sunstar-contact.jpg" />
             </Helmet>
+
             {/* Hero Section */}
-            <section className="relative py-20 md:py-32 overflow-hidden border-b border-white/5">
-                <div className="absolute inset-0 opacity-5">
-                    <div className="absolute top-20 right-20 w-96 h-96 bg-[#CCFF00] rounded-full blur-[120px]" />
+            <section ref={heroRef} className="relative py-20 md:py-32 overflow-hidden border-b border-white/5">
+                <div className="absolute inset-0 opacity-5 pointer-events-none">
+                    <div className="absolute top-20 right-20 w-96 h-96 bg-brand-lime rounded-full blur-[120px]" />
                 </div>
 
                 <div className="container mx-auto px-6 relative z-10">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="text-center max-w-3xl mx-auto"
+                    <div
+                        className="text-center max-w-3xl mx-auto transition-all duration-700 ease-out will-change-transform"
+                        style={{
+                            opacity: heroVisible ? 1 : 0,
+                            transform: heroVisible ? 'translate3d(0, 0, 0)' : 'translate3d(0, 20px, 0)'
+                        }}
                     >
-                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#CCFF00]/10 rounded-full border border-[#CCFF00]/20 mb-6">
-                            <Mail className="w-4 h-4 text-[#CCFF00]" />
-                            <span className="text-[#CCFF00] font-bold uppercase tracking-wider text-xs">Get In Touch</span>
+                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-brand-lime/10 rounded-full border border-brand-lime/20 mb-6 font-sans">
+                            <Mail className="w-4 h-4 text-brand-lime" />
+                            <span className="text-brand-lime font-bold uppercase tracking-wider text-xs">Get In Touch</span>
                         </div>
-                        <h1 className="text-4xl md:text-7xl font-black mb-6 font-['Plus_Jakarta_Sans']">
+                        <h1 className="text-4xl md:text-7xl font-black mb-6 font-display uppercase tracking-tighter">
                             Contact Us
                         </h1>
-                        <p className="text-lg md:text-xl text-gray-400">
+                        <p className="text-lg md:text-xl text-gray-400 font-sans">
                             Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
                         </p>
-                    </motion.div>
+                    </div>
                 </div>
             </section>
 
             {/* Contact Form & Info */}
-            <section className="py-20">
+            <section ref={contentRef} className="py-20">
                 <div className="container mx-auto px-6">
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
                         {/* Contact Information */}
                         <div className="lg:col-span-1 space-y-6">
-                            <motion.h2
-                                initial={{ opacity: 0, x: -20 }}
-                                whileInView={{ opacity: 1, x: 0 }}
-                                viewport={{ once: true }}
-                                className="text-3xl font-black mb-8 font-['Plus_Jakarta_Sans']"
+                            <h2
+                                className="text-3xl font-black mb-8 font-display transition-all duration-500 will-change-transform"
+                                style={{ opacity: contentVisible ? 1 : 0, transform: contentVisible ? 'translate3d(0,0,0)' : 'translate3d(-20px,0,0)' }}
                             >
                                 Contact Information
-                            </motion.h2>
+                            </h2>
 
-                            {contactInfo.map((info, i) => (
-                                <motion.div
-                                    key={i}
-                                    initial={{ opacity: 0, x: -20 }}
-                                    whileInView={{ opacity: 1, x: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ delay: i * 0.1 }}
-                                    className="flex gap-4 p-4 rounded-xl border border-white/10 bg-white/5 hover:border-[#CCFF00]/30 transition-all"
-                                >
-                                    <div className="flex-shrink-0">
-                                        <div className="w-12 h-12 rounded-full bg-[#CCFF00]/10 flex items-center justify-center">
-                                            <info.icon className="w-6 h-6 text-[#CCFF00]" />
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <h3 className="font-bold mb-1 font-['Plus_Jakarta_Sans']">{info.title}</h3>
-                                        {info.details.map((detail, idx) => (
-                                            <p key={idx} className="text-sm text-gray-400">
-                                                {info.link && idx === 0 ? (
-                                                    <a href={info.link} className="hover:text-[#CCFF00] transition-colors">
-                                                        {detail}
-                                                    </a>
-                                                ) : (
-                                                    detail
-                                                )}
-                                            </p>
-                                        ))}
-                                    </div>
-                                </motion.div>
+                            {CONTACT_INFO.map((info, i) => (
+                                <InfoCard key={i} info={info} visible={contentVisible} delay={i * 100} />
                             ))}
 
                             {/* Social Media */}
-                            <motion.div
-                                initial={{ opacity: 0, x: -20 }}
-                                whileInView={{ opacity: 1, x: 0 }}
-                                viewport={{ once: true }}
-                                className="pt-8"
+                            <div
+                                className="pt-8 transition-all duration-500 delay-400"
+                                style={{ opacity: contentVisible ? 1 : 0 }}
                             >
-                                <h3 className="font-bold mb-4 font-['Plus_Jakarta_Sans']">Follow Us</h3>
+                                <h3 className="font-bold mb-4 font-display uppercase tracking-widest text-xs text-gray-500">Follow Us</h3>
                                 <div className="flex gap-3">
-                                    {[
-                                        { icon: Facebook, link: '#' },
-                                        { icon: Instagram, link: '#' },
-                                        { icon: Twitter, link: '#' }
-                                    ].map((social, i) => (
+                                    {SOCIAL_LINKS.map((social, i) => (
                                         <a
                                             key={i}
                                             href={social.link}
-                                            className="w-10 h-10 rounded-full border border-white/10 bg-white/5 flex items-center justify-center hover:bg-[#CCFF00] hover:border-[#CCFF00] hover:text-black transition-all"
+                                            className="w-10 h-10 rounded-full border border-white/10 bg-white/5 flex items-center justify-center hover:bg-brand-lime hover:border-brand-lime hover:text-black transition-all active:scale-95"
                                         >
                                             <social.icon className="w-5 h-5" />
                                         </a>
                                     ))}
                                 </div>
-                            </motion.div>
+                            </div>
                         </div>
 
                         {/* Contact Form */}
-                        <motion.div
-                            initial={{ opacity: 0, x: 20 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            className="lg:col-span-2"
+                        <div
+                            className="lg:col-span-2 transition-all duration-700 ease-out will-change-transform"
+                            style={{
+                                opacity: contentVisible ? 1 : 0,
+                                transform: contentVisible ? 'translate3d(0, 0, 0)' : 'translate3d(20px, 0, 0)'
+                            }}
                         >
                             <div className="p-8 md:p-12 rounded-2xl border border-white/10 bg-white/5">
-                                <h2 className="text-3xl font-black mb-8 font-['Plus_Jakarta_Sans']">Send Us a Message</h2>
+                                <h2 className="text-3xl font-black mb-8 font-display">Send Us a Message</h2>
                                 <form onSubmit={handleSubmit} className="space-y-6">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div>
-                                            <label className="block text-sm font-bold mb-2 text-gray-300">Name</label>
+                                            <label className="block text-sm font-bold mb-2 text-gray-500 uppercase tracking-widest font-sans">Name</label>
                                             <input
                                                 type="text"
                                                 value={formData.name}
                                                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                                className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 focus:border-[#CCFF00] focus:outline-none transition-colors text-white"
+                                                className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 focus:border-brand-lime focus:outline-none transition-colors text-white font-sans"
                                                 placeholder="Your name"
                                                 required
                                             />
                                         </div>
                                         <div>
-                                            <label className="block text-sm font-bold mb-2 text-gray-300">Email</label>
+                                            <label className="block text-sm font-bold mb-2 text-gray-500 uppercase tracking-widest font-sans">Email</label>
                                             <input
                                                 type="email"
                                                 value={formData.email}
                                                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                                className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 focus:border-[#CCFF00] focus:outline-none transition-colors text-white"
+                                                className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 focus:border-brand-lime focus:outline-none transition-colors text-white font-sans"
                                                 placeholder="your@email.com"
                                                 required
                                             />
@@ -227,28 +254,28 @@ const Contact: React.FC = () => {
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-bold mb-2 text-gray-300">Subject</label>
+                                        <label className="block text-sm font-bold mb-2 text-gray-500 uppercase tracking-widest font-sans">Subject</label>
                                         <select
                                             value={formData.subject}
                                             onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                                            className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 focus:border-[#CCFF00] focus:outline-none transition-colors text-white appearance-none"
+                                            className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 focus:border-brand-lime focus:outline-none transition-colors text-white appearance-none font-sans"
                                             required
                                         >
-                                            <option value="" disabled className="bg-[#111]">Select a subject</option>
-                                            <option value="General Inquiry" className="bg-[#111]">General Inquiry</option>
-                                            <option value="Distributor Application" className="bg-[#111]">Become a Distributor</option>
-                                            <option value="Support" className="bg-[#111]">Customer Support</option>
-                                            <option value="Feedback" className="bg-[#111]">Feedback</option>
+                                            <option value="" disabled className="bg-brand-black">Select a subject</option>
+                                            <option value="General Inquiry" className="bg-brand-black">General Inquiry</option>
+                                            <option value="Distributor Application" className="bg-brand-black">Become a Distributor</option>
+                                            <option value="Support" className="bg-brand-black">Customer Support</option>
+                                            <option value="Feedback" className="bg-brand-black">Feedback</option>
                                         </select>
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-bold mb-2 text-gray-300">Message</label>
+                                        <label className="block text-sm font-bold mb-2 text-gray-500 uppercase tracking-widest font-sans">Message</label>
                                         <textarea
                                             value={formData.message}
                                             onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                                             rows={6}
-                                            className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 focus:border-[#CCFF00] focus:outline-none transition-colors text-white resize-none"
+                                            className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 focus:border-brand-lime focus:outline-none transition-colors text-white resize-none font-sans"
                                             placeholder="Tell us more..."
                                             required
                                         />
@@ -257,11 +284,11 @@ const Contact: React.FC = () => {
                                     <button
                                         type="submit"
                                         disabled={status === 'sending' || status === 'success'}
-                                        className={`w-full md:w-auto px-8 py-4 rounded-full font-black transition-all flex items-center justify-center gap-2 uppercase tracking-wider ${status === 'success'
+                                        className={`w-full md:w-auto px-10 py-4 rounded-full font-black transition-all flex items-center justify-center gap-2 uppercase tracking-widest text-[10px] ${status === 'success'
                                             ? 'bg-green-500 text-white cursor-default'
                                             : status === 'error'
                                                 ? 'bg-red-500 text-white hover:bg-red-600'
-                                                : 'bg-[#CCFF00] text-black hover:bg-white'
+                                                : 'bg-brand-lime text-black hover:bg-white active:scale-95'
                                             }`}
                                     >
                                         {status === 'sending' ? (
@@ -271,36 +298,31 @@ const Contact: React.FC = () => {
                                                 <span>Message Sent!</span>
                                                 <CheckCircle className="w-5 h-5" />
                                             </>
-                                        ) : status === 'error' ? (
-                                            <>
-                                                <span>Failed. Try Again.</span>
-                                                <AlertCircle className="w-5 h-5" />
-                                            </>
                                         ) : (
                                             <>
                                                 <span>Send Message</span>
-                                                <Send className="w-5 h-5" />
+                                                <Send className="w-4 h-4" />
                                             </>
                                         )}
                                     </button>
                                 </form>
                             </div>
-                        </motion.div>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            {/* Distributor CTA */}
             <DistributorCTA />
 
             {/* Map Section */}
-            <section className="py-20 border-t border-white/5">
+            <section ref={mapRef} className="py-20 border-t border-white/5">
                 <div className="container mx-auto px-6">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        className="rounded-2xl overflow-hidden border border-white/10 h-96"
+                    <div
+                        className="rounded-2xl overflow-hidden border border-white/10 h-96 transition-all duration-1000 ease-out will-change-transform"
+                        style={{
+                            opacity: mapVisible ? 1 : 0,
+                            transform: mapVisible ? 'translate3d(0, 0, 0)' : 'translate3d(0, 40px, 0)'
+                        }}
                     >
                         <iframe
                             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.798467128444!2d79.84759631477269!3d6.914961795007538!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae259a5cef2bc07%3A0x1d7f2f6f3c8c4e0c!2sColombo%2C%20Sri%20Lanka!5e0!3m2!1sen!2sus!4v1234567890123"
@@ -311,11 +333,11 @@ const Contact: React.FC = () => {
                             loading="lazy"
                             title="Sunstar Location"
                         />
-                    </motion.div>
+                    </div>
                 </div>
             </section>
         </div>
     );
 };
 
-export default Contact;
+export default memo(Contact);
