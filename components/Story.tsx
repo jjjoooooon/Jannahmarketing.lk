@@ -1,75 +1,89 @@
-import React, { memo } from 'react';
+import React, { memo, useEffect, useRef, useState } from 'react';
 import { ArrowRight, Zap, Clock, Trophy, TrendingUp } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import story1 from '../assets/banner.webp'
+import story1 from '../assets/banner.webp';
+
+// Static stat card — no state so it never re-renders
+const StatCard = memo(() => (
+  <div className="absolute bottom-8 left-8 right-8 z-20">
+    <div className="bg-black/60 border border-white/10 p-6 rounded-2xl">
+      <div className="flex justify-between items-end">
+        <div>
+          <p className="text-gray-300 text-sm font-medium mb-1">Market Growth</p>
+          <h4 className="text-3xl font-black text-white">+240%</h4>
+        </div>
+        <div className="w-12 h-12 bg-brand-lime rounded-full flex items-center justify-center text-black">
+          <TrendingUp className="w-6 h-6" />
+        </div>
+      </div>
+    </div>
+  </div>
+));
+
+// Hook: trigger animation once on enter viewport
+const useReveal = () => {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setVisible(true); observer.disconnect(); } },
+      { threshold: 0.15 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+  return { ref, visible };
+};
 
 const Story: React.FC = memo(() => {
+  const { ref, visible } = useReveal();
+
   return (
     <section id="our-story" className="relative py-12 md:py-32 bg-brand-black overflow-hidden">
       <div className="container mx-auto px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+        <div ref={ref} className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
 
           {/* Visual Side */}
-          <div
-            className="relative order-2 lg:order-1 animate-fade-in-up"
-          >
-            <div className="relative rounded-3xl overflow-hidden border border-white/10 aspect-square lg:aspect-4/5 group">
-              <div className="absolute inset-0 bg-linear-to-t from-black via-transparent to-transparent z-10" />
+          <div className={`relative order-2 lg:order-1 transition-all duration-700 ease-out will-change-transform ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+            }`} style={{ backfaceVisibility: 'hidden' }}>
+            <div className="relative rounded-3xl overflow-hidden border border-white/10 aspect-square lg:aspect-[4/5] group">
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10" />
               <img
                 src={story1}
-                alt="Sunstar Carbonated Soda"
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                alt="Sunstar Carbonated Soda from Sainthamaruthu"
+                className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 will-change-transform"
+                loading="lazy"
+                decoding="async"
               />
-
-              {/* Floating Stats Card */}
-              <div className="absolute bottom-8 left-8 right-8 z-20">
-                <div className="bg-white/10 backdrop-blur-md border border-white/20 p-6 rounded-2xl">
-                  <div className="flex justify-between items-end">
-                    <div>
-                      <p className="text-gray-300 text-sm font-medium mb-1">Market Growth</p>
-                      <h4 className="text-3xl font-black text-white">+240%</h4>
-                    </div>
-                    <div className="w-12 h-12 bg-brand-lime rounded-full flex items-center justify-center text-black">
-                      <TrendingUp className="w-6 h-6" />
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <StatCard />
             </div>
 
-            {/* Decorative Elements */}
-            <div className="absolute -top-10 -left-10 w-32 h-32 bg-brand-lime rounded-full blur-[80px] opacity-20" />
-            <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-brand-lime rounded-full blur-[80px] opacity-20" />
+            {/* Decorative blobs — opacity-only animation, no layout effect */}
+            <div className="absolute -top-10 -left-10 w-32 h-32 bg-brand-lime rounded-full blur-[80px] opacity-10 pointer-events-none" />
+            <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-brand-lime rounded-full blur-[80px] opacity-10 pointer-events-none" />
           </div>
 
           {/* Content Side */}
-          <div className="order-1 lg:order-2">
-            <div
-              className="inline-flex items-center gap-2 px-4 py-2 bg-brand-lime/10 rounded-full border border-brand-lime/20 mb-6 animate-fade-in-up"
-            >
+          <div className={`order-1 lg:order-2 transition-all duration-700 delay-150 ease-out will-change-transform ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+            }`} style={{ backfaceVisibility: 'hidden' }}>
+
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-brand-lime/10 rounded-full border border-brand-lime/20 mb-6">
               <Zap className="w-4 h-4 text-brand-lime" />
               <span className="text-brand-lime font-bold uppercase tracking-wider text-xs">The Birthplace</span>
             </div>
 
-            <h2
-              className="text-4xl md:text-6xl font-black text-white mb-6 font-display leading-tight animate-fade-in-up"
-              style={{ animationDelay: '100ms' }}
-            >
+            <h2 className="text-4xl md:text-6xl font-black text-white mb-6 font-display leading-tight">
               From Sainthamaruthu <br />
               <span className="text-brand-lime">To The Island</span>
             </h2>
 
-            <p
-              className="text-gray-400 text-lg mb-8 leading-relaxed font-sans animate-fade-in-up translate-y-4 opacity-0"
-              style={{ animationDelay: '200ms', animationFillMode: 'forwards' }}
-            >
+            <p className="text-gray-400 text-lg mb-8 leading-relaxed font-sans">
               Jannah Marketing (Pvt) Ltd didn't start in a corporate office. We started in Sainthamaruthu back in 2023, driven by a simple love for that perfect soda fizz. We wanted to create a drink that hits different—powerful carbonation and bold, refreshing flavors.
             </p>
 
-            <div
-              className="grid grid-cols-2 gap-6 mb-10 animate-fade-in-up opacity-0"
-              style={{ animationDelay: '300ms', animationFillMode: 'forwards' }}
-            >
+            <div className="grid grid-cols-2 gap-6 mb-10">
               <div className="flex gap-4">
                 <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
                   <Clock className="w-6 h-6 text-brand-lime" />
@@ -90,18 +104,13 @@ const Story: React.FC = memo(() => {
               </div>
             </div>
 
-            <div
-              className="animate-fade-in-up opacity-0"
-              style={{ animationDelay: '400ms', animationFillMode: 'forwards' }}
+            <Link
+              to="/about"
+              className="inline-flex items-center gap-2 text-white font-bold hover:text-brand-lime transition-colors group"
             >
-              <Link
-                to="/about"
-                className="inline-flex items-center gap-2 text-white font-bold hover:text-brand-lime transition-colors group"
-              >
-                Read our full story
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </div>
+              Read our full story
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform will-change-transform" />
+            </Link>
           </div>
 
         </div>
