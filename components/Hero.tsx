@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, memo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronDown } from 'lucide-react';
 
@@ -48,12 +48,30 @@ const FLAVORS = [
   }
 ];
 
+// Memoized flavor button to prevent re-rendering all buttons on every state change
+const FlavorButton = memo(({ flavor, index, isActive, onClick }: {
+  flavor: typeof FLAVORS[0];
+  index: number;
+  isActive: boolean;
+  onClick: (i: number) => void;
+}) => (
+  <button
+    onClick={() => onClick(index)}
+    className={`group flex items-center gap-3 transition-all duration-300 ease-out transform-gpu ${isActive ? 'opacity-100' : 'opacity-50 hover:opacity-100'}`}
+  >
+    <span className={`hidden lg:block font-bold uppercase tracking-widest transition-all duration-300 ${isActive ? 'text-brand-lime text-sm translate-x-0' : 'text-white text-xs translate-x-2'}`}>
+      {flavor.name}
+    </span>
+    <div className={`h-2 rounded-full transition-all duration-300 ${isActive ? 'w-8 bg-brand-lime lg:w-12 lg:h-1' : 'w-2 bg-white lg:w-6 lg:h-px group-hover:bg-brand-lime'}`} />
+  </button>
+));
+
 const SunstarModernHero = () => {
   const [activeFlavor, setActiveFlavor] = useState(0);
   const [direction, setDirection] = useState<'in' | 'out'>('in');
   const [isTransitioning, setIsTransitioning] = useState(false);
 
-  // Preloader
+  // Preload images once on mount for smooth transitions
   useEffect(() => {
     FLAVORS.forEach((flavor) => {
       const img = new Image();
@@ -61,30 +79,26 @@ const SunstarModernHero = () => {
     });
   }, []);
 
-  const handleFlavorChange = (index: number) => {
+  // useCallback prevents re-creation of this function on every render
+  const handleFlavorChange = useCallback((index: number) => {
     if (index === activeFlavor || isTransitioning) return;
 
     setIsTransitioning(true);
     setDirection('out');
 
-    // Wait for exit animation, then switch and trigger entry
     setTimeout(() => {
       setActiveFlavor(index);
       setDirection('in');
-
-      // Complete the transition state after entry starts
-      setTimeout(() => {
-        setIsTransitioning(false);
-      }, 500);
+      setTimeout(() => setIsTransitioning(false), 500);
     }, 300);
-  };
+  }, [activeFlavor, isTransitioning]);
 
   const currentData = FLAVORS[activeFlavor];
 
   return (
     <div className="relative w-full min-h-dvh bg-brand-black overflow-hidden flex flex-col justify-center">
-      {/* --- Background --- */}
-      <div className="absolute inset-0 z-0 transition-opacity duration-700 ease-in-out">
+      {/* --- Background: translateZ(0) forces GPU compositing --- */}
+      <div className="absolute inset-0 z-0 pointer-events-none" style={{ transform: 'translateZ(0)' }}>
         <div
           className="absolute inset-0 opacity-40 transition-all duration-700"
           style={{ background: currentData.bgGradient }}
@@ -95,9 +109,12 @@ const SunstarModernHero = () => {
       {/* --- Main Content --- */}
       <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:pr-24 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center pt-20">
 
-        {/* Left: Text Content */}
-        <div className={`order-2 lg:order-1 flex flex-col items-start space-y-6 transition-all duration-500 ${direction === 'in' ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'
-          }`}>
+        {/* Left: Text Content — GPU-accelerated transitions */}
+        <div
+          className={`order-2 lg:order-1 flex flex-col items-start space-y-6 will-change-transform transition-all duration-500 ease-out ${direction === 'in' ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'
+            }`}
+          style={{ backfaceVisibility: 'hidden' }}
+        >
           <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-full border border-white/10 animate-fade-in translate-y-4">
             <span className="w-2 h-2 rounded-full bg-brand-lime animate-pulse" />
             <span className="text-xs font-bold text-white/80 uppercase tracking-widest">Sri Lankan Heritage</span>
@@ -119,10 +136,16 @@ const SunstarModernHero = () => {
           </div>
 
           <div className="flex flex-wrap gap-4 pt-4 animate-fade-in-up [animation-delay:300ms]">
-            <Link to="/shop" className="px-8 py-3 bg-brand-lime text-black rounded-full font-bold uppercase tracking-widest text-xs hover:scale-105 transition-transform">
+            <Link
+              to="/shop"
+              className="px-8 py-3 bg-brand-lime text-black rounded-full font-bold uppercase tracking-widest text-xs hover:scale-105 transition-transform active:scale-95"
+            >
               Explore Flavors
             </Link>
-            <Link to="/about" className="px-8 py-3 bg-white/5 text-white border border-white/10 rounded-full font-bold uppercase tracking-widest text-xs hover:bg-white/10 transition-colors">
+            <Link
+              to="/about"
+              className="px-8 py-3 bg-white/5 text-white border border-white/10 rounded-full font-bold uppercase tracking-widest text-xs hover:bg-white/10 transition-colors active:scale-95"
+            >
               Learn More
             </Link>
           </div>
@@ -135,64 +158,65 @@ const SunstarModernHero = () => {
           </div>
         </div>
 
-        {/* Right: Bottle */}
+        {/* Right: Bottle — translate3d keeps animation on GPU composite layer */}
         <div className="order-1 lg:order-2 flex justify-center lg:justify-end relative h-[40vh] lg:h-[60vh]">
-          {/* White Glow Effect */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] h-[60%] bg-white/30 rounded-full blur-[80px] animate-float z-0" />
+          {/* Glow: opacity-only animation avoids layout/paint */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] h-[60%] bg-white/30 rounded-full blur-[80px] animate-glow-pulse z-0 pointer-events-none" />
 
           <img
             src={currentData.image}
             alt={currentData.name}
-            className={`h-full w-auto object-contain drop-shadow-2xl animate-float will-change-transform z-10 transition-all duration-500 ease-out ${direction === 'in' ? 'opacity-100 translate-x-0 rotate-0 scale-100' : 'opacity-0 translate-x-20 rotate-12 scale-90'
+            loading="eager"
+            decoding="async"
+            className={`h-full w-auto object-contain drop-shadow-2xl animate-float-gpu will-change-transform z-10 transition-all duration-500 ease-out ${direction === 'in'
+                ? 'opacity-100 translate-x-0 rotate-0 scale-100'
+                : 'opacity-0 translate-x-20 rotate-12 scale-90'
               }`}
-            style={{ filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.5))' }}
+            style={{
+              filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.5))',
+              backfaceVisibility: 'hidden',
+            }}
           />
         </div>
       </div>
 
-      {/* --- Optimized Flavor Selector (Vertical Right) --- */}
+      {/* --- Flavor Selector --- */}
       <div className="z-50 absolute bottom-8 left-0 w-full flex justify-center gap-2 lg:fixed lg:right-10 lg:top-1/2 lg:-translate-y-1/2 lg:w-auto lg:flex-col lg:items-end lg:gap-4 lg:bottom-auto lg:left-auto">
-        {FLAVORS.map((flavor, index) => {
-          const isActive = activeFlavor === index;
-          return (
-            <button
-              key={flavor.name}
-              onClick={() => handleFlavorChange(index)}
-              className={`group flex items-center gap-3 transition-all duration-300 ease-out ${isActive ? 'opacity-100' : 'opacity-50 hover:opacity-100'
-                }`}
-            >
-              <span className={`hidden lg:block font-bold uppercase tracking-widest transition-all duration-300 ${isActive ? 'text-brand-lime text-sm translate-x-0' : 'text-white text-xs translate-x-2'
-                }`}>
-                {flavor.name}
-              </span>
-
-              <div className={`h-2 rounded-full transition-all duration-300 ${isActive ? 'w-8 bg-brand-lime lg:w-12 lg:h-1' : 'w-2 bg-white lg:w-6 lg:h-px group-hover:bg-brand-lime'
-                }`} />
-            </button>
-          );
-        })}
+        {FLAVORS.map((flavor, index) => (
+          <FlavorButton
+            key={flavor.name}
+            flavor={flavor}
+            index={index}
+            isActive={activeFlavor === index}
+            onClick={handleFlavorChange}
+          />
+        ))}
       </div>
 
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 animate-bounce hidden md:block">
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 animate-bounce hidden md:block pointer-events-none">
         <ChevronDown className="text-white/30" />
       </div>
 
-      {/* --- CSS for Animations --- */}
+      {/* --- All keyframes use translate3d to stay on GPU compositor --- */}
       <style>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-20px); }
+        @keyframes float-gpu {
+          0%, 100% { transform: translate3d(0, 0, 0); }
+          50%       { transform: translate3d(0, -20px, 0); }
         }
         @keyframes fade-in-up {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
+          from { opacity: 0; transform: translate3d(0, 20px, 0); }
+          to   { opacity: 1; transform: translate3d(0, 0, 0); }
         }
         @keyframes fade-in {
           from { opacity: 0; }
-          to { opacity: 1; }
+          to   { opacity: 1; }
         }
-        .animate-float {
-          animation: float 6s ease-in-out infinite;
+        @keyframes glow-pulse {
+          0%, 100% { opacity: 0.3; }
+          50%       { opacity: 0.5; }
+        }
+        .animate-float-gpu {
+          animation: float-gpu 6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
         }
         .animate-fade-in-up {
           animation: fade-in-up 0.8s ease-out forwards;
@@ -200,9 +224,13 @@ const SunstarModernHero = () => {
         .animate-fade-in {
           animation: fade-in 0.8s ease-out forwards;
         }
+        .animate-glow-pulse {
+          animation: glow-pulse 4s ease-in-out infinite;
+          will-change: opacity;
+        }
       `}</style>
     </div>
   );
 };
 
-export default SunstarModernHero;
+export default memo(SunstarModernHero);
