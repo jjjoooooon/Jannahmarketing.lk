@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
+    "@marsidev/react-turnstile": "^1.4.2",
     "@svg-maps/sri-lanka": "^2.0.0",
     "framer-motion": "^12.23.26",
     "lucide-react": "^0.562.0",
