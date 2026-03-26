@@ -41,7 +41,7 @@ const Home: React.FC = () => {
             <ProductShowcase />
 
             <Suspense fallback={<div className="h-96 bg-brand-black animate-pulse" />}>
-                <Testimonials />
+                {/* <Testimonials /> */}
                 <SriLankaMap />
                 <DistributorCTA />
             </Suspense>
