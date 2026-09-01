@@ -12,12 +12,14 @@
     "@emailjs/browser": "^4.4.1",
     "@marsidev/react-turnstile": "^1.4.2",
     "@svg-maps/sri-lanka": "^2.0.0",
+    "@types/react-transition-group": "^4.4.12",
     "framer-motion": "^12.23.26",
     "lucide-react": "^0.562.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "react-helmet-async": "^2.0.5",
-    "react-router-dom": "^7.11.0"
+    "react-router-dom": "^7.11.0",
+    "react-transition-group": "^4.4.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.18",
