@@ -1,96 +1,111 @@
-import React, { memo, useEffect, useRef, useState } from 'react';
+import React, { memo, useRef } from 'react';
 import { ArrowRight, TrendingUp, Users, Globe, ShieldCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const BENEFITS = [
-    { icon: TrendingUp, title: "High Growth Potential", description: "Join Sri Lanka's fastest-growing soda brand with Jannah Marketing." },
-    { icon: Users, title: "Exclusive Territories", description: "Secure dedicated distribution zones for maximum profitability." },
-    { icon: ShieldCheck, title: "Marketing Support", description: "Full backing with premium POS materials and digital campaigns." },
-    { icon: Globe, title: "Island-wide Network", description: "Be part of a robust supply chain covering the entire nation." },
+  { icon: TrendingUp, title: "High Growth Potential", description: "Join Sri Lanka's fastest-growing soda brand with Jannah Marketing." },
+  { icon: Users, title: "Exclusive Territories", description: "Secure dedicated distribution zones for maximum profitability." },
+  { icon: ShieldCheck, title: "Marketing Support", description: "Full backing with premium POS materials and digital campaigns." },
+  { icon: Globe, title: "Island-wide Network", description: "Be part of a robust supply chain covering the entire nation." },
 ];
 
-const BenefitCard = memo(({ benefit, visible, delay }: { benefit: typeof BENEFITS[0]; visible: boolean; delay: number }) => (
-    <div
-        className="bg-white/5 border border-white/10 p-6 rounded-2xl hover:border-brand-lime/30 transition-colors group will-change-transform"
-        style={{
-            opacity: visible ? 1 : 0,
-            transform: visible ? 'translate3d(0, 0, 0)' : 'translate3d(20px, 0, 0)',
-            transition: `opacity 0.6s ease-out ${delay}ms, transform 0.6s ease-out ${delay}ms`,
-        }}
-    >
-        <div className="w-12 h-12 rounded-full bg-brand-lime/10 flex items-center justify-center mb-4 group-hover:bg-brand-lime transition-colors duration-300">
-            <benefit.icon className="w-6 h-6 text-brand-lime group-hover:text-black transition-colors duration-300" />
-        </div>
-        <h3 className="text-xl font-bold text-white mb-2 font-display">{benefit.title}</h3>
-        <p className="text-sm text-gray-400 font-sans">{benefit.description}</p>
-    </div>
-));
-
 const DistributorCTA: React.FC = memo(() => {
-    const ref = useRef<HTMLDivElement>(null);
-    const [visible, setVisible] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const leftColRef = useRef<HTMLDivElement>(null);
+  const rightColRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-        const el = ref.current;
-        if (!el) return;
-        const observer = new IntersectionObserver(
-            ([entry]) => { if (entry.isIntersecting) { setVisible(true); observer.disconnect(); } },
-            { threshold: 0.1 }
-        );
-        observer.observe(el);
-        return () => observer.disconnect();
-    }, []);
-
-    return (
-        <section className="py-20 bg-brand-black relative overflow-hidden border-t border-white/5">
-            {/* Background glow — opacity only, compositor-safe */}
-            <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-brand-lime rounded-full blur-[150px] opacity-5 translate-y-1/2 translate-x-1/3 pointer-events-none" />
-
-            <div className="container mx-auto px-6 relative z-10" ref={ref}>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-
-                    {/* Content */}
-                    <div
-                        className="will-change-transform"
-                        style={{
-                            opacity: visible ? 1 : 0,
-                            transform: visible ? 'translate3d(0, 0, 0)' : 'translate3d(0, 24px, 0)',
-                            transition: 'opacity 0.7s ease-out, transform 0.7s ease-out',
-                        }}
-                    >
-                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-brand-lime/10 rounded-full border border-brand-lime/20 mb-6">
-                            <Users className="w-4 h-4 text-brand-lime" />
-                            <span className="text-brand-lime font-bold uppercase tracking-wider text-xs">Partner With Us</span>
-                        </div>
-
-                        <h2 className="text-4xl md:text-6xl font-black text-white mb-6 font-display leading-tight">
-                            Become a <span className="text-brand-lime">Distributor</span>
-                        </h2>
-
-                        <p className="text-gray-400 text-lg mb-8 max-w-xl font-sans">
-                            Are you ready to grow with us? We are looking for passionate partners to expand our distribution network across all provinces. Join Jannah Marketing and be part of the Sunstar success story.
-                        </p>
-
-                        <Link
-                            to="/contact"
-                            className="inline-flex items-center gap-2 px-8 py-4 bg-brand-lime text-black font-black rounded-full hover:bg-white transition-all uppercase tracking-wider group active:scale-95"
-                        >
-                            Apply Now
-                            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform will-change-transform" />
-                        </Link>
-                    </div>
-
-                    {/* Benefits Grid */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        {BENEFITS.map((benefit, i) => (
-                            <BenefitCard key={benefit.title} benefit={benefit} visible={visible} delay={i * 100 + 200} />
-                        ))}
-                    </div>
-
-                </div>
-            </div>
-        </section>
+  useGSAP(() => {
+    // Reveal left column content
+    gsap.fromTo(leftColRef.current?.children ? Array.from(leftColRef.current.children) : [],
+      { opacity: 0, y: 30 },
+      {
+        opacity: 1, 
+        y: 0, 
+        duration: 1.2, 
+        stagger: 0.2, 
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top 75%",
+        }
+      }
     );
+
+    // Stagger right column cards
+    gsap.fromTo(".benefit-card",
+      { opacity: 0, x: 30 },
+      {
+        opacity: 1, 
+        x: 0, 
+        duration: 1, 
+        stagger: 0.15, 
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top 75%",
+        }
+      }
+    );
+  }, { scope: containerRef });
+
+  return (
+    <section ref={containerRef} className="py-24 md:py-32 bg-brand-black relative overflow-hidden border-t border-white/5">
+      {/* Background glow */}
+      <div className="absolute bottom-0 right-0 w-[800px] h-[800px] bg-white/5 rounded-full blur-[150px] opacity-10 translate-y-1/2 translate-x-1/3 pointer-events-none" />
+
+      <div className="container mx-auto px-6 max-w-7xl relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+
+          {/* Text Content */}
+          <div ref={leftColRef} className="flex flex-col items-center lg:items-start text-center lg:text-left">
+            <div className="inline-flex items-center gap-2 mb-8">
+              <span className="w-8 h-[1px] bg-white/30" />
+              <span className="text-white/50 uppercase tracking-[0.3em] text-xs font-bold font-sans">Business Opportunities</span>
+              <span className="w-8 h-[1px] bg-white/30" />
+            </div>
+
+            <h2 className="text-5xl md:text-7xl font-sans font-light text-white mb-6 leading-tight tracking-tight">
+              Become a <span className="font-grace text-6xl md:text-8xl block mt-2 text-white/90">Distributor.</span>
+            </h2>
+
+            <p className="text-white/50 text-lg md:text-xl mb-10 max-w-lg font-mplus font-light leading-relaxed">
+              Are you ready to grow with us? We are looking for passionate partners to expand our distribution network across all provinces. Join Jannah Marketing and be part of the Sunstar luxury success story.
+            </p>
+
+            <Link
+              to="/contact"
+              className="inline-flex items-center gap-4 px-10 py-4 bg-transparent text-white border border-white/20 rounded-full hover:bg-white hover:text-black transition-all duration-300 uppercase tracking-widest font-bold font-sans text-xs group active:scale-95"
+            >
+              Apply Now
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
+
+          {/* Benefits Grid */}
+          <div ref={rightColRef} className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {BENEFITS.map((benefit) => (
+              <div 
+                key={benefit.title} 
+                className="benefit-card bg-white/[0.02] border border-white/10 p-8 rounded-3xl hover:bg-white/[0.05] hover:border-white/30 transition-all duration-500 group flex flex-col items-start text-left"
+              >
+                <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mb-6 group-hover:bg-white transition-colors duration-500">
+                  <benefit.icon className="w-5 h-5 text-white/50 group-hover:text-black transition-colors duration-500" />
+                </div>
+                <h3 className="text-xl font-light text-white mb-3 font-sans tracking-tight">{benefit.title}</h3>
+                <p className="text-sm text-white/40 font-mplus font-light leading-relaxed">{benefit.description}</p>
+              </div>
+            ))}
+          </div>
+
+        </div>
+      </div>
+    </section>
+  );
 });
 
 export default DistributorCTA;
