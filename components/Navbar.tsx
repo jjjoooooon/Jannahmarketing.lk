@@ -69,7 +69,7 @@ const Navbar: React.FC = () => {
       isOpen
         ? "top-0 bg-brand-black/95 py-3 border-b border-white/10"
         : isSolid
-        ? "top-0 bg-[#050505]/80 backdrop-blur-xl border-b border-white/10 py-3 shadow-[0_8px_32px_rgba(0,0,0,0.3)]"
+        ? "top-0 bg-[#000000]/90 backdrop-blur-xl border-b border-white/5 py-4 shadow-[0_8px_32px_rgba(0,0,0,0.5)]"
         : "top-0 bg-transparent py-5 border-b border-transparent"
     }
   `;
@@ -77,45 +77,43 @@ const Navbar: React.FC = () => {
   return (
     <>
       <nav className={navClasses}>
-        <div className="px-6 lg:px-8 flex justify-between items-center relative z-50 w-full h-full">
+        <div className="px-6 lg:px-12 flex justify-between items-center relative z-50 w-full h-full max-w-[1920px] mx-auto">
+          {/* Logo Area */}
           <Link
             to="/"
             aria-label="Home"
             className="z-50 block transition-transform active:scale-95 group"
           >
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center">
               <div className="relative">
-                <div className="absolute inset-0 bg-white blur-md opacity-5 group-hover:opacity-10 transition-opacity" />
+                <div className="absolute inset-0 bg-white blur-md opacity-0 group-hover:opacity-10 transition-opacity rounded-full" />
                 <img
                   src="/jannah_logo_hq_transparent.png"
                   alt="Jannah Marketing Logo"
-                  className="w-10 h-10 md:w-12 md:h-12 relative z-10 object-contain rounded-full bg-white p-1"
+                  className="w-12 h-12 md:w-14 md:h-14 relative z-10 object-contain rounded-full bg-white border-2 border-transparent p-1"
                   loading="eager"
-                  width="48"
-                  height="48"
+                  width="56"
+                  height="56"
                 />
               </div>
             </div>
           </Link>
 
-          {/* Desktop Menu */}
+          {/* Desktop Menu - Central Pill */}
           <div className="hidden md:flex flex-1 justify-center">
-            <div className="flex items-center space-x-2 lg:space-x-4 bg-transparent px-2 py-1.5">
+            <div className="flex items-center space-x-12 bg-[#101010] rounded-[2rem] px-10 py-3.5 border border-white/5 shadow-2xl">
               {MENU_ITEMS.map((item) => {
                 const isActive = location.pathname === item.href;
                 return (
                   <Link
                     key={item.name}
                     to={item.href}
-                    className={`relative px-4 py-2 text-[10px] uppercase tracking-[0.2em] font-bold transition-colors duration-300 ${isActive ? "text-white" : "text-white/40 hover:text-white"}`}
+                    className={`relative text-[11px] uppercase tracking-[0.15em] font-black font-['Plus_Jakarta_Sans'] transition-all duration-300 ${
+                      isActive 
+                        ? "text-[#D4FF00] drop-shadow-[0_0_12px_rgba(212,255,0,0.3)]" 
+                        : "text-white/30 hover:text-white/60"
+                    }`}
                   >
-                    {isActive && (
-                      <motion.div
-                        layoutId="nav-active-pill"
-                        className="absolute bottom-0 left-0 right-0 h-[1px] bg-white"
-                        transition={{ type: "spring", stiffness: 350, damping: 30 }}
-                      />
-                    )}
                     <span className="relative z-10">{item.name}</span>
                   </Link>
                 );
@@ -123,22 +121,23 @@ const Navbar: React.FC = () => {
             </div>
           </div>
 
-          <div className="hidden md:flex items-center gap-3">
+          {/* Right Action Icons & Button */}
+          <div className="hidden md:flex items-center gap-4">
             <button
               onClick={() => setIsDrawerOpen(true)}
-              className="relative p-2.5 text-white/70 bg-transparent border border-white/20 hover:bg-white/10 hover:border-white/40 hover:text-white transition-colors group"
+              className="relative w-11 h-11 rounded-full flex items-center justify-center bg-transparent border border-white/20 text-white/70 hover:bg-white/10 hover:border-white/40 hover:text-white transition-all group"
             >
               <ShoppingCart size={18} />
               {totalItems > 0 && (
-                <span className="absolute -top-1 -right-1 bg-white text-black text-[9px] font-bold w-4 h-4 flex items-center justify-center border border-brand-black">
+                <span className="absolute -top-1 -right-1 bg-white text-black text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center border border-brand-black">
                   {totalItems}
                 </span>
               )}
             </button>
             <Link to="/contact">
-              <button className="flex items-center gap-2 px-8 py-3.5 bg-transparent text-white border border-white hover:bg-white hover:text-black font-bold text-[11px] uppercase tracking-[0.2em] transition-all duration-300">
+              <button className="flex items-center gap-3 px-6 py-3 bg-transparent text-white border border-white/80 hover:bg-white hover:text-black font-black text-[11px] uppercase tracking-[0.2em] transition-all duration-300">
                 <span>Distributors</span>
-                <Users size={14} />
+                <Users size={16} className={isSolid ? "opacity-100" : "opacity-80"} />
               </button>
             </Link>
           </div>
