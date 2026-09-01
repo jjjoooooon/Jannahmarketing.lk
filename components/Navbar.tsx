@@ -24,7 +24,6 @@ const SOCIAL_LINKS = [Instagram, Twitter, Facebook];
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [hoveredNav, setHoveredNav] = useState<string | null>(null);
   const [hidden, setHidden] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const prevScrollY = useRef(0);
@@ -101,40 +100,23 @@ const Navbar: React.FC = () => {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex flex-1 justify-center">
-            <div 
-              className="flex items-center space-x-2 lg:space-x-4 bg-transparent px-2 py-1.5"
-              onMouseLeave={() => setHoveredNav && setHoveredNav(null)}
-            >
+            <div className="flex items-center space-x-2 lg:space-x-4 bg-transparent px-2 py-1.5">
               {MENU_ITEMS.map((item) => {
                 const isActive = location.pathname === item.href;
-                const isHovered = hoveredNav === item.name;
-                
                 return (
                   <Link
                     key={item.name}
                     to={item.href}
-                    onMouseEnter={() => setHoveredNav && setHoveredNav(item.name)}
-                    className={`relative px-5 py-2 text-[11px] uppercase tracking-[0.15em] font-sans font-bold transition-all duration-300 group ${isActive ? "text-[#050505]" : isHovered ? "text-[#050505]" : "text-white/60"}`}
+                    className={`relative px-4 py-2 text-[10px] uppercase tracking-[0.2em] font-bold transition-colors duration-300 ${isActive ? "text-white" : "text-white/40 hover:text-white"}`}
                   >
-                    <span className="relative z-10 transition-colors duration-300">{item.name}</span>
-                    
-                    {/* Active State Background */}
                     {isActive && (
                       <motion.div
-                        layoutId="nav-active-fill"
-                        className="absolute inset-0 bg-white rounded-full shadow-[0_0_15px_rgba(255,255,255,0.3)]"
-                        transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                        layoutId="nav-active-pill"
+                        className="absolute bottom-0 left-0 right-0 h-[1px] bg-white"
+                        transition={{ type: "spring", stiffness: 350, damping: 30 }}
                       />
                     )}
-
-                    {/* Hover State Background */}
-                    {isHovered && !isActive && (
-                      <motion.div
-                        layoutId="nav-hover-fill"
-                        className="absolute inset-0 bg-white/80 rounded-full"
-                        transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                      />
-                    )}
+                    <span className="relative z-10">{item.name}</span>
                   </Link>
                 );
               })}
@@ -154,7 +136,7 @@ const Navbar: React.FC = () => {
               )}
             </button>
             <Link to="/contact">
-              <button className="flex items-center gap-2 px-8 py-3.5 bg-transparent text-white border border-white hover:bg-white hover:text-black font-mplus font-bold text-[11px] uppercase tracking-[0.2em] transition-all duration-300">
+              <button className="flex items-center gap-2 px-8 py-3.5 bg-transparent text-white border border-white hover:bg-white hover:text-black font-bold text-[11px] uppercase tracking-[0.2em] transition-all duration-300">
                 <span>Distributors</span>
                 <Users size={14} />
               </button>
@@ -233,13 +215,13 @@ const Navbar: React.FC = () => {
                     setIsOpen(false);
                     setIsDrawerOpen(true);
                   }}
-                  className="px-4 py-2 bg-transparent border border-white/20 text-white/70 text-[10px] font-mplus font-bold rounded-sm uppercase tracking-widest leading-none"
+                  className="px-4 py-2 bg-transparent border border-white/20 text-white/70 text-[10px] font-bold rounded-sm uppercase tracking-widest leading-none"
                 >
                   {totalItems} Items
                 </button>
               </div>
               <Link to="/contact" className="w-full">
-                <button className="w-full py-4 bg-[#6F9578] text-white hover:bg-[#597860] font-mplus font-bold uppercase text-[11px] tracking-[0.2em] transition-all duration-300 flex items-center justify-center gap-2">
+                <button className="w-full py-4 bg-[#6F9578] text-white hover:bg-[#597860] font-bold uppercase text-[11px] tracking-[0.2em] transition-all duration-300 flex items-center justify-center gap-2">
                   <span>Become a Distributor</span>
                   <Users size={18} />
                 </button>

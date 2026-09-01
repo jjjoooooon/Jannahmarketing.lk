@@ -65,24 +65,34 @@ const ProductShowcase: React.FC = () => {
 
   useGSAP(() => {
     const track = trackRef.current;
-    if (!track) return;
+    const container = containerRef.current;
+    if (!track || !container) return;
 
-    // The correct approach: pin the section, then animate the inner track
-    // by the full pixel distance it needs to travel (total width - viewport width)
-    const totalScrollWidth = track.scrollWidth - window.innerWidth;
+    const getScrollDist = () => track.scrollWidth - container.offsetWidth;
 
-    gsap.to(track, {
-      x: () => -totalScrollWidth,
-      ease: "none",
-      scrollTrigger: {
-        trigger: containerRef.current,
-        pin: true,
-        scrub: 1.5,
-        // end is tied to the actual pixel distance needed so it feels natural
-        end: () => `+=${totalScrollWidth}`,
-        invalidateOnRefresh: true, // Recalculate on resize
-      }
+    const st = ScrollTrigger.create({
+      trigger: container,
+      pin: true,
+      pinSpacing: true,
+      scrub: 1.5,
+      start: "top top",
+      end: () => `+=${getScrollDist()}`,
+      invalidateOnRefresh: true,
+      anticipatePin: 1,
+      animation: gsap.to(track, {
+        x: () => -getScrollDist(),
+        ease: "none",
+      }),
     });
+
+    // In a React SPA, window.load never re-fires after client-side navigation.
+    // Use a short timeout to let images/fonts paint before locking measurements.
+    const timerId = setTimeout(() => ScrollTrigger.refresh(), 200);
+
+    return () => {
+      clearTimeout(timerId);
+      st.kill();
+    };
 
   }, { scope: containerRef });
 
@@ -90,10 +100,10 @@ const ProductShowcase: React.FC = () => {
     <section
       ref={containerRef}
       id="flavors"
-      className="relative bg-brand-black border-t border-white/5"
+      className="relative bg-brand-black border-t border-white/5 overflow-hidden"
     >
-      {/* The track must NOT have overflow:hidden so the pin spacer works properly */}
-      <div className="h-screen w-full flex items-center overflow-hidden">
+      {/* Track: wider than viewport, translated by GSAP */}
+      <div className="h-screen w-full flex items-center">
         <div
           ref={trackRef}
           className="flex h-full items-center will-change-transform"
