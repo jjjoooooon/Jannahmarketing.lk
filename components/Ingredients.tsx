@@ -1,73 +1,100 @@
-import React, { memo, useEffect, useRef, useState } from 'react';
-import { Zap, Leaf, Droplets, Wind, Sun, BatteryCharging } from 'lucide-react';
+import React, { memo, useRef } from 'react';
+import { Zap, Leaf, Droplets, Wind, Sun, ShieldCheck } from 'lucide-react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const INGREDIENTS = [
-  { icon: Zap, title: "TRIPLE FILTERED WATER", desc: "Our water goes through high-tech filtration to ensure every sip is as pure as it gets." },
-  { icon: Leaf, title: "HIGH CARBONATION", desc: "We don't do weak bubbles. Sunstar is packed with the crisp, sharp fizz that soda lovers crave." },
-  { icon: Droplets, title: "BOLD FLAVORING", desc: "Our artificial flavors are carefully crafted to deliver that punchy, nostalgic taste in every bottle." },
-  { icon: Sun, title: "PERFECT CHILL", desc: "Designed to be served ice cold, our soda holds its carbonation longer for maximum refreshment." },
-  { icon: Wind, title: "CLEAN FINISH", desc: "No weird aftertaste here. Just a smooth, refreshing finish that clears the palate." },
-  { icon: BatteryCharging, title: "CONSISTENT QUALITY", desc: "Same great fizz, same bold flavor. From Sainthamaruthu to your doorstep, every time." },
+  { icon: Droplets, title: "Pure Filtration", desc: "Our water goes through advanced high-tech filtration, guaranteeing absolute purity in every single drop." },
+  { icon: Zap, title: "Maximum Carbonation", desc: "Engineered for intense, long-lasting carbonation that provides the crisp, sharp fizz soda lovers crave." },
+  { icon: Leaf, title: "Refined Flavors", desc: "Expertly balanced flavor profiles designed to deliver punchy, authentic taste without overwhelming sweetness." },
+  { icon: Sun, title: "Thermal Integrity", desc: "Formulated to maintain carbonation stability even when served ice-cold, ensuring maximum refreshment." },
+  { icon: Wind, title: "Clean Finish", desc: "Crafted for a flawlessly smooth palate finish, entirely free from artificial aftertastes." },
+  { icon: ShieldCheck, title: "The Jannah Standard", desc: "Every bottle undergoes rigorous quality assurance to meet our uncompromising corporate benchmarks." },
 ];
 
-// Memoized single card — prevents re-renders of all cards when parent updates
-const IngredientCard = memo(({ item, visible, delay }: { item: typeof INGREDIENTS[0]; visible: boolean; delay: number }) => (
-  <div
-    className="bg-white/5 border border-white/10 p-6 md:p-8 rounded-2xl group relative overflow-hidden hover:border-brand-lime/50 hover:scale-[1.02] active:scale-95 cursor-default transition-all duration-300 will-change-transform"
-    style={{
-      opacity: visible ? 1 : 0,
-      transform: visible ? 'translate3d(0, 0, 0)' : 'translate3d(0, 24px, 0)',
-      transition: `opacity 0.6s ease-out ${delay}ms, transform 0.6s ease-out ${delay}ms`,
-    }}
-  >
-    {/* Glow on hover — opacity-only, compositor-safe */}
-    <div className="absolute top-0 right-0 w-24 h-24 bg-brand-lime blur-[60px] opacity-0 group-hover:opacity-10 transition-opacity duration-500 pointer-events-none" />
-
-    <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/5 flex items-center justify-center mb-4 md:mb-6 text-brand-lime group-hover:bg-brand-lime group-hover:text-black transition-colors duration-300">
-      <item.icon size={24} />
-    </div>
-    <h3 className="text-lg md:text-xl font-bold text-white font-display mb-2 md:mb-3 uppercase tracking-wide">{item.title}</h3>
-    <p className="text-gray-400 text-sm leading-relaxed font-sans">{item.desc}</p>
-  </div>
-));
-
 const Ingredients: React.FC = memo(() => {
-  const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setVisible(true); observer.disconnect(); } },
-      { threshold: 0.1 }
+  useGSAP(() => {
+    // Reveal Header
+    gsap.fromTo(headerRef.current,
+      { opacity: 0, y: 40, filter: 'blur(8px)' },
+      {
+        opacity: 1,
+        y: 0,
+        filter: 'blur(0px)',
+        duration: 1.5,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top 75%",
+        }
+      }
     );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
+
+    // Staggered Cards Reveal
+    gsap.fromTo(gridRef.current?.children ? Array.from(gridRef.current.children) : [],
+      { opacity: 0, y: 50 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 1.2,
+        stagger: 0.15,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: gridRef.current,
+          start: "top 80%",
+        }
+      }
+    );
+  }, { scope: containerRef });
 
   return (
-    <section className="py-20 md:py-32 bg-brand-black relative">
-      <div className="container mx-auto px-6">
-        <div
-          ref={ref}
-          className="text-center mb-12 md:mb-20 transition-all duration-700 ease-out will-change-transform"
-          style={{
-            opacity: visible ? 1 : 0,
-            transform: visible ? 'translate3d(0, 0, 0)' : 'translate3d(0, 20px, 0)',
-          }}
-        >
-          <h2 className="text-3xl md:text-6xl font-black font-display text-white mb-4 uppercase tracking-tighter">
-            The <span className="text-brand-lime">Formula</span>
+    <section ref={containerRef} className="py-24 md:py-40 bg-[#0a0a0a] relative border-t border-white/5">
+      {/* Subtle Background Glows */}
+      <div className="absolute top-1/4 left-1/4 w-[30rem] h-[30rem] bg-white/5 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 w-[30rem] h-[30rem] bg-brand-lime/5 rounded-full blur-[120px] pointer-events-none" />
+
+      <div className="container mx-auto px-6 max-w-7xl relative z-10">
+        {/* Header Section */}
+        <div ref={headerRef} className="text-center mb-16 md:mb-24 flex flex-col items-center">
+          <div className="inline-flex items-center gap-2 mb-6">
+            <span className="w-8 h-[1px] bg-white/30" />
+            <span className="text-white/50 uppercase tracking-[0.3em] text-xs font-bold font-sans">Quality Assurance</span>
+            <span className="w-8 h-[1px] bg-white/30" />
+          </div>
+
+          <h2 className="text-5xl md:text-7xl font-light font-sans text-white mb-6 leading-tight tracking-tight">
+            The Anatomy of <span className="font-grace text-6xl md:text-8xl block mt-2 text-white/90">Excellence.</span>
           </h2>
-          <p className="text-gray-400 max-w-2xl mx-auto text-base md:text-lg font-medium font-sans">
-            We've perfected the science of the fizz. High carbonation, bold flavors, and zero excuses. This is soda how it should be.
+          
+          <p className="text-white/50 max-w-2xl mx-auto text-lg md:text-xl font-light font-mplus leading-relaxed">
+            Every product distributed by Jannah Marketing is engineered to perfection. From high-retention carbonation to flawless flavor profiles, we set the benchmark for Sri Lankan beverages.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+        {/* Dynamic Grid */}
+        <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {INGREDIENTS.map((item, i) => (
-            <IngredientCard key={item.title} item={item} visible={visible} delay={i * 80} />
+            <div
+              key={i}
+              className="group relative bg-white/[0.02] border border-white/10 p-8 md:p-10 rounded-3xl overflow-hidden hover:bg-white/[0.04] transition-colors duration-500"
+            >
+              {/* Glassmorphic internal glow */}
+              <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-[50px] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+
+              <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-8 text-white/60 group-hover:text-white transition-colors duration-500">
+                <item.icon size={26} strokeWidth={1.5} />
+              </div>
+              
+              <h3 className="text-xl md:text-2xl font-normal text-white font-sans tracking-tight mb-4">{item.title}</h3>
+              <p className="text-white/50 text-sm md:text-base leading-relaxed font-mplus font-light">{item.desc}</p>
+            </div>
           ))}
         </div>
       </div>
