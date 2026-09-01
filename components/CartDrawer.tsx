@@ -21,7 +21,7 @@ const CartItemRow = memo(({
             <div className="flex-grow flex flex-col justify-between py-1">
                 <div>
                     <div className="flex justify-between items-start mb-1">
-                        <h3 className="font-bold text-white font-['Plus_Jakarta_Sans']">{item.productName}</h3>
+                        <h3 className="font-bold text-white font-grace text-xl">{item.productName}</h3>
                         <button
                             onClick={() => onRemove(item.productId, item.size)}
                             className="text-gray-500 hover:text-red-500 transition-colors p-1"
@@ -29,21 +29,21 @@ const CartItemRow = memo(({
                             <Trash2 size={16} />
                         </button>
                     </div>
-                    <p className="text-xs text-brand-lime font-bold uppercase tracking-wider">{item.size}</p>
+                    <p className="text-[11px] text-[#6F9578] font-bold uppercase tracking-[0.2em]">{item.size}</p>
                 </div>
 
                 <div className="flex justify-between items-center mt-2">
                     <div className="flex items-center bg-white/5 rounded-lg p-1 border border-white/10">
                         <button
                             onClick={() => onUpdateQuantity(item.productId, item.size, -1)}
-                            className="w-7 h-7 flex items-center justify-center hover:bg-brand-lime hover:text-black rounded-md transition-all text-gray-400"
+                            className="w-7 h-7 flex items-center justify-center hover:bg-white/10 hover:text-white rounded-md transition-all text-gray-400"
                         >
                             <Minus size={14} />
                         </button>
                         <span className="w-8 text-center text-sm font-bold text-white">{item.quantity}</span>
                         <button
                             onClick={() => onUpdateQuantity(item.productId, item.size, 1)}
-                            className="w-7 h-7 flex items-center justify-center hover:bg-brand-lime hover:text-black rounded-md transition-all text-gray-400"
+                            className="w-7 h-7 flex items-center justify-center hover:bg-white/10 hover:text-white rounded-md transition-all text-gray-400"
                         >
                             <Plus size={14} />
                         </button>
@@ -96,12 +96,12 @@ const CartDrawer: React.FC = () => {
                 {/* Header */}
                 <div className="p-6 border-b border-white/10 flex items-center justify-between bg-[#050505] sticky top-0 z-10">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-brand-lime/10 flex items-center justify-center">
-                            <ShoppingCart size={20} className="text-brand-lime" />
+                        <div className="w-10 h-10 border border-white/20 bg-white/5 flex items-center justify-center">
+                            <ShoppingCart size={18} className="text-white/70" />
                         </div>
                         <div>
-                            <h2 className="text-xl font-black font-['Plus_Jakarta_Sans'] text-white">Your Cart</h2>
-                            <p className="text-xs text-brand-lime uppercase tracking-widest font-black italic">{totalItems} Items</p>
+                            <h2 className="text-3xl font-grace text-white leading-none">Your Cart</h2>
+                            <p className="text-[10px] text-white/50 uppercase tracking-[0.2em] font-bold mt-1">{totalItems} Items</p>
                         </div>
                     </div>
                     <button
@@ -136,7 +136,7 @@ const CartDrawer: React.FC = () => {
                             </div>
                             <button
                                 onClick={() => setIsDrawerOpen(false)}
-                                className="px-8 py-3 bg-brand-lime/10 text-brand-lime font-bold rounded-full border border-brand-lime/20 hover:bg-brand-lime hover:text-black transition-all uppercase text-xs tracking-widest"
+                                className="px-8 py-4 font-bold text-[11px] uppercase tracking-[0.2em] transition-all duration-300 bg-transparent text-white border border-white hover:bg-white hover:text-black"
                             >
                                 Start Shopping
                             </button>
@@ -154,11 +154,11 @@ const CartDrawer: React.FC = () => {
                             </div>
                             <div className="flex justify-between text-gray-400 text-sm">
                                 <span>Delivery</span>
-                                <span className="text-brand-lime text-xs font-bold uppercase tracking-wider italic">Calculated at next step</span>
+                                <span className="text-white/50 text-[10px] font-bold uppercase tracking-[0.2em]">Calculated at next step</span>
                             </div>
                             <div className="flex justify-between items-center pt-2 border-t border-white/5">
                                 <span className="text-lg font-bold text-white uppercase tracking-tighter">Total Price</span>
-                                <span className="text-2xl font-black text-brand-lime">LKR {totalPrice.toLocaleString()}</span>
+                                <span className="text-2xl font-grace text-white mt-1">LKR {totalPrice.toLocaleString()}</span>
                             </div>
                         </div>
                         <Link to="/checkout" onClick={() => setIsDrawerOpen(false)}>

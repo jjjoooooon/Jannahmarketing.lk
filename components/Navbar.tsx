@@ -24,6 +24,7 @@ const SOCIAL_LINKS = [Instagram, Twitter, Facebook];
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [hoveredNav, setHoveredNav] = useState<string | null>(null);
   const [hidden, setHidden] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const prevScrollY = useRef(0);
@@ -69,8 +70,8 @@ const Navbar: React.FC = () => {
       isOpen
         ? "top-0 bg-brand-black/95 py-3 border-b border-white/10"
         : isSolid
-          ? "top-0 lg:top-4 lg:w-[90%] lg:max-w-5xl bg-[#0a0a0a]/60 backdrop-blur-xl border-b lg:border border-white/10 py-2 lg:rounded-[2rem] shadow-[0_8px_32px_rgba(0,0,0,0.3)]"
-          : "top-0 lg:top-6 lg:w-[92%] lg:max-w-6xl bg-transparent py-4 border-b border-transparent"
+        ? "top-0 bg-[#050505]/80 backdrop-blur-xl border-b border-white/10 py-3 shadow-[0_8px_32px_rgba(0,0,0,0.3)]"
+        : "top-0 bg-transparent py-5 border-b border-transparent"
     }
   `;
 
@@ -85,7 +86,7 @@ const Navbar: React.FC = () => {
           >
             <div className="flex items-center space-x-3">
               <div className="relative">
-                <div className="absolute inset-0 bg-brand-lime blur-md opacity-20 rounded-full group-hover:opacity-40 transition-opacity" />
+                <div className="absolute inset-0 bg-white blur-md opacity-5 group-hover:opacity-10 transition-opacity" />
                 <img
                   src="/jannah_logo_hq_transparent.png"
                   alt="Jannah Marketing Logo"
@@ -100,23 +101,40 @@ const Navbar: React.FC = () => {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex flex-1 justify-center">
-            <div className="flex items-center space-x-1 lg:space-x-2 bg-white/5 rounded-full px-2 py-1.5 border border-white/10 backdrop-blur-md">
+            <div 
+              className="flex items-center space-x-2 lg:space-x-4 bg-transparent px-2 py-1.5"
+              onMouseLeave={() => setHoveredNav && setHoveredNav(null)}
+            >
               {MENU_ITEMS.map((item) => {
                 const isActive = location.pathname === item.href;
+                const isHovered = hoveredNav === item.name;
+                
                 return (
                   <Link
                     key={item.name}
                     to={item.href}
-                    className={`relative px-4 py-2 text-[10px] uppercase tracking-[0.15em] font-bold rounded-full transition-colors duration-300 ${isActive ? "text-brand-lime" : "text-gray-400 hover:text-white"}`}
+                    onMouseEnter={() => setHoveredNav && setHoveredNav(item.name)}
+                    className={`relative px-5 py-2 text-[11px] uppercase tracking-[0.15em] font-sans font-bold transition-all duration-300 group ${isActive ? "text-[#050505]" : isHovered ? "text-[#050505]" : "text-white/60"}`}
                   >
+                    <span className="relative z-10 transition-colors duration-300">{item.name}</span>
+                    
+                    {/* Active State Background */}
                     {isActive && (
                       <motion.div
-                        layoutId="nav-active-pill"
-                        className="absolute inset-0 bg-white/15 rounded-full shadow-inner border border-white/5"
-                        transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                        layoutId="nav-active-fill"
+                        className="absolute inset-0 bg-white rounded-full shadow-[0_0_15px_rgba(255,255,255,0.3)]"
+                        transition={{ type: "spring", stiffness: 400, damping: 30 }}
                       />
                     )}
-                    <span className="relative z-10">{item.name}</span>
+
+                    {/* Hover State Background */}
+                    {isHovered && !isActive && (
+                      <motion.div
+                        layoutId="nav-hover-fill"
+                        className="absolute inset-0 bg-white/80 rounded-full"
+                        transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                      />
+                    )}
                   </Link>
                 );
               })}
@@ -126,17 +144,17 @@ const Navbar: React.FC = () => {
           <div className="hidden md:flex items-center gap-3">
             <button
               onClick={() => setIsDrawerOpen(true)}
-              className="relative p-2.5 text-white bg-white/5 rounded-full border border-white/10 hover:bg-white/10 hover:text-brand-lime transition-colors group"
+              className="relative p-2.5 text-white/70 bg-transparent border border-white/20 hover:bg-white/10 hover:border-white/40 hover:text-white transition-colors group"
             >
               <ShoppingCart size={18} />
               {totalItems > 0 && (
-                <span className="absolute -top-1 -right-1 bg-brand-lime text-black text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center border border-brand-black">
+                <span className="absolute -top-1 -right-1 bg-white text-black text-[9px] font-bold w-4 h-4 flex items-center justify-center border border-brand-black">
                   {totalItems}
                 </span>
               )}
             </button>
             <Link to="/contact">
-              <button className="flex items-center gap-2 px-8 py-3.5 bg-transparent text-white border border-white hover:bg-white hover:text-black font-bold text-[11px] uppercase tracking-[0.2em] transition-all duration-300">
+              <button className="flex items-center gap-2 px-8 py-3.5 bg-transparent text-white border border-white hover:bg-white hover:text-black font-mplus font-bold text-[11px] uppercase tracking-[0.2em] transition-all duration-300">
                 <span>Distributors</span>
                 <Users size={14} />
               </button>
@@ -147,25 +165,25 @@ const Navbar: React.FC = () => {
           <div className="flex md:hidden items-center gap-3">
             <button
               onClick={() => setIsDrawerOpen(true)}
-              className="relative p-2 text-white bg-white/5 rounded-full border border-white/10 active:text-brand-lime transition-colors"
+              className="relative p-2.5 text-white/70 bg-transparent border border-white/20 hover:bg-white/10 hover:text-white transition-colors"
               aria-label="Open Cart"
             >
               <ShoppingCart size={18} />
               {totalItems > 0 && (
-                <span className="absolute -top-1 -right-1 bg-brand-lime text-black text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 bg-white text-black text-[9px] font-bold w-4 h-4 flex items-center justify-center border border-brand-black">
                   {totalItems}
                 </span>
               )}
             </button>
             <button
-              className="text-white bg-white/5 border border-white/10 rounded-full z-50 p-2 focus:outline-none relative touch-manipulation transition-colors"
+              className="text-white/70 bg-transparent border border-white/20 p-2.5 focus:outline-none relative touch-manipulation hover:bg-white/10 hover:text-white transition-colors"
               onClick={() => setIsOpen(!isOpen)}
               aria-label={isOpen ? "Close Menu" : "Open Menu"}
             >
               {isOpen ? (
-                <X size={20} className="text-brand-lime" />
+                <X size={18} className="text-white" />
               ) : (
-                <Menu size={20} />
+                <Menu size={18} />
               )}
             </button>
           </div>
@@ -191,7 +209,7 @@ const Navbar: React.FC = () => {
               <Link
                 key={item.name}
                 to={item.href}
-                className={`text-5xl font-black font-display uppercase tracking-tighter block py-2 transition-all duration-500 ${isOpen ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"} ${location.pathname === item.href ? "text-brand-lime" : "text-white/50 active:text-white"}`}
+                className={`text-5xl font-normal font-grace uppercase tracking-[0.1em] block py-2 transition-all duration-500 ${isOpen ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"} ${location.pathname === item.href ? "text-white" : "text-white/30 active:text-white"}`}
                 style={{ transitionDelay: `${i * 50 + 200}ms` }}
               >
                 {item.name}
@@ -205,8 +223,8 @@ const Navbar: React.FC = () => {
             <div className="flex flex-col space-y-6">
               <div className="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/10">
                 <div className="flex items-center gap-3">
-                  <ShoppingCart size={20} className="text-brand-lime" />
-                  <span className="text-white font-black uppercase tracking-widest text-[10px]">
+                  <ShoppingCart size={20} className="text-white/70" />
+                  <span className="text-white/70 font-bold uppercase tracking-widest text-[10px]">
                     My Cart
                   </span>
                 </div>
@@ -215,13 +233,13 @@ const Navbar: React.FC = () => {
                     setIsOpen(false);
                     setIsDrawerOpen(true);
                   }}
-                  className="px-4 py-2 bg-brand-lime text-black text-[10px] font-black rounded-full uppercase tracking-widest leading-none"
+                  className="px-4 py-2 bg-transparent border border-white/20 text-white/70 text-[10px] font-mplus font-bold rounded-sm uppercase tracking-widest leading-none"
                 >
                   {totalItems} Items
                 </button>
               </div>
               <Link to="/contact" className="w-full">
-                <button className="w-full py-4 bg-[#6F9578] text-white hover:bg-[#597860] font-bold uppercase text-[11px] tracking-[0.2em] transition-all duration-300 flex items-center justify-center gap-2">
+                <button className="w-full py-4 bg-[#6F9578] text-white hover:bg-[#597860] font-mplus font-bold uppercase text-[11px] tracking-[0.2em] transition-all duration-300 flex items-center justify-center gap-2">
                   <span>Become a Distributor</span>
                   <Users size={18} />
                 </button>
@@ -235,7 +253,7 @@ const Navbar: React.FC = () => {
                   {SOCIAL_LINKS.map((Icon, i) => (
                     <div
                       key={i}
-                      className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white/50 active:text-brand-lime transition-all active:scale-95"
+                      className="w-10 h-10 border border-white/10 flex items-center justify-center text-white/50 active:bg-white/10 active:text-white transition-all active:scale-95"
                     >
                       <Icon size={18} />
                     </div>

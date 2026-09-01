@@ -81,11 +81,12 @@ const Contact: React.FC = () => {
     const containerRef = useRef<HTMLDivElement>(null);
 
     useGSAP(() => {
-        // Hero
-        gsap.to(".contact-hero-content", {
+        // Hero text stagger 
+        gsap.to(".contact-hero-element", {
             y: 0,
             opacity: 1,
             duration: 1.2,
+            stagger: 0.2,
             ease: "power3.out",
             delay: 0.1
         });
@@ -111,9 +112,13 @@ const Contact: React.FC = () => {
         });
 
         // Map
+        gsap.to(".contact-map-header", {
+            scrollTrigger: { trigger: ".contact-map-section", start: "top 80%" },
+            x: 0, opacity: 1, duration: 1, ease: "power2.out"
+        });
         gsap.to(".contact-map-container", {
             scrollTrigger: { trigger: ".contact-map-section", start: "top 80%" },
-            y: 0, opacity: 1, duration: 1.2, ease: "power3.out"
+            y: 0, opacity: 1, duration: 1.2, ease: "power3.out", delay: 0.2
         });
 
     }, { scope: containerRef });
@@ -160,15 +165,15 @@ const Contact: React.FC = () => {
                 <div className="absolute inset-0 z-0 bg-[linear-gradient(to_bottom,rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(to_right,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_110%)] pointer-events-none" />
 
                 <div className="container mx-auto px-6 max-w-7xl relative z-10">
-                    <div className="contact-hero-content text-center max-w-4xl mx-auto opacity-0 translate-y-12">
-                        <div className="inline-flex items-center gap-3 px-6 py-2 border border-white/20 mb-8 backdrop-blur-md">
+                    <div className="text-center max-w-4xl mx-auto">
+                        <div className="contact-hero-element opacity-0 translate-y-12 inline-flex items-center gap-3 px-6 py-2 border border-white/20 mb-8 backdrop-blur-md">
                             <Mail className="w-3.5 h-3.5 text-white/70" />
                             <span className="text-white/70 font-bold uppercase tracking-[0.2em] text-[9px]">Connect</span>
                         </div>
-                        <h1 className="text-6xl md:text-8xl font-normal mb-8 font-grace leading-tight">
+                        <h1 className="contact-hero-element opacity-0 translate-y-12 text-6xl md:text-8xl font-normal mb-8 font-grace leading-tight">
                             Start a Conversation
                         </h1>
-                        <p className="text-lg text-white/50 mb-10 font-mplus max-w-2xl mx-auto leading-relaxed">
+                        <p className="contact-hero-element opacity-0 translate-y-12 text-lg text-white/50 mb-10 font-mplus max-w-2xl mx-auto leading-relaxed">
                             Whether you are a customer with questions or an enterprise looking for wholesale distribution, our corporate desk is ready to assist.
                         </p>
                     </div>
@@ -307,7 +312,7 @@ const Contact: React.FC = () => {
             {/* Map Section */}
             <section className="contact-map-section py-24 lg:py-32 border-t border-white/5">
                 <div className="container mx-auto px-6 max-w-7xl">
-                    <div className="inline-flex items-center gap-2 mb-8">
+                    <div className="contact-map-header opacity-0 transform -translate-x-8 inline-flex items-center gap-2 mb-8">
                         <span className="w-8 h-[1px] bg-white/30" />
                         <span className="text-white/50 uppercase tracking-[0.3em] text-xs font-bold font-sans">Location Grid</span>
                     </div>
