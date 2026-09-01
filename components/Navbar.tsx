@@ -11,7 +11,6 @@ import {
 } from "lucide-react";
 import { useCart } from "../context/CartContext";
 import { Link, useLocation } from "react-router-dom";
-import logo from "../assets/sunstar_logo.webp";
 
 // --- Constants ---
 const MENU_ITEMS = [
@@ -84,21 +83,18 @@ const Navbar: React.FC = () => {
             aria-label="Home"
             className="z-50 block transition-transform active:scale-95 group"
           >
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-3">
               <div className="relative">
                 <div className="absolute inset-0 bg-brand-lime blur-md opacity-20 rounded-full group-hover:opacity-40 transition-opacity" />
                 <img
-                  src={logo}
-                  alt="Sunstar Logo"
-                  className="w-8 h-8 md:w-9 md:h-9 relative z-10 object-contain"
+                  src="/jannah_logo_hq_transparent.png"
+                  alt="Jannah Marketing Logo"
+                  className="w-10 h-10 md:w-12 md:h-12 relative z-10 object-contain rounded-full bg-white p-1"
                   loading="eager"
-                  width="40"
-                  height="40"
+                  width="48"
+                  height="48"
                 />
               </div>
-              <span className="text-lg md:text-xl font-black tracking-tighter text-white font-display">
-                SUNSTAR
-              </span>
             </div>
           </Link>
 
