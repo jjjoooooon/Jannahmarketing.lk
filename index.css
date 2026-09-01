@@ -1,135 +1,136 @@
 @import "tailwindcss";
 
 @theme {
-    --color-brand-lime: #CCFF00;
-    --color-brand-black: #050505;
-    --font-sans: 'Inter', sans-serif;
-    --font-display: 'Plus Jakarta Sans', sans-serif;
+  --color-brand-lime: #ccff00;
+  --color-brand-black: #050505;
+  --font-sans: "Inter", sans-serif;
+  --font-display: "Plus Jakarta Sans", sans-serif;
+  --font-grace: "Covered By Your Grace", cursive;
+  --font-mplus: "M PLUS 1", sans-serif;
 }
 
 @layer base {
-    body {
-        @apply font-sans bg-brand-black text-white overflow-x-hidden w-full min-h-screen;
-        touch-action: pan-y;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        -webkit-tap-highlight-color: transparent;
-    }
+  body {
+    @apply font-sans bg-brand-black text-white overflow-x-hidden w-full min-h-screen;
+    touch-action: pan-y;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
+  }
 
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-        @apply font-display;
-    }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-display;
+  }
 
-    /* Prevent layout shifts on images — always reserve space */
-    img {
-        display: block;
-        max-width: 100%;
-        height: auto;
-    }
+  /* Prevent layout shifts on images — always reserve space */
+  img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
 }
 
 @layer utilities {
-    .text-outline {
-        -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
-        color: transparent;
-    }
+  .text-outline {
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
+    color: transparent;
+  }
 
-    .liquid-text {
-        background: linear-gradient(90deg, #fff, var(--brand-lime), #fff);
-        background-size: 200% auto;
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
-        animation: shine 3s linear infinite;
-    }
+  .liquid-text {
+    background: linear-gradient(90deg, #fff, var(--brand-lime), #fff);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shine 3s linear infinite;
+  }
 
-    .animate-fade-in-up {
-        animation: fade-in-up 0.8s ease-out forwards;
-        opacity: 0;
-    }
+  .animate-fade-in-up {
+    animation: fade-in-up 0.8s ease-out forwards;
+    opacity: 0;
+  }
 
-    .animate-fade-in-right {
-        animation: fade-in-right 0.8s ease-out forwards;
-        opacity: 0;
-    }
+  .animate-fade-in-right {
+    animation: fade-in-right 0.8s ease-out forwards;
+    opacity: 0;
+  }
 
-    /* GPU compositing hint — only on elements that animate */
-    .transform-gpu {
-        will-change: transform;
-        -webkit-backface-visibility: hidden;
-        backface-visibility: hidden;
-    }
+  /* GPU compositing hint — only on elements that animate */
+  .transform-gpu {
+    will-change: transform;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
 }
 
 @keyframes fade-in-up {
-    from {
-        opacity: 0;
-        transform: translate3d(0, 20px, 0);
-    }
+  from {
+    opacity: 0;
+    transform: translate3d(0, 20px, 0);
+  }
 
-    to {
-        opacity: 1;
-        transform: translate3d(0, 0, 0);
-    }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
 }
 
 @keyframes fade-in-right {
-    from {
-        opacity: 0;
-        transform: translate3d(20px, 0, 0);
-    }
+  from {
+    opacity: 0;
+    transform: translate3d(20px, 0, 0);
+  }
 
-    to {
-        opacity: 1;
-        transform: translate3d(0, 0, 0);
-    }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
 }
 
 @keyframes shine {
-    to {
-        background-position: 200% center;
-    }
+  to {
+    background-position: 200% center;
+  }
 }
 
 /* Custom scrollbar - hide on mobile for performance */
 @media (min-width: 768px) {
-    ::-webkit-scrollbar {
-        width: 6px;
-    }
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
 
-    ::-webkit-scrollbar-track {
-        background: var(--brand-black);
-    }
+  ::-webkit-scrollbar-track {
+    background: var(--brand-black);
+  }
 
-    ::-webkit-scrollbar-thumb {
-        background: #333;
-        border-radius: 3px;
-    }
+  ::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 3px;
+  }
 
-    ::-webkit-scrollbar-thumb:hover {
-        background: var(--brand-lime);
-    }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--brand-lime);
+  }
 }
 
 /* Reduce motion for users who prefer it */
 @media (prefers-reduced-motion: reduce) {
-
-    *,
-    *::before,
-    *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-    }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* CLS Prevention: sections need explicit intrinsic size for content-visibility */
 section {
-    content-visibility: auto;
-    contain-intrinsic-size: auto 600px;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 600px;
 }

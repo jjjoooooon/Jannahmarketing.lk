@@ -1,236 +1,194 @@
-import React, { useEffect, useState, memo, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect, memo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 
-// Import bottle images
-import orange from '../assets/orange.webp';
-import ginger from '../assets/ginger.webp';
-import cola from '../assets/cola.webp';
-import creamsoda from '../assets/creamsoda.webp';
-import nesta from '../assets/nesta.webp';
-
-// --- Static Data ---
-const FLAVORS = [
+const SCENES = [
   {
-    name: 'Orange',
-    tagline: 'Citrus Burst',
-    bgGradient: 'radial-gradient(circle at 50% 50%, rgba(255, 107, 53, 0.4) 0%, transparent 70%)',
-    image: orange,
-    description: 'Pure sunshine in every sip'
+    id: 0,
+    image: "/assets/hero_backgrounds/Orange.jpg",
+    title: "Sunstar Orange",
+    subtitle: "Pure sunshine in every sip. The ultimate citrus burst.",
+    highlight: "Classic Flavor",
+    buttons: [
+      { text: "SHOP ORANGE", href: "/shop", primary: true },
+      { text: "VIEW ALL", href: "/shop", primary: false }
+    ]
   },
   {
-    name: 'Ginger',
-    tagline: 'Spiced Refresh',
-    bgGradient: 'radial-gradient(circle at 50% 50%, rgba(212, 165, 116, 0.4) 0%, transparent 70%)',
-    image: ginger,
-    description: 'Bold and invigorating'
+    id: 1,
+    image: "/assets/hero_backgrounds/Cola.jpg",
+    title: "Classic Cola",
+    subtitle: "Timeless carbonated perfection with a classic kick.",
+    highlight: "Original Series",
+    buttons: [
+      { text: "SHOP COLA", href: "/shop", primary: true }
+    ]
   },
   {
-    name: 'Cola',
-    tagline: 'Classic Kick',
-    bgGradient: 'radial-gradient(circle at 50% 50%, rgba(45, 24, 16, 0.6) 0%, transparent 70%)',
-    image: cola,
-    description: 'Timeless carbonated perfection'
+    id: 2,
+    image: "/assets/hero_backgrounds/Nesta_flavour.jpg",
+    title: "Tropical Nesta",
+    subtitle: "A smooth tropical escape infused in every bottle.",
+    highlight: "Tropical Refresh",
+    buttons: [
+      { text: "SHOP NESTA", href: "/shop", primary: true }
+    ]
   },
   {
-    name: 'Cream Soda',
-    tagline: 'Smooth Vanilla',
-    bgGradient: 'radial-gradient(circle at 50% 50%, rgba(255, 182, 217, 0.4) 0%, transparent 70%)',
-    image: creamsoda,
-    description: 'Creamy, dreamy indulgence'
-  },
-  {
-    name: 'Nesta',
-    tagline: 'Tropical Escape',
-    bgGradient: 'radial-gradient(circle at 50% 50%, rgba(0, 203, 169, 0.4) 0%, transparent 70%)',
-    image: nesta,
-    description: 'Island vibes in a bottle'
+    id: 3,
+    image: "/assets/hero_backgrounds/Lemenup.jpg",
+    title: "Zesty Lemon Up",
+    subtitle: "Crisp, zesty, and infinitely refreshing.",
+    highlight: "Zesty Energy",
+    buttons: [
+      { text: "SHOP LEMON UP", href: "/shop", primary: true }
+    ]
   }
 ];
 
-// Memoized flavor button to prevent re-rendering all buttons on every state change
-const FlavorButton = memo(({ flavor, index, isActive, onClick }: {
-  flavor: typeof FLAVORS[0];
-  index: number;
-  isActive: boolean;
-  onClick: (i: number) => void;
-}) => (
-  <button
-    onClick={() => onClick(index)}
-    className={`group flex items-center gap-3 transition-all duration-300 ease-out transform-gpu ${isActive ? 'opacity-100' : 'opacity-50 hover:opacity-100'}`}
-  >
-    <span className={`hidden lg:block font-bold uppercase tracking-widest transition-all duration-300 ${isActive ? 'text-brand-lime text-sm translate-x-0' : 'text-white text-xs translate-x-2'}`}>
-      {flavor.name}
-    </span>
-    <div className={`h-2 rounded-full transition-all duration-300 ${isActive ? 'w-8 bg-brand-lime lg:w-12 lg:h-1' : 'w-2 bg-white lg:w-6 lg:h-px group-hover:bg-brand-lime'}`} />
-  </button>
-));
-
-const SunstarModernHero = () => {
-  const [activeFlavor, setActiveFlavor] = useState(0);
-  const [direction, setDirection] = useState<'in' | 'out'>('in');
-  const [isTransitioning, setIsTransitioning] = useState(false);
-
-  // Preload images once on mount for smooth transitions
-  useEffect(() => {
-    FLAVORS.forEach((flavor) => {
-      const img = new Image();
-      img.src = flavor.image;
-    });
-  }, []);
-
-  // useCallback prevents re-creation of this function on every render
-  const handleFlavorChange = useCallback((index: number) => {
-    if (index === activeFlavor || isTransitioning) return;
-
-    setIsTransitioning(true);
-    setDirection('out');
-
-    setTimeout(() => {
-      setActiveFlavor(index);
-      setDirection('in');
-      setTimeout(() => setIsTransitioning(false), 500);
-    }, 300);
-  }, [activeFlavor, isTransitioning]);
-
-  const currentData = FLAVORS[activeFlavor];
-
-  return (
-    <div className="relative w-full min-h-dvh bg-brand-black overflow-hidden flex flex-col justify-center">
-      {/* --- Background: translateZ(0) forces GPU compositing --- */}
-      <div className="absolute inset-0 z-0 pointer-events-none" style={{ transform: 'translateZ(0)' }}>
-        <div
-          className="absolute inset-0 opacity-40 transition-all duration-700"
-          style={{ background: currentData.bgGradient }}
-        />
-        <div className="absolute inset-0 bg-[radial-gradient(transparent,black_80%)]" />
-      </div>
-
-      {/* --- Main Content --- */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:pr-24 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center pt-20">
-
-        {/* Left: Text Content — GPU-accelerated transitions */}
-        <div
-          className={`order-2 lg:order-1 flex flex-col items-start space-y-6 will-change-transform transition-all duration-500 ease-out ${direction === 'in' ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'
-            }`}
-          style={{ backfaceVisibility: 'hidden' }}
-        >
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-full border border-white/10 animate-fade-in">
-            <span className="w-2 h-2 rounded-full bg-brand-lime animate-pulse" />
-            <span className="text-xs font-bold text-white/80 uppercase tracking-widest">Sri Lankan Heritage</span>
-          </div>
-
-          <div className="space-y-2">
-            <h1 className="text-5xl sm:text-7xl lg:text-8xl font-black text-white leading-none tracking-tight font-['Plus_Jakarta_Sans'] animate-fade-in-up">
-              {currentData.name}
-            </h1>
-            <p className="text-xl sm:text-3xl font-light text-brand-lime italic font-['Inter'] animate-fade-in-up [animation-delay:100ms]">
-              {currentData.tagline}
-            </p>
-          </div>
-
-          <div className="min-h-14 flex items-center animate-fade-in-up [animation-delay:200ms]">
-            <p className="text-gray-400 text-sm sm:text-lg leading-relaxed max-w-lg">
-              {currentData.description}. Crafted with authentic Sri Lankan tradition.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap gap-4 pt-4 animate-fade-in-up [animation-delay:300ms]">
-            <Link
-              to="/shop"
-              className="px-8 py-3 bg-brand-lime text-black rounded-full font-bold uppercase tracking-widest text-xs hover:scale-105 transition-transform active:scale-95"
-            >
-              Explore Flavors
-            </Link>
-            <Link
-              to="/about"
-              className="px-8 py-3 bg-white/5 text-white border border-white/10 rounded-full font-bold uppercase tracking-widest text-xs hover:bg-white/10 transition-colors active:scale-95"
-            >
-              Learn More
-            </Link>
-          </div>
-
-          <div className="pt-8 border-t border-white/10 w-full animate-fade-in-up [animation-delay:400ms]">
-            <p className="text-[10px] uppercase tracking-widest text-gray-500 mb-2">Available Sizes</p>
-            <div className="flex gap-4 text-white font-mono text-sm opacity-60">
-              <span>250ml</span>/<span>330ml</span>/<span>750ml</span>/<span>1050ml</span>/<span>1.5L</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Right: Bottle — translate3d keeps animation on GPU composite layer */}
-        <div className="order-1 lg:order-2 flex justify-center lg:justify-end relative h-[40vh] lg:h-[60vh]">
-          {/* Glow: opacity-only animation avoids layout/paint */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] h-[60%] bg-white/30 rounded-full blur-[80px] animate-glow-pulse z-0 pointer-events-none" />
-
-          <img
-            src={currentData.image}
-            alt={currentData.name}
-            loading="eager"
-            decoding="async"
-            className={`h-full w-auto object-contain drop-shadow-2xl animate-float-gpu will-change-transform z-10 transition-all duration-500 ease-out ${direction === 'in'
-              ? 'opacity-100 translate-x-0 rotate-0 scale-100'
-              : 'opacity-0 translate-x-20 rotate-12 scale-90'
-              }`}
-            style={{
-              filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.5))',
-              backfaceVisibility: 'hidden',
-            }}
-          />
-        </div>
-      </div>
-
-      {/* --- Flavor Selector --- */}
-      <div className="z-50 absolute bottom-8 left-0 w-full flex justify-center gap-2 lg:absolute lg:right-10 lg:top-1/2 lg:-translate-y-1/2 lg:w-auto lg:flex-col lg:items-end lg:gap-4 lg:bottom-auto lg:left-auto">
-        {FLAVORS.map((flavor, index) => (
-          <FlavorButton
-            key={flavor.name}
-            flavor={flavor}
-            index={index}
-            isActive={activeFlavor === index}
-            onClick={handleFlavorChange}
-          />
-        ))}
-      </div>
-
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 animate-bounce hidden md:block pointer-events-none">
-        <ChevronDown className="text-white/30" />
-      </div>
-
-      {/* --- All keyframes use translate3d to stay on GPU compositor --- */}
-      <style>{`
-        @keyframes float-gpu {
-          0%, 100% { transform: translate3d(0, 0, 0); }
-          50%       { transform: translate3d(0, -20px, 0); }
-        }
-        @keyframes fade-in-up {
-          from { opacity: 0; transform: translate3d(0, 20px, 0); }
-          to   { opacity: 1; transform: translate3d(0, 0, 0); }
-        }
-        @keyframes fade-in {
-          from { opacity: 0; }
-          to   { opacity: 1; }
-        }
-        @keyframes glow-pulse {
-          0%, 100% { opacity: 0.3; }
-          50%       { opacity: 0.5; }
-        }
-        .animate-float-gpu {
-          animation: float-gpu 6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
-        }
-        .animate-fade-in-up {
-          animation: fade-in-up 0.8s ease-out forwards;
-        }
-        .animate-fade-in {
-          animation: fade-in 0.8s ease-out forwards;
-        }
-        .animate-glow-pulse {
-          animation: glow-pulse 4s ease-in-out infinite;
-          will-change: opacity;
-        }
-      `}</style>
-    </div>
-  );
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.15, delayChildren: 0.2 }
+  },
+  exit: {
+    opacity: 0,
+    transition: { staggerChildren: 0.1, staggerDirection: -1 }
+  }
 };
 
-export default memo(SunstarModernHero);
+const itemVariants = {
+  hidden: { opacity: 0, y: 30, filter: 'blur(10px)' },
+  show: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] } },
+  exit: { opacity: 0, y: -20, filter: 'blur(10px)', transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
+};
+
+// We no longer use AnimatePresence for images to prevent DOM mount/unmount lag.
+// Instead we keep all images in the DOM and just animate opacity for GPU acceleration.
+
+
+const Hero = () => {
+    const [currentScene, setCurrentScene] = useState(0);
+
+    // Preload all images on mount to ensure smooth cross-fading
+    useEffect(() => {
+        SCENES.forEach((scene) => {
+            const img = new Image();
+            img.src = scene.image;
+        });
+    }, []);
+
+    // Change slide every 6 seconds
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentScene((prev) => (prev + 1) % SCENES.length);
+        }, 6000); 
+        return () => clearInterval(interval);
+    }, []);
+
+    return (
+        <div className="relative w-full h-dvh bg-brand-black overflow-hidden flex flex-col justify-center items-center">
+            {/* Background Images Carousel - Optimized for GPU */}
+            <div className="absolute inset-0 w-full h-full z-0 bg-black overflow-hidden">
+                {SCENES.map((scene, idx) => {
+                    const isActive = currentScene === idx;
+                    return (
+                        <motion.div
+                            key={scene.id}
+                            initial={false}
+                            animate={{
+                                opacity: isActive ? 1 : 0,
+                                scale: isActive ? 1 : 1.05
+                            }}
+                            transition={{
+                                opacity: { duration: 1.5, ease: "easeInOut" },
+                                scale: { duration: 10, ease: "linear" }
+                            }}
+                            className="absolute inset-0 w-full h-full pointer-events-none"
+                            style={{ 
+                                willChange: "opacity, transform",
+                                zIndex: isActive ? 1 : 0 
+                            }}
+                        >
+                            <img 
+                                src={scene.image}
+                                alt=""
+                                className="w-full h-full object-cover"
+                                loading={idx === 0 ? "eager" : "lazy"}
+                                decoding="async" 
+                            />
+                        </motion.div>
+                    );
+                })}
+                
+                {/* Dark Overlay for Text Legibility */}
+                <div className="absolute inset-0 bg-black/60 z-10 pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-black via-transparent to-black/40 z-10 pointer-events-none" />
+            </div>
+
+            {/* Foreground Animated Content */}
+            <div className="relative z-20 w-full max-w-7xl mx-auto px-6 h-full flex flex-col justify-center items-center md:items-start pt-16">
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        key={currentScene}
+                        variants={containerVariants}
+                        initial="hidden"
+                        animate="show"
+                        exit="exit"
+                        className="flex flex-col items-center text-center md:text-left md:items-start gap-4 max-w-4xl"
+                    >
+                        <motion.h1 variants={itemVariants} className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-normal text-white leading-[1.0] font-grace drop-shadow-md">
+                            {SCENES[currentScene].title}
+                        </motion.h1>
+                        
+                        <motion.p variants={itemVariants} className="text-lg sm:text-xl md:text-2xl text-white/90 font-normal max-w-2xl leading-relaxed mt-2 font-mplus drop-shadow-md">
+                            {SCENES[currentScene].subtitle}
+                        </motion.p>
+                        
+                        {SCENES[currentScene].buttons && (
+                            <motion.div variants={itemVariants} className="flex gap-4 mt-6">
+                                {SCENES[currentScene].buttons.map((btn, i) => (
+                                    <a 
+                                        key={i} 
+                                        href={btn.href} 
+                                        className={`px-8 py-4 font-bold text-[11px] uppercase tracking-[0.2em] transition-all duration-300 ${
+                                            btn.primary 
+                                                ? 'bg-[#6F9578] text-white hover:bg-[#597860]' 
+                                                : 'bg-transparent text-white border border-white hover:bg-white hover:text-black'
+                                        }`}
+                                    >
+                                        {btn.text}
+                                    </a>
+                                ))}
+                            </motion.div>
+                        )}
+                    </motion.div>
+                </AnimatePresence>
+            </div>
+
+            {/* Carousel Navigation Indicators */}
+            <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-30 flex gap-3">
+                {SCENES.map((_, idx) => (
+                    <button 
+                        key={idx}
+                        onClick={() => setCurrentScene(idx)}
+                        className={`transition-all duration-500 rounded-full ${
+                            currentScene === idx 
+                            ? 'w-8 h-2 bg-brand-lime' 
+                            : 'w-2 h-2 bg-white/30 hover:bg-white/60'
+                        }`}
+                        aria-label={`Go to slide ${idx + 1}`}
+                    />
+                ))}
+            </div>
+
+            {/* Scroll Indicator */}
+            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 animate-bounce cursor-pointer pointer-events-none hover:text-brand-lime transition-colors">
+                <ChevronDown size={36} className="text-white/50" />
+            </div>
+        </div>
+    );
+};
+
+export default memo(Hero);
