@@ -136,7 +136,7 @@ const Navbar: React.FC = () => {
               )}
             </button>
             <Link to="/contact">
-              <button className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-brand-lime text-black font-bold text-[10px] uppercase tracking-[0.1em] font-display hover:bg-[#d4ff00] hover:shadow-[0_0_15px_rgba(204,255,0,0.3)] active:scale-95 transition-all">
+              <button className="flex items-center gap-2 px-8 py-3.5 bg-transparent text-white border border-white hover:bg-white hover:text-black font-bold text-[11px] uppercase tracking-[0.2em] transition-all duration-300">
                 <span>Distributors</span>
                 <Users size={14} />
               </button>
@@ -221,7 +221,7 @@ const Navbar: React.FC = () => {
                 </button>
               </div>
               <Link to="/contact" className="w-full">
-                <button className="w-full py-4 rounded-full bg-brand-lime text-black font-bold uppercase text-sm tracking-widest active:scale-[0.98] transition-transform flex items-center justify-center gap-2">
+                <button className="w-full py-4 bg-[#6F9578] text-white hover:bg-[#597860] font-bold uppercase text-[11px] tracking-[0.2em] transition-all duration-300 flex items-center justify-center gap-2">
                   <span>Become a Distributor</span>
                   <Users size={18} />
                 </button>

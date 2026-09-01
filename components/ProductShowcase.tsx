@@ -144,7 +144,7 @@ const ProductShowcase: React.FC = () => {
                 </p>
 
                 <Link to="/shop">
-                  <button className="px-8 py-3 rounded-full bg-transparent text-white border border-white/20 hover:bg-white hover:text-black hover:scale-105 active:scale-95 transition-all duration-300 font-sans text-xs uppercase tracking-widest font-bold">
+                  <button className="px-8 py-4 bg-transparent text-white border border-white hover:bg-white hover:text-black transition-all duration-300 font-bold text-[11px] uppercase tracking-[0.2em]">
                     View Details
                   </button>
                 </Link>

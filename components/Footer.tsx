@@ -123,23 +123,26 @@ const Footer: React.FC = () => {
           
           {/* Copyright */}
           <div className="flex flex-col md:flex-row items-center text-center md:text-left gap-2 md:gap-4">
-            <p className="text-[10px] uppercase tracking-[0.1em] font-bold font-sans text-white/30">
+            <p className="text-[10px] uppercase tracking-[0.1em] font-medium font-mplus text-white/30">
               &copy; {new Date().getFullYear()} Jannah Marketing (PVT) Ltd. All rights reserved.
             </p>
           </div>
 
           {/* Development Credit */}
-          <div className="text-[10px] uppercase tracking-[0.1em] font-bold font-sans text-white/30">
-            Engineered by <a href="https://inzeedo.com" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-white transition-colors">Inzeedo</a>
+          <div className="flex items-center justify-center gap-2 text-[10px] uppercase tracking-[0.1em] font-medium font-mplus text-white/30">
+            <span>Engineered by</span>
+            <a href="https://inzeedo.com" target="_blank" rel="noopener noreferrer" className="opacity-60 hover:opacity-100 transition-opacity">
+              <img src="/inzeedo.png" alt="Inzeedo" className="h-6 w-auto object-contain" />
+            </a>
           </div>
 
           {/* Policy Links */}
           <div className="flex items-center gap-6">
-            <Link to="/privacy-policy" onClick={scrollToTop} className="text-[10px] uppercase tracking-[0.1em] font-bold font-sans text-white/30 hover:text-white transition-colors">
+            <Link to="/privacy-policy" onClick={scrollToTop} className="text-[10px] uppercase tracking-[0.1em] font-medium font-mplus text-white/30 hover:text-white transition-colors">
               Privacy
             </Link>
             <span className="w-1 h-1 rounded-full bg-white/10" />
-            <Link to="/terms-of-service" onClick={scrollToTop} className="text-[10px] uppercase tracking-[0.1em] font-bold font-sans text-white/30 hover:text-white transition-colors">
+            <Link to="/terms-of-service" onClick={scrollToTop} className="text-[10px] uppercase tracking-[0.1em] font-medium font-mplus text-white/30 hover:text-white transition-colors">
               Terms
             </Link>
           </div>

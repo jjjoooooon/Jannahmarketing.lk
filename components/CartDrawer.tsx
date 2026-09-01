@@ -162,7 +162,7 @@ const CartDrawer: React.FC = () => {
                             </div>
                         </div>
                         <Link to="/checkout" onClick={() => setIsDrawerOpen(false)}>
-                            <button className="w-full py-4 bg-brand-lime text-black font-bold rounded-full hover:bg-white transition-all uppercase text-xs tracking-widest flex items-center justify-center gap-3 shadow-[0_10px_30px_rgba(204,255,0,0.2)]">
+                            <button className="w-full py-4 bg-[#6F9578] text-white hover:bg-[#597860] transition-all duration-300 font-bold text-[11px] uppercase tracking-[0.2em] flex items-center justify-center gap-3">
                                 Proceed to Checkout
                                 <ArrowRight size={18} />
                             </button>

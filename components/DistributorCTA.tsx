@@ -79,7 +79,7 @@ const DistributorCTA: React.FC = memo(() => {
 
             <Link
               to="/contact"
-              className="inline-flex items-center gap-4 px-10 py-4 bg-transparent text-white border border-white/20 rounded-full hover:bg-white hover:text-black transition-all duration-300 uppercase tracking-widest font-bold font-sans text-xs group active:scale-95"
+              className="inline-flex items-center justify-center gap-4 px-10 py-4 bg-[#6F9578] text-white hover:bg-[#597860] transition-all duration-300 font-bold text-[11px] uppercase tracking-[0.2em] group"
             >
               Apply Now
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
