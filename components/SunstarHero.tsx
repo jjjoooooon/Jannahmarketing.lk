@@ -136,15 +136,15 @@ const SunstarModernHero = () => {
           </div>
 
           <div className="flex flex-wrap gap-4 pt-4 animate-fade-in-up [animation-delay:300ms]">
-            <Link
-              to="/shop"
+            <a
+              href="#flavors"
               className="px-8 py-3 bg-brand-lime text-black rounded-full font-bold uppercase tracking-widest text-xs hover:scale-105 transition-transform active:scale-95"
             >
               Explore Flavors
-            </Link>
+            </a>
             <Link
               to="/about"
-              className="px-8 py-3 bg-white/5 text-white border border-white/10 rounded-full font-bold uppercase tracking-widest text-xs hover:bg-white/10 transition-colors active:scale-95"
+              className="px-8 py-4 bg-transparent border border-white/30 text-white/90 hover:bg-white hover:text-black hover:border-white transition-all duration-300 font-bold text-[11px] uppercase tracking-[0.2em]"
             >
               Learn More
             </Link>

@@ -10,8 +10,8 @@ const SCENES = [
     subtitle: "Pure sunshine in every sip. The ultimate citrus burst.",
     highlight: "Classic Flavor",
     buttons: [
-      { text: "SHOP ORANGE", href: "/shop", primary: true },
-      { text: "VIEW ALL", href: "/shop", primary: false }
+      { text: "SHOP ORANGE", href: "#flavors", primary: true },
+      { text: "VIEW ALL", href: "#flavors", primary: false }
     ]
   },
   {
@@ -21,7 +21,7 @@ const SCENES = [
     subtitle: "Timeless carbonated perfection with a classic kick.",
     highlight: "Original Series",
     buttons: [
-      { text: "SHOP COLA", href: "/shop", primary: true }
+      { text: "SHOP COLA", href: "#flavors", primary: true }
     ]
   },
   {
@@ -31,7 +31,7 @@ const SCENES = [
     subtitle: "A smooth tropical escape infused in every bottle.",
     highlight: "Tropical Refresh",
     buttons: [
-      { text: "SHOP NESTA", href: "/shop", primary: true }
+      { text: "SHOP NESTA", href: "#flavors", primary: true }
     ]
   },
   {
@@ -41,7 +41,7 @@ const SCENES = [
     subtitle: "Crisp, zesty, and infinitely refreshing.",
     highlight: "Zesty Energy",
     buttons: [
-      { text: "SHOP LEMON UP", href: "/shop", primary: true }
+      { text: "SHOP LEMON UP", href: "#flavors", primary: true }
     ]
   }
 ];

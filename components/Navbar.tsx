@@ -15,7 +15,6 @@ import { Link, useLocation } from "react-router-dom";
 // --- Constants ---
 const MENU_ITEMS = [
   { name: "Home", href: "/" },
-  { name: "Shop", href: "/shop" },
   { name: "About", href: "/about" },
   { name: "Contact", href: "/contact" },
 ] as const;
