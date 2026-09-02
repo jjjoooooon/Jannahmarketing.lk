@@ -314,7 +314,7 @@ const Contact: React.FC = () => {
                 <div className="container mx-auto px-6 max-w-7xl">
                     <div className="contact-map-header opacity-0 transform -translate-x-8 inline-flex items-center gap-2 mb-8">
                         <span className="w-8 h-[1px] bg-white/30" />
-                        <span className="text-white/50 uppercase tracking-[0.3em] text-xs font-bold font-sans">Location Grid</span>
+                        <span className="text-[#D4FF00] uppercase tracking-[0.3em] text-xs font-bold font-sans">Location Grid</span>
                     </div>
 
                     <div className="contact-map-container opacity-0 transform translate-y-12 h-[500px] border border-white/10 bg-white/[0.02] p-2">

@@ -111,7 +111,7 @@ const ProductShowcase: React.FC = () => {
           {/* Introductory Title Slide */}
           <div className="w-screen h-full shrink-0 flex flex-col justify-center items-center px-[8vw]">
             <div className="max-w-2xl flex flex-col items-center text-center">
-              <p className="text-white/40 uppercase tracking-[0.4em] text-xs font-bold font-sans mb-6">
+              <p className="text-[#D4FF00] uppercase tracking-[0.4em] text-xs font-bold font-sans mb-6">
                 Our Portfolio
               </p>
               <h2 className="text-6xl md:text-8xl font-sans font-light text-white tracking-tighter mb-4">

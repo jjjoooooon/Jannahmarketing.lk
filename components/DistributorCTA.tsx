@@ -65,7 +65,7 @@ const DistributorCTA: React.FC = memo(() => {
           <div ref={leftColRef} className="flex flex-col items-center lg:items-start text-center lg:text-left">
             <div className="inline-flex items-center gap-2 mb-8">
               <span className="w-8 h-[1px] bg-white/30" />
-              <span className="text-white/50 uppercase tracking-[0.3em] text-xs font-bold font-sans">Business Opportunities</span>
+              <span className="text-[#D4FF00] uppercase tracking-[0.3em] text-xs font-bold font-sans">Business Opportunities</span>
               <span className="w-8 h-[1px] bg-white/30" />
             </div>
 

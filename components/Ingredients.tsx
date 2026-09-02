@@ -65,7 +65,7 @@ const Ingredients: React.FC = memo(() => {
         <div ref={headerRef} className="text-center mb-16 md:mb-24 flex flex-col items-center">
           <div className="inline-flex items-center gap-2 mb-6">
             <span className="w-8 h-[1px] bg-white/30" />
-            <span className="text-white/50 uppercase tracking-[0.3em] text-xs font-bold font-sans">Quality Assurance</span>
+            <span className="text-[#D4FF00] uppercase tracking-[0.3em] text-xs font-bold font-sans">Quality Assurance</span>
             <span className="w-8 h-[1px] bg-white/30" />
           </div>
 
